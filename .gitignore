@@ -5,4 +5,4 @@
 /logs
 /log
 /LittleCatIMSService/*.classpath
-/LittleCatIMSService/*
+/LittleCatIMSService/.settings
