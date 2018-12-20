@@ -50,8 +50,8 @@ public class XiaoQuAreaBusiness
 		xiaoQuAreaDao.modify(mo);
 	}
 
-	public List<XiaoQuAreaMO> getList(String name) throws LittleCatException
+	public List<XiaoQuAreaMO> getList(String name,String enable) throws LittleCatException
 	{
-		return xiaoQuAreaDao.getList(name);
+		return xiaoQuAreaDao.getList(name,enable);
 	}
 }

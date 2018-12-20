@@ -108,13 +108,13 @@ public class XiaoQuAreaController
 	}
 
 	@GetMapping(value = "/getList")
-	public RestRsp<XiaoQuAreaMO> getList(@RequestParam @Nullable String name)
+	public RestRsp<XiaoQuAreaMO> getList(@RequestParam @Nullable String name,@RequestParam String enable)
 	{
 		RestRsp<XiaoQuAreaMO> result = new RestRsp<XiaoQuAreaMO>();
 
 		try
 		{
-			result.getData().addAll(xiaoQuAreaBusiness.getList(name));
+			result.getData().addAll(xiaoQuAreaBusiness.getList(name,enable));
 		}
 		catch (LittleCatException e)
 		{

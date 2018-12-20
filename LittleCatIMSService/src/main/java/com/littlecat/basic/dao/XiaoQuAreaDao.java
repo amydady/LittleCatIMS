@@ -83,9 +83,10 @@ public class XiaoQuAreaDao
 		}
 	}
 
-	public List<XiaoQuAreaMO> getList(String name) throws LittleCatException
+	public List<XiaoQuAreaMO> getList(String name, String enable) throws LittleCatException
 	{
-		String sql = "select * from  " + TABLE_NAME + " where 1 = 1 ";
+		String sql = "select * from  " + TABLE_NAME + " where enable = ? ";
+
 		if (StringUtil.isNotEmpty(name))
 		{
 			sql += " and name like '%" + name + "'%";
@@ -93,7 +94,7 @@ public class XiaoQuAreaDao
 
 		try
 		{
-			return jdbcTemplate.query(sql, new XiaoQuAreaMO.MOMapper());
+			return jdbcTemplate.query(sql, new Object[] { enable }, new XiaoQuAreaMO.MOMapper());
 		}
 		catch (DataAccessException e)
 		{
