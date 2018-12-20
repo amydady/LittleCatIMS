@@ -1,12 +1,12 @@
 package com.littlecat.student.model;
 
 import com.littlecat.cbb.common.BaseMO;
-import com.littlecat.common.consts.SexEnum;
+import com.littlecat.common.consts.Sex;
 
 public class StudentMO extends BaseMO
 {
 	private String name;
-	private SexEnum sex;
+	private Sex sex;
 	private String birthdayYear;
 	private String birthdayMonth;
 	private String birthdayDay;
@@ -32,12 +32,12 @@ public class StudentMO extends BaseMO
 		this.name = name;
 	}
 
-	public SexEnum getSex()
+	public Sex getSex()
 	{
 		return sex;
 	}
 
-	public void setSex(SexEnum sex)
+	public void setSex(Sex sex)
 	{
 		this.sex = sex;
 	}

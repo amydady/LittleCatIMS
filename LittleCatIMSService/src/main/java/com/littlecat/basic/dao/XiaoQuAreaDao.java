@@ -7,7 +7,7 @@ import org.springframework.dao.DataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Component;
 
-import com.littlecat.basic.model.XiaoQuMO;
+import com.littlecat.basic.model.XiaoQuAreaMO;
 import com.littlecat.cbb.common.Consts;
 import com.littlecat.cbb.exception.LittleCatException;
 import com.littlecat.cbb.utils.StringUtil;
@@ -16,16 +16,16 @@ import com.littlecat.common.consts.TableName;
 import com.littlecat.common.utils.DaoUtil;
 
 @Component
-public class XiaoQuDao
+public class XiaoQuAreaDao
 {
 	@Autowired
 	protected JdbcTemplate jdbcTemplate;
 
-	private final String TABLE_NAME = TableName.XiaoQu.getName();
+	private final String TABLE_NAME = TableName.XiaoQuArea.getName();
 
-	public XiaoQuMO getById(String id) throws LittleCatException
+	public XiaoQuAreaMO getById(String id) throws LittleCatException
 	{
-		return DaoUtil.getById(TABLE_NAME, id, jdbcTemplate, new XiaoQuMO.MOMapper());
+		return DaoUtil.getById(TABLE_NAME, id, jdbcTemplate, new XiaoQuAreaMO.MOMapper());
 	}
 
 	public void enable(String id) throws LittleCatException
@@ -48,18 +48,18 @@ public class XiaoQuDao
 		DaoUtil.disable(TABLE_NAME, ids, jdbcTemplate);
 	}
 
-	public String add(XiaoQuMO mo) throws LittleCatException
+	public String add(XiaoQuAreaMO mo) throws LittleCatException
 	{
 		if (StringUtil.isEmpty(mo.getId()))
 		{
 			mo.setId(UUIDUtil.createUUID());
 		}
 
-		String sql = "insert into " + TABLE_NAME + "(id,area,name,code) values(?,?,?,?)";
+		String sql = "insert into " + TABLE_NAME + "(id,name) values(?,?)";
 
 		try
 		{
-			jdbcTemplate.update(sql, new Object[] { mo.getId(), mo.getArea(), mo.getName(), mo.getCode() });
+			jdbcTemplate.update(sql, new Object[] { mo.getId(), mo.getName() });
 		}
 		catch (DataAccessException e)
 		{
@@ -69,13 +69,13 @@ public class XiaoQuDao
 		return mo.getId();
 	}
 
-	public void modify(XiaoQuMO mo) throws LittleCatException
+	public void modify(XiaoQuAreaMO mo) throws LittleCatException
 	{
-		String sql = "update " + TABLE_NAME + " set name = ?,area = ?,code = ? where id = ?";
+		String sql = "update " + TABLE_NAME + " set name = ? where id = ?";
 
 		try
 		{
-			jdbcTemplate.update(sql, new Object[] { mo.getName(), mo.getArea(), mo.getCode(), mo.getId() });
+			jdbcTemplate.update(sql, new Object[] { mo.getName(), mo.getId() });
 		}
 		catch (DataAccessException e)
 		{
@@ -83,13 +83,17 @@ public class XiaoQuDao
 		}
 	}
 
-	public List<XiaoQuMO> getListByArea(String area) throws LittleCatException
+	public List<XiaoQuAreaMO> getList(String name) throws LittleCatException
 	{
-		String sql = "select * from  " + TABLE_NAME + " where area = ?";
+		String sql = "select * from  " + TABLE_NAME + " where 1 = 1 ";
+		if (StringUtil.isNotEmpty(name))
+		{
+			sql += " and name like '%" + name + "'%";
+		}
 
 		try
 		{
-			return jdbcTemplate.query(sql, new Object[] { area }, new XiaoQuMO.MOMapper());
+			return jdbcTemplate.query(sql, new XiaoQuAreaMO.MOMapper());
 		}
 		catch (DataAccessException e)
 		{

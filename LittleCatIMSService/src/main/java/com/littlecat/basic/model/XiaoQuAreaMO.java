@@ -8,27 +8,15 @@ import org.springframework.jdbc.core.RowMapper;
 import com.littlecat.cbb.common.BaseMO;
 
 /**
- * 小区信息
+ * 小区归属的区域信息
  * 
  * @author Administrator
  *
  */
-public class XiaoQuMO extends BaseMO
+public class XiaoQuAreaMO extends BaseMO
 {
-	private String area;
 	private String name;
-	private String code;
 	private String enable;
-
-	public String getArea()
-	{
-		return area;
-	}
-
-	public void setArea(String area)
-	{
-		this.area = area;
-	}
 
 	public String getName()
 	{
@@ -38,16 +26,6 @@ public class XiaoQuMO extends BaseMO
 	public void setName(String name)
 	{
 		this.name = name;
-	}
-
-	public String getCode()
-	{
-		return code;
-	}
-
-	public void setCode(String code)
-	{
-		this.code = code;
 	}
 
 	public String getEnable()
@@ -60,16 +38,14 @@ public class XiaoQuMO extends BaseMO
 		this.enable = enable;
 	}
 	
-	public static class MOMapper implements RowMapper<XiaoQuMO>
+	public static class MOMapper implements RowMapper<XiaoQuAreaMO>
 	{
 		@Override
-		public XiaoQuMO mapRow(ResultSet rs, int num) throws SQLException
+		public XiaoQuAreaMO mapRow(ResultSet rs, int num) throws SQLException
 		{
-			XiaoQuMO mo = new XiaoQuMO();
+			XiaoQuAreaMO mo = new XiaoQuAreaMO();
 			mo.setId(rs.getString("id"));
-			mo.setArea(rs.getString("area"));
 			mo.setName(rs.getString("name"));
-			mo.setCode(rs.getString("code"));
 			mo.setEnable(rs.getString("enable"));
 			return mo;
 		}

@@ -23,6 +23,16 @@ CREATE TABLE `t_student` (
 );
 
 ##################################基础信息
+#小区归属的区域
+CREATE TABLE `t_basic_xiaoquarea` (
+	`id` VARCHAR(125) NOT NULL,
+	`name` VARCHAR(255) NOT NULL,
+	`enable` VARCHAR(1) NOT NULL DEFAULT 'Y',
+	
+	PRIMARY KEY (`id`),
+	UNIQUE INDEX `name` (`name`)
+);
+
 #小区
 CREATE TABLE `t_basic_xiaoqu` (
 	`id` VARCHAR(125) NOT NULL,

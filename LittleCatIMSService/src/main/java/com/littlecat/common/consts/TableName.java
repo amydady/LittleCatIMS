@@ -15,7 +15,7 @@ public enum TableName
 	Role("t_sys_role"),
 	SysOperator("t_sys_sysoperator"),
 	
-	
+	XiaoQuArea("t_basic_xiaoquarea"),
 	XiaoQu("t_basic_xiaoqu"),
 	;
 

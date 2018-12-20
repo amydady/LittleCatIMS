@@ -7,12 +7,12 @@ import org.springframework.dao.DataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Component;
 
+import com.littlecat.cbb.common.Consts;
 import com.littlecat.cbb.exception.LittleCatException;
 import com.littlecat.cbb.query.QueryParam;
 import com.littlecat.cbb.utils.CollectionUtil;
 import com.littlecat.cbb.utils.StringUtil;
 import com.littlecat.cbb.utils.UUIDUtil;
-import com.littlecat.common.consts.ErrorCode;
 import com.littlecat.common.consts.TableName;
 import com.littlecat.common.utils.DaoUtil;
 import com.littlecat.system.model.SysOperatorMO;
@@ -21,7 +21,6 @@ import com.littlecat.system.model.SysOperatorMO;
 public class SysOperatorDao
 {
 	private final String TABLE_NAME = TableName.SysOperator.getName();
-	private final String MODEL_NAME = SysOperatorMO.class.getSimpleName();
 
 	@Autowired
 	protected JdbcTemplate jdbcTemplate;
@@ -56,33 +55,28 @@ public class SysOperatorDao
 
 			if (CollectionUtil.isEmpty(mos))
 			{
-				throw new LittleCatException(ErrorCode.GetInfoFromDBReturnEmpty.getCode(), ErrorCode.GetInfoFromDBReturnEmpty.getMsg().replace("{INFO_NAME}", MODEL_NAME) + " identity=" + identity);
+				return null;
 			}
 
 			return mos.get(0);
 		}
 		catch (DataAccessException e)
 		{
-			throw new LittleCatException(ErrorCode.DataAccessException.getCode(), ErrorCode.DataAccessException.getMsg(), e);
+			throw new LittleCatException(Consts.ERROR_CODE_DATAACCESSEXCEPTION, Consts.ERROR_CODE_DATAACCESSEXCEPTION, e);
 		}
 	}
-	
-	public void setPassword(String id,String pwd) throws LittleCatException
+
+	public void setPassword(String id, String pwd) throws LittleCatException
 	{
 		String sql = "update " + TABLE_NAME + " set password = password(?) where id = ?";
 
 		try
 		{
-			int ret = jdbcTemplate.update(sql, new Object[] { pwd, id });
-
-			if (ret != 1)
-			{
-				throw new LittleCatException(ErrorCode.UpdateObjectToDBError.getCode(), ErrorCode.UpdateObjectToDBError.getMsg().replace("{INFO_NAME}", MODEL_NAME));
-			}
+			jdbcTemplate.update(sql, new Object[] { pwd, id });
 		}
 		catch (DataAccessException e)
 		{
-			throw new LittleCatException(ErrorCode.DataAccessException.getCode(), ErrorCode.DataAccessException.getMsg(), e);
+			throw new LittleCatException(Consts.ERROR_CODE_DATAACCESSEXCEPTION, Consts.ERROR_CODE_DATAACCESSEXCEPTION, e);
 		}
 	}
 
@@ -94,23 +88,18 @@ public class SysOperatorDao
 
 		if (count < 1)
 		{
-			throw new LittleCatException(ErrorCode.OldPwdIsError.getCode(), ErrorCode.OldPwdIsError.getMsg());
+			throw new LittleCatException(Consts.ERROR_CODE_OLDPWDISERROR, Consts.ERROR_CODE_OLDPWDISERROR);
 		}
 
 		sql = "update " + TABLE_NAME + " set password = password(?) where id = ?";
 
 		try
 		{
-			int ret = jdbcTemplate.update(sql, new Object[] { pwd, id });
-
-			if (ret != 1)
-			{
-				throw new LittleCatException(ErrorCode.UpdateObjectToDBError.getCode(), ErrorCode.UpdateObjectToDBError.getMsg().replace("{INFO_NAME}", MODEL_NAME));
-			}
+			jdbcTemplate.update(sql, new Object[] { pwd, id });
 		}
 		catch (DataAccessException e)
 		{
-			throw new LittleCatException(ErrorCode.DataAccessException.getCode(), ErrorCode.DataAccessException.getMsg(), e);
+			throw new LittleCatException(Consts.ERROR_CODE_DATAACCESSEXCEPTION, Consts.ERROR_CODE_DATAACCESSEXCEPTION, e);
 		}
 	}
 
@@ -125,21 +114,16 @@ public class SysOperatorDao
 
 		try
 		{
-			int ret = jdbcTemplate.update(sql, new Object[] { mo.getId(), mo.getUsername(), mo.getPassword(), mo.getName(), mo.getWxCode(), mo.getEmail(), mo.getMobile() });
-
-			if (ret != 1)
-			{
-				throw new LittleCatException(ErrorCode.InsertObjectToDBError.getCode(), ErrorCode.InsertObjectToDBError.getMsg().replace("{INFO_NAME}", MODEL_NAME));
-			}
+			jdbcTemplate.update(sql, new Object[] { mo.getId(), mo.getUsername(), mo.getPassword(), mo.getName(), mo.getWxCode(), mo.getEmail(), mo.getMobile() });
 		}
 		catch (DataAccessException e)
 		{
-			if(e.getMessage().contains("Duplicate"))
+			if (e.getMessage().contains("Duplicate"))
 			{
-				throw new LittleCatException(ErrorCode.DuplicateError.getCode(), ErrorCode.DuplicateError.getMsg(), e);
+				throw new LittleCatException(Consts.ERROR_CODE_DUPLICATE, Consts.ERROR_CODE_DUPLICATE, e);
 			}
-			
-			throw new LittleCatException(ErrorCode.DataAccessException.getCode(), ErrorCode.DataAccessException.getMsg(), e);
+
+			throw new LittleCatException(Consts.ERROR_CODE_OLDPWDISERROR, Consts.ERROR_CODE_OLDPWDISERROR);
 		}
 
 		return mo.getId();
@@ -151,21 +135,16 @@ public class SysOperatorDao
 
 		try
 		{
-			int ret = jdbcTemplate.update(sql, new Object[] { mo.getName(), mo.getWxCode(), mo.getEmail(), mo.getMobile(), mo.getId() });
-
-			if (ret != 1)
-			{
-				throw new LittleCatException(ErrorCode.UpdateObjectToDBError.getCode(), ErrorCode.UpdateObjectToDBError.getMsg().replace("{INFO_NAME}", MODEL_NAME));
-			}
+			jdbcTemplate.update(sql, new Object[] { mo.getName(), mo.getWxCode(), mo.getEmail(), mo.getMobile(), mo.getId() });
 		}
 		catch (DataAccessException e)
 		{
-			if(e.getMessage().contains("Duplicate"))
+			if (e.getMessage().contains("Duplicate"))
 			{
-				throw new LittleCatException(ErrorCode.DuplicateError.getCode(), ErrorCode.DuplicateError.getMsg(), e);
+				throw new LittleCatException(Consts.ERROR_CODE_DUPLICATE, Consts.ERROR_CODE_DUPLICATE, e);
 			}
-			
-			throw new LittleCatException(ErrorCode.DataAccessException.getCode(), ErrorCode.DataAccessException.getMsg(), e);
+
+			throw new LittleCatException(Consts.ERROR_CODE_DATAACCESSEXCEPTION, Consts.ERROR_CODE_DATAACCESSEXCEPTION, e);
 		}
 	}
 

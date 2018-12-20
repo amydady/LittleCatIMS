@@ -7,8 +7,8 @@ import org.springframework.dao.DataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Component;
 
+import com.littlecat.cbb.common.Consts;
 import com.littlecat.cbb.exception.LittleCatException;
-import com.littlecat.common.consts.ErrorCode;
 import com.littlecat.common.consts.TableName;
 import com.littlecat.system.model.SysParamMO;
 
@@ -16,32 +16,21 @@ import com.littlecat.system.model.SysParamMO;
 public class SysParamDao
 {
 	private final String TABLE_NAME = TableName.SysParam.getName();
-	private final String MODEL_NAME = SysParamMO.class.getSimpleName();
 
 	@Autowired
 	protected JdbcTemplate jdbcTemplate;
 
 	public void modify(SysParamMO mo) throws LittleCatException
 	{
-		if (mo == null)
-		{
-			throw new LittleCatException(ErrorCode.RequestObjectIsNull.getCode(), ErrorCode.RequestObjectIsNull.getMsg().replace("{INFO_NAME}", MODEL_NAME));
-		}
-
 		String sql = "update " + TABLE_NAME + " set value = ? where name = ?";
 
 		try
 		{
-			int ret = jdbcTemplate.update(sql, new Object[] { mo.getValue(), mo.getName() });
-
-			if (ret != 1)
-			{
-				throw new LittleCatException(ErrorCode.UpdateObjectToDBError.getCode(), ErrorCode.UpdateObjectToDBError.getMsg().replace("{INFO_NAME}", MODEL_NAME));
-			}
+			jdbcTemplate.update(sql, new Object[] { mo.getValue(), mo.getName() });
 		}
 		catch (DataAccessException e)
 		{
-			throw new LittleCatException(ErrorCode.DataAccessException.getCode(), ErrorCode.DataAccessException.getMsg(), e);
+			throw new LittleCatException(Consts.ERROR_CODE_DATAACCESSEXCEPTION, Consts.ERROR_CODE_DATAACCESSEXCEPTION, e);
 		}
 	}
 
@@ -55,7 +44,7 @@ public class SysParamDao
 		}
 		catch (DataAccessException e)
 		{
-			throw new LittleCatException(ErrorCode.DataAccessException.getCode(), ErrorCode.DataAccessException.getMsg(), e);
+			throw new LittleCatException(Consts.ERROR_CODE_DATAACCESSEXCEPTION, Consts.ERROR_CODE_DATAACCESSEXCEPTION, e);
 		}
 	}
 
@@ -69,7 +58,7 @@ public class SysParamDao
 		}
 		catch (DataAccessException e)
 		{
-			throw new LittleCatException(ErrorCode.DataAccessException.getCode(), ErrorCode.DataAccessException.getMsg(), e);
+			throw new LittleCatException(Consts.ERROR_CODE_DATAACCESSEXCEPTION, Consts.ERROR_CODE_DATAACCESSEXCEPTION, e);
 		}
 	}
 }

@@ -1,12 +1,12 @@
 package com.littlecat.common.consts;
 
 /**
- * 错误码信息
+ * 系统参数名称
  * 
  * @author amydady
  *
  */
-public enum ErrorCode
+public enum SysParamName
 {
 	
 }

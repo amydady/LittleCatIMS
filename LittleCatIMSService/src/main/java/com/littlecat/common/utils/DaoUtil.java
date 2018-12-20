@@ -15,8 +15,6 @@ import com.littlecat.cbb.common.Consts;
 import com.littlecat.cbb.exception.LittleCatException;
 import com.littlecat.cbb.query.QueryParam;
 import com.littlecat.cbb.utils.CollectionUtil;
-import com.littlecat.cbb.utils.StringUtil;
-import com.littlecat.common.consts.ErrorCode;
 
 public final class DaoUtil
 {
@@ -38,34 +36,20 @@ public final class DaoUtil
 
 	public static void delete(String tableName, String id, JdbcTemplate jdbcTemplate) throws LittleCatException
 	{
-		if (StringUtil.isEmpty(id))
-		{
-			throw new LittleCatException(ErrorCode.DeleteObjectWithEmptyId.getCode(), ErrorCode.DeleteObjectWithEmptyId.getMsg().replace("{INFO_NAME}", tableName));
-		}
-
 		String sql = "delete from " + tableName + " where id = ?";
 
 		try
 		{
-			int ret = jdbcTemplate.update(sql, new Object[] { id });
-			if (ret > 1)
-			{
-				throw new LittleCatException(ErrorCode.DeleteObjectWithIdError.getCode(), ErrorCode.DeleteObjectWithIdError.getMsg().replace("{INFO_NAME}", tableName) + "id=" + id);
-			}
+			jdbcTemplate.update(sql, new Object[] { id });
 		}
 		catch (DataAccessException e)
 		{
-			throw new LittleCatException(ErrorCode.DataAccessException.getCode(), ErrorCode.DataAccessException.getMsg(), e);
+			throw new LittleCatException(Consts.ERROR_CODE_DATAACCESSEXCEPTION, Consts.ERROR_CODE_DATAACCESSEXCEPTION, e);
 		}
 	}
 
 	public static void delete(String tableName, List<String> ids, JdbcTemplate jdbcTemplate) throws LittleCatException
 	{
-		if (CollectionUtil.isEmpty(ids))
-		{
-			throw new LittleCatException(ErrorCode.DeleteObjectWithEmptyId.getCode(), ErrorCode.DeleteObjectWithEmptyId.getMsg().replace("{INFO_NAME}", tableName));
-		}
-
 		NamedParameterJdbcTemplate namedParameterJdbcTemplate = new NamedParameterJdbcTemplate(jdbcTemplate);
 
 		String sql = "delete from " + tableName + " where id in (:ids)";
@@ -78,40 +62,26 @@ public final class DaoUtil
 		}
 		catch (DataAccessException e)
 		{
-			throw new LittleCatException(ErrorCode.DataAccessException.getCode(), ErrorCode.DataAccessException.getMsg(), e);
+			throw new LittleCatException(Consts.ERROR_CODE_DATAACCESSEXCEPTION, Consts.ERROR_CODE_DATAACCESSEXCEPTION, e);
 		}
 	}
 
 	public static void disable(String tableName, String id, JdbcTemplate jdbcTemplate) throws LittleCatException
 	{
-		if (StringUtil.isEmpty(id))
-		{
-			throw new LittleCatException(ErrorCode.DisableObjectWithEmptyId.getCode(), ErrorCode.DisableObjectWithEmptyId.getMsg().replace("{INFO_NAME}", tableName));
-		}
-
 		String sql = "update " + tableName + " set " + FIELD_NAME_ENABLE + " = 'N' where id = ?";
 
 		try
 		{
-			int ret = jdbcTemplate.update(sql, new Object[] { id });
-			if (ret > 1)
-			{
-				throw new LittleCatException(ErrorCode.DisableObjectWithIdError.getCode(), ErrorCode.DisableObjectWithIdError.getMsg().replace("{INFO_NAME}", tableName) + "id=" + id);
-			}
+			jdbcTemplate.update(sql, new Object[] { id });
 		}
 		catch (DataAccessException e)
 		{
-			throw new LittleCatException(ErrorCode.DataAccessException.getCode(), ErrorCode.DataAccessException.getMsg(), e);
+			throw new LittleCatException(Consts.ERROR_CODE_DATAACCESSEXCEPTION, Consts.ERROR_CODE_DATAACCESSEXCEPTION, e);
 		}
 	}
 
 	public static void disable(String tableName, List<String> ids, JdbcTemplate jdbcTemplate) throws LittleCatException
 	{
-		if (CollectionUtil.isEmpty(ids))
-		{
-			throw new LittleCatException(ErrorCode.DisableObjectWithEmptyId.getCode(), ErrorCode.DisableObjectWithEmptyId.getMsg().replace("{INFO_NAME}", tableName));
-		}
-
 		NamedParameterJdbcTemplate namedParameterJdbcTemplate = new NamedParameterJdbcTemplate(jdbcTemplate);
 
 		String sql = "update " + tableName + " set " + FIELD_NAME_ENABLE + " = 'N' where id in (:ids)";
@@ -125,40 +95,26 @@ public final class DaoUtil
 		}
 		catch (DataAccessException e)
 		{
-			throw new LittleCatException(ErrorCode.DataAccessException.getCode(), ErrorCode.DataAccessException.getMsg(), e);
+			throw new LittleCatException(Consts.ERROR_CODE_DATAACCESSEXCEPTION, Consts.ERROR_CODE_DATAACCESSEXCEPTION, e);
 		}
 	}
 
 	public static void enable(String tableName, String id, JdbcTemplate jdbcTemplate) throws LittleCatException
 	{
-		if (StringUtil.isEmpty(id))
-		{
-			throw new LittleCatException(ErrorCode.EnableObjectWithEmptyId.getCode(), ErrorCode.EnableObjectWithEmptyId.getMsg().replace("{INFO_NAME}", tableName));
-		}
-
 		String sql = "update " + tableName + " set " + FIELD_NAME_ENABLE + " = 'Y' where id = ?";
 
 		try
 		{
-			int ret = jdbcTemplate.update(sql, new Object[] { id });
-			if (ret > 1)
-			{
-				throw new LittleCatException(ErrorCode.EnableObjectWithIdError.getCode(), ErrorCode.EnableObjectWithIdError.getMsg().replace("{INFO_NAME}", tableName) + "id=" + id);
-			}
+			jdbcTemplate.update(sql, new Object[] { id });
 		}
 		catch (DataAccessException e)
 		{
-			throw new LittleCatException(ErrorCode.DataAccessException.getCode(), ErrorCode.DataAccessException.getMsg(), e);
+			throw new LittleCatException(Consts.ERROR_CODE_DATAACCESSEXCEPTION, Consts.ERROR_CODE_DATAACCESSEXCEPTION, e);
 		}
 	}
 
 	public static void enable(String tableName, List<String> ids, JdbcTemplate jdbcTemplate) throws LittleCatException
 	{
-		if (CollectionUtil.isEmpty(ids))
-		{
-			throw new LittleCatException(ErrorCode.EnableObjectWithEmptyId.getCode(), ErrorCode.EnableObjectWithEmptyId.getMsg().replace("{INFO_NAME}", tableName));
-		}
-
 		NamedParameterJdbcTemplate namedParameterJdbcTemplate = new NamedParameterJdbcTemplate(jdbcTemplate);
 
 		String sql = "update " + tableName + " set " + FIELD_NAME_ENABLE + " = 'Y' where id in (:ids)";
@@ -172,7 +128,7 @@ public final class DaoUtil
 		}
 		catch (DataAccessException e)
 		{
-			throw new LittleCatException(ErrorCode.DataAccessException.getCode(), ErrorCode.DataAccessException.getMsg(), e);
+			throw new LittleCatException(Consts.ERROR_CODE_DATAACCESSEXCEPTION, Consts.ERROR_CODE_DATAACCESSEXCEPTION, e);
 		}
 	}
 
@@ -186,7 +142,7 @@ public final class DaoUtil
 		}
 		catch (DataAccessException e)
 		{
-			throw new LittleCatException(ErrorCode.DataAccessException.getCode(), ErrorCode.DataAccessException.getMsg(), e);
+			throw new LittleCatException(Consts.ERROR_CODE_DATAACCESSEXCEPTION, Consts.ERROR_CODE_DATAACCESSEXCEPTION, e);
 		}
 	}
 
@@ -194,7 +150,7 @@ public final class DaoUtil
 	{
 		if (queryParam == null)
 		{
-			throw new LittleCatException(ErrorCode.QueryParamIsNull.getCode(), ErrorCode.QueryParamIsNull.getMsg().replace("{INFO_NAME}", tableName));
+			throw new LittleCatException(Consts.ERROR_CODE_QUERYPARAMISNULL, Consts.ERROR_CODE_QUERYPARAMISNULL);
 		}
 
 		if (mos == null)
@@ -210,7 +166,7 @@ public final class DaoUtil
 		}
 		catch (DataAccessException e)
 		{
-			throw new LittleCatException(ErrorCode.DataAccessException.getCode(), ErrorCode.DataAccessException.getMsg(), e);
+			throw new LittleCatException(Consts.ERROR_CODE_DATAACCESSEXCEPTION, Consts.ERROR_CODE_DATAACCESSEXCEPTION, e);
 		}
 
 		return DaoUtil.getTotalNum(tableName, queryParam, jdbcTemplate);
@@ -220,7 +176,7 @@ public final class DaoUtil
 	{
 		if (queryParam == null)
 		{
-			throw new LittleCatException(ErrorCode.QueryParamIsNull.getCode(), ErrorCode.QueryParamIsNull.getMsg().replace("{INFO_NAME}", tableName));
+			throw new LittleCatException(Consts.ERROR_CODE_QUERYPARAMISNULL, Consts.ERROR_CODE_QUERYPARAMISNULL);
 		}
 
 		List<T_MO> mos = new ArrayList<T_MO>();
@@ -249,7 +205,7 @@ public final class DaoUtil
 		}
 		catch (DataAccessException e)
 		{
-			throw new LittleCatException(ErrorCode.DataAccessException.getCode(), ErrorCode.DataAccessException.getMsg(), e);
+			throw new LittleCatException(Consts.ERROR_CODE_DATAACCESSEXCEPTION, Consts.ERROR_CODE_DATAACCESSEXCEPTION, e);
 		}
 	}
 }

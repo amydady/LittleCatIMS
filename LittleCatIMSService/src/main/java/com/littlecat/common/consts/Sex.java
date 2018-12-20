@@ -6,14 +6,14 @@ package com.littlecat.common.consts;
  * @author amydady
  *
  */
-public enum SexEnum
+public enum Sex
 {
 	male("男"), // 男
 	female("女"); // 女
 
 	private String displayName;
 
-	SexEnum(String displayName)
+	Sex(String displayName)
 	{
 		this.setDisplayName(displayName);
 	}
