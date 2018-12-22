@@ -35,7 +35,7 @@
             </div>
 
             <div class="col" align="right">
-                <button type="button" class="btn btn-primary" ng-click="add()">添 加</button>
+                <button type="button" class="btn btn-primary" ng-click="onLoadDetail('')">添 加</button>
                 <button type="button" class="btn btn-success" ng-click='onEnable()' ng-hide='needHideEnable'>生 效</button>
                 <button type="button" class="btn btn-danger" ng-click='onDisable()' ng-hide='needHideDisable'>失 效</button>
             </div>
@@ -71,7 +71,7 @@
                             <td><input type="checkbox"></td>
                             <td>{{ $index + 1 }}</td>
                             <td ng-hide={{true}}>{{x.id}}</td>
-                            <th scope="row"><a href="XiaoQuAreaDetail.html?id={{x.id}}">{{x.name}}</a></th>
+                            <th scope="row"><a href="#" ng-click="onLoadDetail({{x.id}})">{{x.name}}</a></th>
                         </tr>
                     </tbody>
                 </table>
@@ -97,6 +97,49 @@
                     <button type="button" class="btn btn-secondary" data-dismiss="modal">确 定</button>
                 </div>
             </div>
+        </div>
+    </div>
+
+    <div id='detailModal' class="modal fade bd-example-modal-lg" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel"
+        aria-hidden="true">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalLabel">小区区域编辑</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+
+                <div class="modal-body">
+                    <form>
+                        <div class="form-group row">
+                            <label for="inputName" class="col-sm-2 col-form-label">名称</label>
+                            <div class="col-sm-4">
+                                <input type="text" class="form-control" id="inputName" ng-model="detailInfo.name">
+                            </div>
+
+                            <label for="inputName" class="col-sm-2 col-form-label">生效</label>
+                            <div class="col-sm-4">
+                                <input type="text" class="form-control" id="inputFee" readonly ng-model="detailInfo.enableV">
+                            </div>
+
+                        </div>
+
+                    </form>
+                </div>
+
+                <div class="modal-footer">
+                    <div id='cityMgrAlertInfo'>
+
+                    </div>
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">关 闭</button>
+                    <button type="button" class="btn btn-primary" ng-click="saveData()" data-dismiss="modal">{{isAdd?'新
+                        增':'修 改'}}
+                    </button>
+                </div>
+            </div>
+
         </div>
     </div>
 
@@ -190,6 +233,31 @@
 
 
             };
+
+            $scope.onLoadDetail = function (id) {
+
+                if (StringUtil.isNotEmpty(id)) {
+                    $http.get(CommonConfig.RestBaseUrl.IMSService + 'xiaoquarea/getbyid?id=' + id)
+                        .then(function (result) {  //正确请求成功时处理
+                            $scope.detailInfo = result.data.data[0];
+                            $scope.detailInfo.enableV = $scope.detailInfo.enable == 'Y' ? '是' : '否';
+                            $scope.isAdd = false;
+                        }).catch(function (result) { //捕捉错误处理
+                            console.log(result);
+                        });
+                }
+                else {
+                    $scope.detailInfo = {
+                        name: '',
+                        enableV: '是'
+                    };
+
+                    $scope.isAdd = true;
+                }
+                $('#detailModal').modal('show');
+
+            };
+
 
             $scope.onEnableTabClick = function () {
                 $scope.needHideEnable = true;
