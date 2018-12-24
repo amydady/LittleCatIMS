@@ -22,6 +22,7 @@ public class XiaoQuDao
 	protected JdbcTemplate jdbcTemplate;
 
 	private final String TABLE_NAME = TableName.XiaoQu.getName();
+	private final String TABLE_NAME_XIAOQUAREA = TableName.XiaoQuArea.getName();
 
 	public XiaoQuMO getById(String id) throws LittleCatException
 	{
@@ -55,11 +56,11 @@ public class XiaoQuDao
 			mo.setId(UUIDUtil.createUUID());
 		}
 
-		String sql = "insert into " + TABLE_NAME + "(id,area,name,code) values(?,?,?,?)";
+		String sql = "insert into " + TABLE_NAME + "(id,area,name) values(?,?,?,?)";
 
 		try
 		{
-			jdbcTemplate.update(sql, new Object[] { mo.getId(), mo.getArea(), mo.getName(), mo.getCode() });
+			jdbcTemplate.update(sql, new Object[] { mo.getId(), mo.getArea(), mo.getName() });
 		}
 		catch (DataAccessException e)
 		{
@@ -71,11 +72,11 @@ public class XiaoQuDao
 
 	public void modify(XiaoQuMO mo) throws LittleCatException
 	{
-		String sql = "update " + TABLE_NAME + " set name = ?,area = ?,code = ? where id = ?";
+		String sql = "update " + TABLE_NAME + " set name = ?,area = ? where id = ?";
 
 		try
 		{
-			jdbcTemplate.update(sql, new Object[] { mo.getName(), mo.getArea(), mo.getCode(), mo.getId() });
+			jdbcTemplate.update(sql, new Object[] { mo.getName(), mo.getArea(), mo.getId() });
 		}
 		catch (DataAccessException e)
 		{
@@ -83,13 +84,28 @@ public class XiaoQuDao
 		}
 	}
 
-	public List<XiaoQuMO> getListByArea(String area) throws LittleCatException
+	public List<XiaoQuMO> getList(String area, String name, String enable) throws LittleCatException
 	{
-		String sql = "select * from  " + TABLE_NAME + " where area = ?";
+		StringBuilder sql = new StringBuilder()
+				.append("select a.*,b.name areaName from  " + TABLE_NAME + " a ")
+				.append(" left join " + TABLE_NAME_XIAOQUAREA + " b on a.area=b.id ")
+				.append(" where a.enable = ?  ");
+
+		if (!"-1".equals(area))
+		{
+			sql.append(" and a.area ='" + area + "'");
+		}
+
+		if (StringUtil.isNotEmpty(name))
+		{
+			sql.append(" and a.name like '%" + name + "%' ");
+		}
+
+		sql.append(" order by a.name");
 
 		try
 		{
-			return jdbcTemplate.query(sql, new Object[] { area }, new XiaoQuMO.MOMapper());
+			return jdbcTemplate.query(sql.toString(), new Object[] { enable }, new XiaoQuMO.MOMapper());
 		}
 		catch (DataAccessException e)
 		{

@@ -89,7 +89,7 @@ public class XiaoQuAreaDao
 
 		if (StringUtil.isNotEmpty(name))
 		{
-			sql += " and name like '%" + name + "'%";
+			sql += " and name like '%" + name + "%'";
 		}
 
 		try

@@ -17,8 +17,11 @@ public class XiaoQuMO extends BaseMO
 {
 	private String area;
 	private String name;
-	private String code;
 	private String enable;
+
+	// just for view
+
+	private String areaName;
 
 	public String getArea()
 	{
@@ -40,16 +43,6 @@ public class XiaoQuMO extends BaseMO
 		this.name = name;
 	}
 
-	public String getCode()
-	{
-		return code;
-	}
-
-	public void setCode(String code)
-	{
-		this.code = code;
-	}
-
 	public String getEnable()
 	{
 		return enable;
@@ -59,7 +52,17 @@ public class XiaoQuMO extends BaseMO
 	{
 		this.enable = enable;
 	}
-	
+
+	public String getAreaName()
+	{
+		return areaName;
+	}
+
+	public void setAreaName(String areaName)
+	{
+		this.areaName = areaName;
+	}
+
 	public static class MOMapper implements RowMapper<XiaoQuMO>
 	{
 		@Override
@@ -69,8 +72,16 @@ public class XiaoQuMO extends BaseMO
 			mo.setId(rs.getString("id"));
 			mo.setArea(rs.getString("area"));
 			mo.setName(rs.getString("name"));
-			mo.setCode(rs.getString("code"));
 			mo.setEnable(rs.getString("enable"));
+
+			try
+			{
+				mo.setAreaName(rs.getString("areaName"));
+			}
+			catch (Exception e)
+			{
+
+			}
 			return mo;
 		}
 	}

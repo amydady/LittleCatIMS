@@ -9,7 +9,7 @@
     <!-- Bootstrap CSS -->
     <link rel="stylesheet" href="../lib/bootstrap/css/bootstrap.min.css">
 
-    <title>小区区域管理</title>
+    <title>小区管理</title>
 </head>
 
 <body ng-app="myApp" ng-controller="myCtrl">
@@ -17,7 +17,7 @@
         <!-- 页面标题 -->
         <div class="row" style="height:60px">
             <div class="col">
-                <h4>小区区域管理</h4>
+                <h4>小区管理</h4>
             </div>
         </div>
 
@@ -26,6 +26,11 @@
         <div class="row">
             <div class="col-3">
                 <div class="input-group">
+                    <select class="form-control" ng-model="search.area" ng-change="onSearchAreaChanged()">
+                        <option value="-1">请选择区域……</option>
+                        <option ng-repeat="x in areaListData" value="{{x.id}}">{{x.name}}</option>
+                    </select>
+                    &nbsp;
                     <input type="text" class="form-control is-valid" id="inputSearchName" placeholder="名称" ng-keyup="enterEvent($event)"
                         ng-model="search.name">
                     <div class="input-group-prepend">
@@ -63,6 +68,7 @@
                             <th scope="col"><input type="checkbox" id="cbxSelectAllOrCancel" ng-click="onSelectAllOrCancel()"></th>
                             <th scope="col">序 号</th>
                             <th scope="col" ng-hide={{true}}>ID</th>
+                            <th scope="col">区 域</th>
                             <th scope="col">名 称</th>
                         </tr>
                     </thead>
@@ -71,6 +77,7 @@
                             <td><input type="checkbox"></td>
                             <td>{{ $index + 1 }}</td>
                             <td ng-hide={{true}}>{{x.id}}</td>
+                            <td>{{x.areaName}}</td>
                             <th scope="row"><a href="#" ng-click="onLoadDetail(x.id)">{{x.name}}</a></th>
                         </tr>
                     </tbody>
@@ -105,7 +112,7 @@
         <div class="modal-dialog modal-lg">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h5 class="modal-title" id="exampleModalLabel">小区区域编辑</h5>
+                    <h5 class="modal-title" id="exampleModalLabel">小区编辑</h5>
                     <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                         <span aria-hidden="true">&times;</span>
                     </button>
@@ -113,6 +120,16 @@
 
                 <div class="modal-body">
                     <form>
+                        <div class="form-group row">
+                            <label for="inputName" class="col-sm-2 col-form-label">区域</label>
+                            <div class="col-sm-4">
+                                <select class="form-control" ng-model="detailInfo.area">
+                                    <option value="-1">请选择区域……</option>
+                                    <option ng-repeat="x in areaListData" value="{{x.id}}">{{x.name}}</option>
+                                </select>
+                            </div>
+
+                        </div>
                         <div class="form-group row">
                             <label for="inputName" class="col-sm-2 col-form-label">名称</label>
                             <div class="col-sm-4">
@@ -130,9 +147,6 @@
                 </div>
 
                 <div class="modal-footer">
-                    <div id='cityMgrAlertInfo'>
-
-                    </div>
                     <button type="button" class="btn btn-secondary" data-dismiss="modal">关 闭</button>
                     <button type="button" class="btn btn-primary" ng-click="saveData()" data-dismiss="modal">{{isAdd?'新
                         增':'修 改'}}
@@ -160,8 +174,22 @@
                 name: ''
             };
 
+            $scope.getAreaListData = function () {
+                $http.get(CommonConfig.RestBaseUrl.IMSService + 'xiaoquarea/getList?name=&enable=Y')
+                    .then(function (result) {  //正确请求成功时处理
+                        $scope.areaListData = result.data.data;
+                    }).catch(function (result) { //捕捉错误处理
+                        console.log(result);
+                    });
+            };
+
+            $scope.onSearchAreaChanged=function(){
+                $scope.getData();
+            };
+
+
             $scope.getData = function () {
-                $http.get(CommonConfig.RestBaseUrl.IMSService + 'xiaoquarea/getList?name=' + $scope.search.name + '&enable=' + $scope.enable)
+                $http.get(CommonConfig.RestBaseUrl.IMSService + 'xiaoqu/getList?area=' + $scope.search.area + '&name=' + $scope.search.name + '&enable=' + $scope.enable)
                     .then(function (result) {  //正确请求成功时处理
                         $scope.listData = result.data.data
 
@@ -198,7 +226,7 @@
                     return;
                 }
 
-                $http.put(CommonConfig.RestBaseUrl.IMSService + 'xiaoquarea/batchdisable', ids, CommonConfig.httpReqConfig)
+                $http.put(CommonConfig.RestBaseUrl.IMSService + 'xiaoqu/batchdisable', ids, CommonConfig.httpReqConfig)
                     .then(function (result) {  //正确请求成功时处理
                         console.log(result);
                         $scope.getData();
@@ -219,7 +247,7 @@
                     return;
                 }
 
-                $http.put(CommonConfig.RestBaseUrl.IMSService + 'xiaoquarea/batchenable', ids, CommonConfig.httpReqConfig)
+                $http.put(CommonConfig.RestBaseUrl.IMSService + 'xiaoqu/batchenable', ids, CommonConfig.httpReqConfig)
                     .then(function (result) {  //正确请求成功时处理
                         console.log(result);
                         $scope.getData();
@@ -234,11 +262,21 @@
             //     $scope.getData();
             // });
 
+            
+
+            $scope.initDetailInfo = function () {
+                $scope.detailInfo={
+                    area:'-1',
+                    name:'',
+                    enableV:'是'
+                };
+            };
+
             $scope.onLoadDetail = function (id) {
 
                 if (StringUtil.isNotEmpty(id)) {
                     $scope.isAdd = false;
-                    $http.get(CommonConfig.RestBaseUrl.IMSService + 'xiaoquarea/getbyid?id=' + id)
+                    $http.get(CommonConfig.RestBaseUrl.IMSService + 'xiaoqu/getbyid?id=' + id)
                         .then(function (result) {  //正确请求成功时处理
                             $scope.detailInfo = result.data.data[0];
                             $scope.detailInfo.enableV = $scope.detailInfo.enable == 'Y' ? '是' : '否';
@@ -248,10 +286,7 @@
                         });
                 }
                 else {
-                    $scope.detailInfo = {
-                        name: '',
-                        enableV: '是'
-                    };
+                    $scope.initDetailInfo();
 
                     $scope.isAdd = true;
                 }
@@ -262,7 +297,7 @@
             $scope.saveData = function () {
                 if ($scope.isAdd) {//新增
 
-                    $http.post(CommonConfig.RestBaseUrl.IMSService + 'xiaoquarea/add', $scope.detailInfo, CommonConfig.httpReqConfig)
+                    $http.post(CommonConfig.RestBaseUrl.IMSService + 'xiaoqu/add', $scope.detailInfo, CommonConfig.httpReqConfig)
                         .then(function (result) {  //正确请求成功时处理
                             console.log('saveData:result', result);
 
@@ -283,7 +318,7 @@
                         });
                 }
                 else {//修改
-                    $http.put(CommonConfig.RestBaseUrl.IMSService + 'xiaoquarea/modify', $scope.detailInfo, CommonConfig.httpReqConfig)
+                    $http.put(CommonConfig.RestBaseUrl.IMSService + 'xiaoqu/modify', $scope.detailInfo, CommonConfig.httpReqConfig)
                         .then(function (result) {  //正确请求成功时处理
                             if (result.data.code != 'NONE_ERROR') {
                                 $scope.modalContent = '修改失败！';
@@ -331,6 +366,9 @@
             $scope.enable = "Y";
             $scope.needHideEnable = true;
             $scope.needHideDisable = false;
+            $scope.search.area = '-1';
+
+            $scope.getAreaListData();
             $scope.getData();
         });
     </script>

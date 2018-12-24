@@ -5,6 +5,7 @@ import java.util.List;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.lang.Nullable;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -106,14 +107,14 @@ public class XiaoQuController
 		return result;
 	}
 
-	@GetMapping(value = "/getListByArea")
-	public RestRsp<XiaoQuMO> getListByArea(@RequestParam String area)
+	@GetMapping(value = "/getList")
+	public RestRsp<XiaoQuMO> getList(@RequestParam String area,@RequestParam @Nullable String name,@RequestParam String enable)
 	{
 		RestRsp<XiaoQuMO> result = new RestRsp<XiaoQuMO>();
 
 		try
 		{
-			result.getData().addAll(xiaoQuBusiness.getListByArea(area));
+			result.getData().addAll(xiaoQuBusiness.getList(area,name,enable));
 		}
 		catch (LittleCatException e)
 		{
