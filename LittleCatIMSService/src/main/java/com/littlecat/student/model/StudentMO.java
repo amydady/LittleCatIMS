@@ -1,26 +1,27 @@
 package com.littlecat.student.model;
 
+import java.sql.ResultSet;
+import java.sql.SQLException;
+
+import org.springframework.jdbc.core.RowMapper;
+
 import com.littlecat.cbb.common.BaseMO;
-import com.littlecat.common.consts.Sex;
+import com.littlecat.cbb.utils.StringUtil;
 
 public class StudentMO extends BaseMO
 {
 	private String name;
-	private Sex sex;
-	private String birthdayYear;
-	private String birthdayMonth;
-	private String birthdayDay;
-	private String babaName;
-	private String babaMobile;
-	private String mamaName;
-	private String mamaMobile;
+	private String mobile;
 	private String xuexiao;
 	private String nianji;
 	private String banji;
 	private String xiaoqu;
-	private String hobby;
 	private String remark;
+	private String enable;
 	private String createTime;
+	
+
+	private String enableV;
 
 	public String getName()
 	{
@@ -32,84 +33,14 @@ public class StudentMO extends BaseMO
 		this.name = name;
 	}
 
-	public Sex getSex()
+	public String getMobile()
 	{
-		return sex;
+		return mobile;
 	}
 
-	public void setSex(Sex sex)
+	public void setMobile(String mobile)
 	{
-		this.sex = sex;
-	}
-
-	public String getBirthdayYear()
-	{
-		return birthdayYear;
-	}
-
-	public void setBirthdayYear(String birthdayYear)
-	{
-		this.birthdayYear = birthdayYear;
-	}
-
-	public String getBirthdayMonth()
-	{
-		return birthdayMonth;
-	}
-
-	public void setBirthdayMonth(String birthdayMonth)
-	{
-		this.birthdayMonth = birthdayMonth;
-	}
-
-	public String getBirthdayDay()
-	{
-		return birthdayDay;
-	}
-
-	public void setBirthdayDay(String birthdayDay)
-	{
-		this.birthdayDay = birthdayDay;
-	}
-
-	public String getBabaName()
-	{
-		return babaName;
-	}
-
-	public void setBabaName(String babaName)
-	{
-		this.babaName = babaName;
-	}
-
-	public String getBabaMobile()
-	{
-		return babaMobile;
-	}
-
-	public void setBabaMobile(String babaMobile)
-	{
-		this.babaMobile = babaMobile;
-	}
-
-	public String getMamaName()
-	{
-		return mamaName;
-	}
-
-	public void setMamaName(String mamaName)
-	{
-		this.mamaName = mamaName;
-	}
-
-	public String getMamaMobile()
-	{
-		return mamaMobile;
-	}
-
-	public void setMamaMobile(String mamaMobile)
-	{
-		this.mamaMobile = mamaMobile;
+		this.mobile = mobile;
 	}
 
 	public String getXuexiao()
@@ -152,16 +83,6 @@ public class StudentMO extends BaseMO
 		this.xiaoqu = xiaoqu;
 	}
 
-	public String getHobby()
-	{
-		return hobby;
-	}
-
-	public void setHobby(String hobby)
-	{
-		this.hobby = hobby;
-	}
-
 	public String getRemark()
 	{
 		return remark;
@@ -180,6 +101,66 @@ public class StudentMO extends BaseMO
 	public void setCreateTime(String createTime)
 	{
 		this.createTime = createTime;
+	}
+	
+	
+	
+	public String getEnable()
+	{
+		return enable;
+	}
+
+	public void setEnable(String enable)
+	{
+		this.enable = enable;
+	}
+
+
+
+	public String getEnableV()
+	{
+		return enableV;
+	}
+
+	public void setEnableV(String enableV)
+	{
+		this.enableV = enableV;
+	}
+
+
+
+	public static class MOMapper implements RowMapper<StudentMO>
+	{
+		@Override
+		public StudentMO mapRow(ResultSet rs, int rowNum) throws SQLException
+		{
+			StudentMO mo = new StudentMO();
+
+			mo.setId(rs.getString("id"));
+			mo.setName(rs.getString("name"));
+			mo.setMobile(rs.getString("mobile"));
+			mo.setXuexiao(rs.getString("xuexiao"));
+			mo.setNianji(rs.getString("nianji"));
+			mo.setBanji(rs.getString("banji"));
+			mo.setXiaoqu(rs.getString("xiaoqu"));
+			mo.setEnable(rs.getString("enable"));
+			mo.setCreateTime(StringUtil.replace(rs.getString("createTime"), ".0", ""));
+			mo.setRemark(rs.getString("remark"));
+
+			// for display
+			mo.setEnableV(mo.enable.equals("Y") ? "是" : "否");
+
+			try
+			{
+
+			}
+			catch (Exception e)
+			{
+
+			}
+
+			return mo;
+		}
 	}
 
 }

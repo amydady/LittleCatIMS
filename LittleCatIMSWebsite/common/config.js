@@ -29,6 +29,5 @@ CommonConfig.fileUploadReqConfig = {
 
 // Rest接口基路径定义
 CommonConfig.RestBaseUrl = {
-    // CaoBaoService: 'http://47.100.218.102:8006/rest/littlecat/caobao/'
-    IMSService: 'http://localhost:10010/rest/littlecat/ims/'
+    IMSService: 'http://127.0.0.1:10010/rest/littlecat/ims/'
 };

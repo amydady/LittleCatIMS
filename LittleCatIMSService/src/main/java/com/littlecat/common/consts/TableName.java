@@ -17,6 +17,9 @@ public enum TableName
 	
 	XiaoQuArea("t_basic_xiaoquarea"),
 	XiaoQu("t_basic_xiaoqu"),
+	
+
+	Student("t_student"),
 	;
 
 	private String name;
