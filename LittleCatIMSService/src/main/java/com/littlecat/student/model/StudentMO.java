@@ -17,6 +17,7 @@ public class StudentMO extends BaseMO
 	private String banji;
 	private String xiaoqu;
 	private String remark;
+	private String tuijianren;
 	private String enable;
 	private String createTime;
 	
@@ -129,6 +130,18 @@ public class StudentMO extends BaseMO
 
 
 
+	public String getTuijianren()
+	{
+		return tuijianren;
+	}
+
+	public void setTuijianren(String tuijianren)
+	{
+		this.tuijianren = tuijianren;
+	}
+
+
+
 	public static class MOMapper implements RowMapper<StudentMO>
 	{
 		@Override
@@ -143,6 +156,7 @@ public class StudentMO extends BaseMO
 			mo.setNianji(rs.getString("nianji"));
 			mo.setBanji(rs.getString("banji"));
 			mo.setXiaoqu(rs.getString("xiaoqu"));
+			mo.setTuijianren(rs.getString("tuijianren"));
 			mo.setEnable(rs.getString("enable"));
 			mo.setCreateTime(StringUtil.replace(rs.getString("createTime"), ".0", ""));
 			mo.setRemark(rs.getString("remark"));

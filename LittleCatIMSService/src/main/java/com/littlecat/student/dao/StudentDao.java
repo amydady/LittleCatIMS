@@ -50,11 +50,11 @@ public class StudentDao
 			mo.setId(UUIDUtil.createUUID());
 		}
 
-		String sql = "insert into " + TABLE_NAME + "(id,name,mobile,xuexiao,nianji,banji,xiaoqu,remark) values(?,?,?,?,?,?,?,?)";
+		String sql = "insert into " + TABLE_NAME + "(id,name,mobile,xuexiao,nianji,banji,xiaoqu,tuijianren,remark) values(?,?,?,?,?,?,?,?,?)";
 
 		try
 		{
-			jdbcTemplate.update(sql, new Object[] { mo.getId(), mo.getName(), mo.getMobile(), mo.getXuexiao(), mo.getNianji(), mo.getBanji(), mo.getXiaoqu(), mo.getRemark() });
+			jdbcTemplate.update(sql, new Object[] { mo.getId(), mo.getName(), mo.getMobile(), mo.getXuexiao(), mo.getNianji(), mo.getBanji(), mo.getXiaoqu(),mo.getTuijianren(), mo.getRemark() });
 		}
 		catch (DataAccessException e)
 		{
@@ -66,11 +66,11 @@ public class StudentDao
 
 	public void modify(StudentMO mo) throws LittleCatException
 	{
-		String sql = "update " + TABLE_NAME + " set name=?,mobile=?,xuexiao=?,nianji=?,banji=?,xiaoqu=?,remark=? where id = ?";
+		String sql = "update " + TABLE_NAME + " set name=?,mobile=?,xuexiao=?,nianji=?,banji=?,xiaoqu=?,tuijianren=?,remark=? where id = ?";
 
 		try
 		{
-			jdbcTemplate.update(sql, new Object[] { mo.getName(), mo.getMobile(), mo.getXuexiao(), mo.getNianji(), mo.getBanji(), mo.getXiaoqu(), mo.getRemark(), mo.getId() });
+			jdbcTemplate.update(sql, new Object[] { mo.getName(), mo.getMobile(), mo.getXuexiao(), mo.getNianji(), mo.getBanji(), mo.getXiaoqu(),mo.getTuijianren(), mo.getRemark(), mo.getId() });
 		}
 		catch (DataAccessException e)
 		{

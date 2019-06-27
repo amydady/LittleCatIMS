@@ -8,6 +8,7 @@ CREATE TABLE `t_student` (
 	`nianji` VARCHAR(125) NULL,
 	`banji` VARCHAR(125) NULL,
 	`xiaoqu` VARCHAR(125) NULL,
+	`tuijianren` VARCHAR(125) NULL,
 	`enable` VARCHAR(1) NOT NULL DEFAULT 'Y',
 	`remark` VARCHAR(255) NULL,
 	`createTime` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,

@@ -27,7 +27,7 @@
 
             <div class="col-3">
                 <div class="input-group">
-                    <input type="text" class="form-control is-valid" id="inputSearchkey" ng-keyup="enterEvent($event)"
+                    <input type="text" class="form-control is-valid"  ng-keyup="enterEvent($event)"
                         ng-model="search.key">
                     <div class="input-group-prepend">
                         <button type="button" class="btn btn-outline-success" ng-click="onSearch()">查 询</button>
@@ -53,6 +53,7 @@
                             <th scope="col">年级</th>
                             <th scope="col">班级</th>
                             <th scope="col">小区</th>
+                            <th scope="col">推荐人</th>
                             <th scope="col">备注</th>
                             <th scope="col">创建时间</th>
                             <th scope="col">是否有效</th>
@@ -68,6 +69,7 @@
                             <td>{{x.nianji}}</td>
                             <td>{{x.banji}}</td>
                             <td>{{x.xiaoqu}}</td>
+                            <td>{{x.tuijianren}}</td>
                             <td>{{x.remark}}</td>
                             <td>{{x.createTime}}</td>
                             <td>{{x.enableV}}</td>
@@ -124,12 +126,16 @@
                         </div>
 
                         <div class="form-group row">
-                            <label for="inputName" class="col-sm-2 col-form-label">创建时间</label>
-                            <div class="col-sm-4">
+                                <label for="inputName" class="col-sm-1 col-form-label">推荐人</label>
+                                <div class="col-sm-3">
+                                    <input type="text" class="form-control" ng-model="detailInfo.tuijianren">
+                                </div>
+                            <label for="inputName" class="col-sm-1 col-form-label">创建时间</label>
+                            <div class="col-sm-3">
                                 <input type="text" class="form-control" readonly ng-model="detailInfo.createTime">
                             </div>
-                            <label for="inputName" class="col-sm-2 col-form-label">是否有效</label>
-                            <div class="col-sm-4">
+                            <label for="inputName" class="col-sm-1 col-form-label">是否有效</label>
+                            <div class="col-sm-3">
                                 <input type="text" class="form-control" readonly ng-model="detailInfo.enableV">
                             </div>
                         </div>
