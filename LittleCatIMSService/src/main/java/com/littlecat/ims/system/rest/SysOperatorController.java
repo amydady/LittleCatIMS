@@ -1,11 +1,11 @@
-package com.littlecat.student.rest;
+package com.littlecat.ims.system.rest;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.lang.Nullable;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -17,28 +17,108 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.littlecat.cbb.common.Consts;
 import com.littlecat.cbb.exception.LittleCatException;
+import com.littlecat.cbb.query.QueryParam;
 import com.littlecat.cbb.rest.RestRsp;
 import com.littlecat.cbb.rest.RestSimpleRsp;
-import com.littlecat.student.business.StudentBusiness;
-import com.littlecat.student.model.StudentMO;
+import com.littlecat.ims.system.business.SysOperatorBusiness;
+import com.littlecat.ims.system.model.ChangePasswordReqInfo;
+import com.littlecat.ims.system.model.LoginReqInfo;
+import com.littlecat.ims.system.model.SysOperatorMO;
 
 @RestController
-@RequestMapping("/rest/littlecat/ims/student")
-public class StudentController
+@RequestMapping("/rest/littlecat/caobao/sys/operator")
+public class SysOperatorController
 {
 	@Autowired
-	private StudentBusiness studentBusiness;
+	private SysOperatorBusiness sysOperatorBusiness;
 
-	private static final Logger logger = LoggerFactory.getLogger(StudentController.class);
+	private static final Logger logger = LoggerFactory.getLogger(SysOperatorController.class);
 
-	@PostMapping(value = "/add")
-	public RestRsp<String> add(@RequestBody StudentMO mo)
+	@PostMapping(value = "/login")
+	public RestRsp<SysOperatorMO> login(@RequestBody LoginReqInfo loginReqInfo)
 	{
-		RestRsp<String> result = new RestRsp<String>();
+		RestRsp<SysOperatorMO> result = new RestRsp<SysOperatorMO>();
 
 		try
 		{
-			result.getData().add(studentBusiness.add(mo));
+			SysOperatorMO mo = sysOperatorBusiness.login(loginReqInfo.getIdentity(), loginReqInfo.getPwd());
+			result.getData().add(mo);
+		}
+		catch (LittleCatException e)
+		{
+			result.setCode(e.getErrorCode());
+			result.setMessage(e.getMessage());
+			logger.error(e.getMessage(), e);
+		}
+		catch (Exception e)
+		{
+			result.setCode(Consts.ERROR_CODE_UNKNOW);
+			result.setMessage(e.getMessage());
+			logger.error(e.getMessage(), e);
+		}
+
+		return result;
+	}
+	
+	@PutMapping(value = "/resetPassword/{id}")
+	public RestSimpleRsp resetPassword(@PathVariable String id)
+	{
+		RestSimpleRsp result = new RestSimpleRsp();
+
+		try
+		{
+			sysOperatorBusiness.resetPassword(id);
+		}
+		catch (LittleCatException e)
+		{
+			result.setCode(e.getErrorCode());
+			result.setMessage(e.getMessage());
+			logger.error(e.getMessage(), e);
+		}
+		catch (Exception e)
+		{
+			result.setCode(Consts.ERROR_CODE_UNKNOW);
+			result.setMessage(e.getMessage());
+			logger.error(e.getMessage(), e);
+		}
+
+		return result;
+	}
+
+	@PostMapping(value = "/changepassword")
+	public RestSimpleRsp changePassword(@RequestBody ChangePasswordReqInfo req)
+	{
+		RestSimpleRsp result = new RestSimpleRsp();
+
+		try
+		{
+			sysOperatorBusiness.changePassword(req.getId(),req.getOldPwd(), req.getPwd());
+		}
+		catch (LittleCatException e)
+		{
+			result.setCode(e.getErrorCode());
+			result.setMessage(e.getMessage());
+			logger.error(e.getMessage(), e);
+		}
+		catch (Exception e)
+		{
+			result.setCode(Consts.ERROR_CODE_UNKNOW);
+			result.setMessage(e.getMessage());
+			logger.error(e.getMessage(), e);
+		}
+
+		return result;
+	}
+
+	@GetMapping(value = "/getbyid")
+	public RestRsp<SysOperatorMO> getById(@RequestParam String id)
+	{
+		RestRsp<SysOperatorMO> result = new RestRsp<SysOperatorMO>();
+
+		try
+		{
+			SysOperatorMO sysOperatorMO = sysOperatorBusiness.getById(id);
+			result.getData().add(sysOperatorMO);
 		}
 		catch (LittleCatException e)
 		{
@@ -57,13 +137,13 @@ public class StudentController
 	}
 
 	@PutMapping(value = "/modify")
-	public RestSimpleRsp modify(@RequestBody StudentMO mo)
+	public RestSimpleRsp modify(@RequestBody SysOperatorMO mo)
 	{
 		RestSimpleRsp result = new RestSimpleRsp();
 
 		try
 		{
-			studentBusiness.modify(mo);
+			sysOperatorBusiness.modify(mo);
 		}
 		catch (LittleCatException e)
 		{
@@ -81,14 +161,14 @@ public class StudentController
 		return result;
 	}
 
-	@GetMapping(value = "/getById")
-	public RestRsp<StudentMO> getById(@RequestParam String id)
+	@PostMapping(value = "/add")
+	public RestRsp<String> add(@RequestBody SysOperatorMO mo)
 	{
-		RestRsp<StudentMO> result = new RestRsp<StudentMO>();
+		RestRsp<String> result = new RestRsp<String>();
 
 		try
 		{
-			result.getData().add(studentBusiness.getById(id));
+			result.getData().add(sysOperatorBusiness.add(mo));
 		}
 		catch (LittleCatException e)
 		{
@@ -106,14 +186,17 @@ public class StudentController
 		return result;
 	}
 
-	@GetMapping(value = "/getList")
-	public RestRsp<StudentMO> getList(@RequestParam @Nullable String key)
+	@PostMapping(value = "/getList")
+	public RestRsp<SysOperatorMO> getList(@RequestBody QueryParam queryParam)
 	{
-		RestRsp<StudentMO> result = new RestRsp<StudentMO>();
+		RestRsp<SysOperatorMO> result = new RestRsp<SysOperatorMO>();
 
 		try
 		{
-			result.getData().addAll(studentBusiness.getList(key));
+			List<SysOperatorMO> mos = new ArrayList<SysOperatorMO>();
+			int totalNum = sysOperatorBusiness.getList(queryParam, mos);
+			result.setTotalNum(totalNum);
+			result.getData().addAll(mos);
 		}
 		catch (LittleCatException e)
 		{
@@ -138,7 +221,7 @@ public class StudentController
 
 		try
 		{
-			studentBusiness.disable(id);
+			sysOperatorBusiness.disable(id);
 		}
 		catch (LittleCatException e)
 		{
@@ -156,14 +239,14 @@ public class StudentController
 		return result;
 	}
 
-	@PutMapping(value = "/batchDisable")
+	@PutMapping(value = "/batchdisable")
 	public RestSimpleRsp batchDisable(@RequestBody List<String> ids)
 	{
 		RestSimpleRsp result = new RestSimpleRsp();
 
 		try
 		{
-			studentBusiness.disable(ids);
+			sysOperatorBusiness.disable(ids);
 		}
 		catch (LittleCatException e)
 		{
@@ -188,7 +271,7 @@ public class StudentController
 
 		try
 		{
-			studentBusiness.enable(id);
+			sysOperatorBusiness.enable(id);
 		}
 		catch (LittleCatException e)
 		{
@@ -206,14 +289,14 @@ public class StudentController
 		return result;
 	}
 
-	@PutMapping(value = "/batchEnable")
+	@PutMapping(value = "/batchenable")
 	public RestSimpleRsp batchEnable(@RequestBody List<String> ids)
 	{
 		RestSimpleRsp result = new RestSimpleRsp();
 
 		try
 		{
-			studentBusiness.enable(ids);
+			sysOperatorBusiness.enable(ids);
 		}
 		catch (LittleCatException e)
 		{
@@ -230,4 +313,5 @@ public class StudentController
 
 		return result;
 	}
+
 }

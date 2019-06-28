@@ -1,4 +1,4 @@
-package com.littlecat.student.dao;
+package com.littlecat.ims.student.dao;
 
 import java.util.List;
 
@@ -11,9 +11,9 @@ import com.littlecat.cbb.common.Consts;
 import com.littlecat.cbb.exception.LittleCatException;
 import com.littlecat.cbb.utils.StringUtil;
 import com.littlecat.cbb.utils.UUIDUtil;
-import com.littlecat.common.consts.TableName;
-import com.littlecat.common.utils.DaoUtil;
-import com.littlecat.student.model.StudentMO;
+import com.littlecat.ims.common.consts.TableName;
+import com.littlecat.ims.common.utils.DaoUtil;
+import com.littlecat.ims.student.model.StudentMO;
 
 @Component
 public class StudentDao

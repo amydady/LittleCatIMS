@@ -1,4 +1,4 @@
-package com.littlecat.student.business;
+package com.littlecat.ims.student.business;
 
 import java.util.List;
 
@@ -7,8 +7,8 @@ import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.littlecat.cbb.exception.LittleCatException;
-import com.littlecat.student.dao.StudentDao;
-import com.littlecat.student.model.StudentMO;
+import com.littlecat.ims.student.dao.StudentDao;
+import com.littlecat.ims.student.model.StudentMO;
 
 @Component
 @Transactional

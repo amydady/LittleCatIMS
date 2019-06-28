@@ -1,4 +1,4 @@
-package com.littlecat.common.consts;
+package com.littlecat.ims.common.consts;
 
 /**
  * 数据库表名

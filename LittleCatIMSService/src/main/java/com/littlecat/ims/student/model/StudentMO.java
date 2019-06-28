@@ -1,4 +1,4 @@
-package com.littlecat.student.model;
+package com.littlecat.ims.student.model;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
