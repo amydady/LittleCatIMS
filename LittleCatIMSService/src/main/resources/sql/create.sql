@@ -66,3 +66,14 @@ CREATE TABLE `t_basic_banji` (
 	UNIQUE KEY `name` (`name`)
 );
 
+CREATE TABLE `t_kecheng` (
+	`id` VARCHAR(125) NOT NULL,
+	`name` VARCHAR(255) NOT NULL,
+	`teacher` VARCHAR(255) NOT NULL,
+	`enable` VARCHAR(1) NOT NULL DEFAULT 'Y',
+	`remark` VARCHAR(255) NULL,
+	`createTime` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+	
+	PRIMARY KEY (`id`)
+);
+
