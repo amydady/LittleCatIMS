@@ -135,3 +135,26 @@ CREATE TABLE `t_kecheng` (
 	UNIQUE KEY `name` (`name`)
 );
 
+CREATE TABLE `t_kecheng_student` (
+	`id` VARCHAR(125) NOT NULL,
+	`kecheng` VARCHAR(255) NOT NULL,
+	`student` VARCHAR(255) NULL,
+	`remaintimes` INT NULL,
+	`remark` VARCHAR(255) NULL,
+	`state` VARCHAR(255) NULL,
+	`createTime` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+	
+	PRIMARY KEY (`id`)
+);
+
+##交费记录
+CREATE TABLE `t_kecheng_payrecord` (
+	`id` VARCHAR(125) NOT NULL,
+	`student` VARCHAR(255) NULL,
+	`fee` INT NULL,
+	`times` INT NULL,
+	`remark` VARCHAR(255) NULL,
+	`createTime` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+	
+	PRIMARY KEY (`id`)
+);

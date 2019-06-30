@@ -18,7 +18,9 @@ import com.littlecat.ims.kecheng.model.KeChengMO;
 @Component
 public class KeChengDao
 {
-	private final String TABLE_NAME = TableName.Kecheng.getName();
+	private final String TABLE_NAME = TableName.Kecheng.getName();	
+	private final String TABLE_NAME_SYSOPERATOR = TableName.SysOperator.getName();
+
 
 	@Autowired
 	protected JdbcTemplate jdbcTemplate;
@@ -86,7 +88,8 @@ public class KeChengDao
 	public List<KeChengMO> getList(String key,String teacher) throws LittleCatException
 	{
 		StringBuilder sql = new StringBuilder()
-				.append("select a.* from ").append(TABLE_NAME).append(" a ");
+				.append("select a.*,b.name teacherName from ").append(TABLE_NAME).append(" a ")
+				.append(" left join " + TABLE_NAME_SYSOPERATOR + " b on a.teacher = b.id ");
 
 		sql.append(" where 1 = 1 ");
 		

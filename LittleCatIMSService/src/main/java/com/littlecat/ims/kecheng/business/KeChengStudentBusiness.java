@@ -1,0 +1,45 @@
+package com.littlecat.ims.kecheng.business;
+
+import java.util.List;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
+import org.springframework.transaction.annotation.Transactional;
+
+import com.littlecat.cbb.exception.LittleCatException;
+import com.littlecat.ims.kecheng.dao.KeChengStudentDao;
+import com.littlecat.ims.kecheng.model.KeChengStudentMO;
+
+@Component
+@Transactional
+public class KeChengStudentBusiness
+{
+	@Autowired
+	private KeChengStudentDao keChengStudentDao;
+
+	public void modify(KeChengStudentMO mo) throws LittleCatException
+	{
+		keChengStudentDao.modify(mo);
+	}
+
+	public String add(KeChengStudentMO mo) throws LittleCatException
+	{
+		return keChengStudentDao.add(mo);
+	}
+
+	public List<KeChengStudentMO> getByKeCheng(String kecheng) throws LittleCatException
+	{
+		return keChengStudentDao.getByKeCheng(kecheng);
+	}
+
+	public List<KeChengStudentMO> getByStudent(String student) throws LittleCatException
+	{
+		return keChengStudentDao.getByKeCheng(student);
+	}
+
+	public boolean exists(String kecheng, String student) throws LittleCatException
+	{
+		return keChengStudentDao.exists(kecheng, student);
+	}
+
+}

@@ -23,6 +23,8 @@ public enum TableName
 
 	Student("t_student"),
 	Kecheng("t_kecheng"),
+	KeChengStudent("t_kecheng_student"),
+	PayRecord("t_kecheng_payrecord"),
 	;
 
 	private String name;
