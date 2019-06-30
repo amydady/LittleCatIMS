@@ -18,9 +18,7 @@ public class SysOperatorMO extends BaseMO
 	private String username;
 	private String password;
 	private String name;
-	private String wxCode;
-	private String email;
-	private String mobile;
+	private String remark;
 	private String createTime;
 	private String enable;
 
@@ -58,36 +56,6 @@ public class SysOperatorMO extends BaseMO
 	{
 		this.name = name;
 	}
-
-	public String getWxCode()
-	{
-		return wxCode;
-	}
-
-	public void setWxCode(String wxCode)
-	{
-		this.wxCode = wxCode;
-	}
-
-	public String getEmail()
-	{
-		return email;
-	}
-
-	public void setEmail(String email)
-	{
-		this.email = email;
-	}
-
-	public String getMobile()
-	{
-		return mobile;
-	}
-
-	public void setMobile(String mobile)
-	{
-		this.mobile = mobile;
-	}
 	
 	public String getCreateTime()
 	{
@@ -109,6 +77,16 @@ public class SysOperatorMO extends BaseMO
 		this.enable = enable;
 	}
 
+	public String getRemark()
+	{
+		return remark;
+	}
+
+	public void setRemark(String remark)
+	{
+		this.remark = remark;
+	}
+
 	public static class MOMapper implements RowMapper<SysOperatorMO>
 	{
 		@Override
@@ -119,9 +97,7 @@ public class SysOperatorMO extends BaseMO
 			mo.setId(rs.getString("id"));
 			mo.setUsername(rs.getString("username"));
 			mo.setName(rs.getString("name"));
-			mo.setWxCode(rs.getString("wxCode"));
-			mo.setEmail(rs.getString("email"));
-			mo.setMobile(rs.getString("mobile"));
+			mo.setRemark(rs.getString("remark"));
 			mo.setCreateTime(StringUtil.replace(rs.getString("createTime"), ".0", ""));
 			mo.setEnable(rs.getString("enable"));
 			

@@ -17,6 +17,7 @@ public class KeChengMO extends BaseMO
 	private String createTime;
 
 	private String enableV;
+	private String teacherName;
 
 	public String getName()
 	{
@@ -78,6 +79,16 @@ public class KeChengMO extends BaseMO
 		this.teacher = teacher;
 	}
 
+	public String getTeacherName()
+	{
+		return teacherName;
+	}
+
+	public void setTeacherName(String teacherName)
+	{
+		this.teacherName = teacherName;
+	}
+
 	public static class MOMapper implements RowMapper<KeChengMO>
 	{
 		@Override
@@ -97,7 +108,7 @@ public class KeChengMO extends BaseMO
 
 			try
 			{
-
+				mo.setTeacherName(rs.getString("teacherName"));
 			}
 			catch (Exception e)
 			{

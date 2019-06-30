@@ -19,26 +19,26 @@ import com.littlecat.cbb.common.Consts;
 import com.littlecat.cbb.exception.LittleCatException;
 import com.littlecat.cbb.rest.RestRsp;
 import com.littlecat.cbb.rest.RestSimpleRsp;
-import com.littlecat.ims.student.business.StudentBusiness;
-import com.littlecat.ims.student.model.StudentMO;
+import com.littlecat.ims.kecheng.business.KeChengBusiness;
+import com.littlecat.ims.kecheng.model.KeChengMO;
 
 @RestController
-@RequestMapping("/rest/littlecat/ims/student")
+@RequestMapping("/rest/littlecat/ims/kecheng")
 public class KeChengController
 {
 	@Autowired
-	private StudentBusiness studentBusiness;
+	private KeChengBusiness keChengBusiness;
 
 	private static final Logger logger = LoggerFactory.getLogger(KeChengController.class);
 
 	@PostMapping(value = "/add")
-	public RestRsp<String> add(@RequestBody StudentMO mo)
+	public RestRsp<String> add(@RequestBody KeChengMO mo)
 	{
 		RestRsp<String> result = new RestRsp<String>();
 
 		try
 		{
-			result.getData().add(studentBusiness.add(mo));
+			result.getData().add(keChengBusiness.add(mo));
 		}
 		catch (LittleCatException e)
 		{
@@ -57,13 +57,13 @@ public class KeChengController
 	}
 
 	@PutMapping(value = "/modify")
-	public RestSimpleRsp modify(@RequestBody StudentMO mo)
+	public RestSimpleRsp modify(@RequestBody KeChengMO mo)
 	{
 		RestSimpleRsp result = new RestSimpleRsp();
 
 		try
 		{
-			studentBusiness.modify(mo);
+			keChengBusiness.modify(mo);
 		}
 		catch (LittleCatException e)
 		{
@@ -82,13 +82,13 @@ public class KeChengController
 	}
 
 	@GetMapping(value = "/getById")
-	public RestRsp<StudentMO> getById(@RequestParam String id)
+	public RestRsp<KeChengMO> getById(@RequestParam String id)
 	{
-		RestRsp<StudentMO> result = new RestRsp<StudentMO>();
+		RestRsp<KeChengMO> result = new RestRsp<KeChengMO>();
 
 		try
 		{
-			result.getData().add(studentBusiness.getById(id));
+			result.getData().add(keChengBusiness.getById(id));
 		}
 		catch (LittleCatException e)
 		{
@@ -107,13 +107,13 @@ public class KeChengController
 	}
 
 	@GetMapping(value = "/getList")
-	public RestRsp<StudentMO> getList(@RequestParam @Nullable String key)
+	public RestRsp<KeChengMO> getList(@RequestParam @Nullable String key, @RequestParam @Nullable String teacher)
 	{
-		RestRsp<StudentMO> result = new RestRsp<StudentMO>();
+		RestRsp<KeChengMO> result = new RestRsp<KeChengMO>();
 
 		try
 		{
-			result.getData().addAll(studentBusiness.getList(key));
+			result.getData().addAll(keChengBusiness.getList(key, teacher));
 		}
 		catch (LittleCatException e)
 		{
@@ -138,7 +138,7 @@ public class KeChengController
 
 		try
 		{
-			studentBusiness.disable(id);
+			keChengBusiness.disable(id);
 		}
 		catch (LittleCatException e)
 		{
@@ -163,7 +163,7 @@ public class KeChengController
 
 		try
 		{
-			studentBusiness.disable(ids);
+			keChengBusiness.disable(ids);
 		}
 		catch (LittleCatException e)
 		{
@@ -188,7 +188,7 @@ public class KeChengController
 
 		try
 		{
-			studentBusiness.enable(id);
+			keChengBusiness.enable(id);
 		}
 		catch (LittleCatException e)
 		{
@@ -213,7 +213,7 @@ public class KeChengController
 
 		try
 		{
-			studentBusiness.enable(ids);
+			keChengBusiness.enable(ids);
 		}
 		catch (LittleCatException e)
 		{

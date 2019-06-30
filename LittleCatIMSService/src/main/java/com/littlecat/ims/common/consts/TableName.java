@@ -17,9 +17,12 @@ public enum TableName
 	
 	XiaoQuArea("t_basic_xiaoquarea"),
 	XiaoQu("t_basic_xiaoqu"),
+	DicType("t_basic_dicType"),
+	DicContent("t_basic_dicContent"),
 	
 
 	Student("t_student"),
+	Kecheng("t_kecheng"),
 	;
 
 	private String name;

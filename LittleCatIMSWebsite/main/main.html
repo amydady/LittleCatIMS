@@ -1,0 +1,271 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+  <!-- Required meta tags -->
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+  <!-- Bootstrap CSS -->
+  <link rel="stylesheet" href="../lib/bootstrap/css/bootstrap.min.css">
+
+  <title>小黄猫信息管理系统</title>
+
+  <style>
+    .navbar {
+      background-color: #3c76e7;
+      font-size: x-large;
+      margin-top: 0.5rem;
+    }
+
+    .navbar .navbar-brand {
+      color: #ecf1ee;
+    }
+
+    .navbar .navbar-brand:hover,
+    .navbar .navbar-brand:focus {
+      color: #ffbbbc;
+    }
+
+    .navbar .navbar-text {
+      color: #ecf1ee;
+    }
+
+    .navbar .navbar-text a {
+      color: #ffbbbc;
+    }
+
+    .navbar .navbar-text a:hover,
+    .navbar .navbar-text a:focus {
+      color: #ffbbbc;
+    }
+
+    .navbar .navbar-nav .nav-link {
+      color: #ecf1ee;
+      border-radius: .25rem;
+      margin: 0 0.25em;
+    }
+
+    .navbar .navbar-nav .nav-link:not(.disabled):hover,
+    .navbar .navbar-nav .nav-link:not(.disabled):focus {
+      color: #ffbbbc;
+    }
+
+    .navbar .navbar-nav .nav-item.active .nav-link,
+    .navbar .navbar-nav .nav-item.active .nav-link:hover,
+    .navbar .navbar-nav .nav-item.active .nav-link:focus,
+    .navbar .navbar-nav .nav-item.show .nav-link,
+    .navbar .navbar-nav .nav-item.show .nav-link:hover,
+    .navbar .navbar-nav .nav-item.show .nav-link:focus {
+      color: #ffbbbc;
+      background-color: #832bc0;
+    }
+
+    .navbar .navbar-toggle {
+      border-color: #832bc0;
+    }
+
+    .navbar .navbar-toggle:hover,
+    .navbar .navbar-toggle:focus {
+      background-color: #832bc0;
+    }
+
+    .navbar .navbar-toggle .navbar-toggler-icon {
+      color: #ecf1ee;
+    }
+
+    .navbar .navbar-collapse,
+    .navbar .navbar-form {
+      border-color: #ecf1ee;
+    }
+
+    .navbar .navbar-link {
+      color: #ecf1ee;
+    }
+
+    .navbar .navbar-link:hover {
+      color: #ffbbbc;
+    }
+
+    .navbar-expand .navbar-nav .show .dropdown-menu .dropdown-item {
+      color: #ecf1ee;
+    }
+
+    .navbar-expand .navbar-nav .show .dropdown-menu .dropdown-item:hover,
+    .navbar-expand .navbar-nav .show .dropdown-menu .dropdown-item:focus {
+      color: #ffbbbc;
+    }
+
+    .navbar-expand .navbar-nav .show .dropdown-menu .dropdown-item.active {
+      color: #ffbbbc;
+      background-color: #832bc0;
+    }
+  </style>
+</head>
+
+<body ng-app="myApp" ng-controller="myCtrl">
+  <div class="container-fluid">
+    <!-- header -->
+    <div class="row">
+      <!-- 导航 -->
+      <div class="col">
+        <!-- <nav class="navbar navbar-expand-lg navbar-light bg-light"> -->
+        <nav class="navbar navbar-expand-lg">
+          <a class="navbar-brand" href="#"><img src="../localimgs/logo2.jpg"
+              style="height:90px;width:90px;opacity:1;background-color:transparent" /></a>
+          <div class="collapse navbar-collapse" id="navbarSupportedContent">
+            <ul class="navbar-nav mr-auto">
+              <li class="nav-item" ng-repeat="x in navMenuData">
+                <a class="nav-link" ng-click='loadLeftMenu(x.id,x.name)' href='#'>{{x.name}}</a>
+              </li>
+
+              <li class="nav-item">
+                <a class="nav-link" ng-click='logout()' href='#'>退出系统</a>
+              </li>
+            </ul>
+
+          </div>
+          <span style="color: snow" >哈喽，{{currentUserName}}！</span>
+
+        </nav>
+      </div>
+    </div>
+    <hr />
+    <!-- middle -->
+    <div class="row">
+      <!-- left -->
+      <div class="col-2">
+        <div id="accordion">
+          <div class="card">
+            <div class="card-header">
+              <!-- href="#collapseOne" -->
+              <a class="card-link" data-toggle="collapse">
+                {{leftMenuData.pname}}
+              </a>
+            </div>
+            <div id="collapseOne" class="collapse show" data-parent="#accordion">
+              <div class="card-body" ng-repeat="x in leftMenuData.menuData">
+                <a class="card-link" href="{{x.targetUrl}}" target='if_content'>{{x.name}}</a>
+              </div>
+
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- content -->
+      <div class="col-10">
+        <div>
+          <iframe id="if_content" style="width:100%" scrolling="yes" frameborder='0' name="if_content"></iframe>
+        </div>
+      </div>
+    </div>
+
+    <!-- footer -->
+    <div class="row">
+      <div class="col">
+        <!-- <h1>FOOT</h1> -->
+      </div>
+    </div>
+
+  </div>
+
+
+  <!-- Optional JavaScript -->
+  <!-- jQuery first, then Popper.js, then Bootstrap JS -->
+  <script src="../lib/jquery/jquery.3.2.1.js"></script>
+  <script src="../lib/popper/popper.1.12.9.js"></script>
+  <script src="../lib/bootstrap/js/bootstrap.min.js"></script>
+  <script src="../lib/angular-1.7.5/angular.min.js"></script>
+  <script src="../common/littleCatCommon.js"></script>
+
+  <script>
+    var app = angular.module('myApp', []);
+
+    // iframe 自适应高度
+    function changeFrameHeight() {
+      var ifm = document.getElementById("if_content");
+      ifm.height = document.documentElement.clientHeight;
+
+    }
+
+    window.onresize = function () {
+      changeFrameHeight();
+    }
+
+    app.controller('myCtrl', ['$scope', '$http', '$location', function ($scope, $http, $location) {
+
+      if (StringUtil.isEmpty(sessionStorage.getItem("currentUserId"))) {//尚未登录
+        window.location = '../main/login.html';
+      }
+
+      $scope.currentUserName = sessionStorage.getItem("currentUserName")
+
+      //获取进入页面时的MenuID
+      $scope.menuId = RequestUtil.getQueryParamByName('menuId');
+      $scope.menuName = RequestUtil.getQueryParamByName('menuName');
+
+      changeFrameHeight();
+
+      $scope.logout = function () {
+        window.sessionStorage.clear();
+        window.location = 'login.html';
+      };
+
+      //加载顶级导航菜单
+      $scope.loadNavMenu = function () {
+        $http.get(CommonConfig.RestBaseUrl.IMSService + 'sys/menu/getbypid?pid=-1')
+          .then(function (result) {  //正确请求成功时处理
+            $scope.navMenuData = result.data.data;
+
+            if (StringUtil.isEmpty($scope.menuId)) {
+              for (var i = 0; i < $scope.navMenuData.length; i++) {
+                if ($scope.navMenuData[i].isDefault == 'Y') {
+                  $scope.menuId = $scope.navMenuData[i].id;
+                  $scope.menuName = $scope.navMenuData[i].name;
+                  break;
+                }
+              }
+            }
+
+            $scope.loadLeftMenu($scope.menuId, $scope.menuName);
+
+          }).catch(function (result) { //捕捉错误处理
+            console.log(result);
+          });
+      };
+
+      //通过PID加载左侧菜单
+      $scope.loadLeftMenu = function (pid, pname) {
+        $scope.leftMenuData = {
+          pname: pname
+        };
+
+        $http.get(CommonConfig.RestBaseUrl.IMSService + 'sys/menu/getbypid?pid=' + pid)
+          .then(function (result) {  //正确请求成功时处理
+            $scope.leftMenuData.menuData = result.data.data;
+
+            //加载默认页面
+            for (var i = 0; i < $scope.leftMenuData.menuData.length; i++) {
+              if ($scope.leftMenuData.menuData[i].isDefault == 'Y') {
+                document.getElementById('if_content').src = $scope.leftMenuData.menuData[i].targetUrl;
+                console.log('if_content.src:', document.getElementById('if_content').src);
+              }
+            }
+
+            console.log(' $scope.leftMenuData:success:', $scope.leftMenuData);
+          }).catch(function (result) { //捕捉错误处理
+            console.log('$scope.loadLeftMenu:error:', result);
+          });
+      };
+
+      $scope.loadNavMenu();
+
+    }]);
+
+
+
+  </script>
+</body>
+
+</html>

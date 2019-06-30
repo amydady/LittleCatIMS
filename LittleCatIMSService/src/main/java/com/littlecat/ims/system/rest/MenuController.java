@@ -15,7 +15,7 @@ import com.littlecat.ims.system.business.MenuBusiness;
 import com.littlecat.ims.system.model.MenuMO;
 
 @RestController
-@RequestMapping("/rest/littlecat/caobao/sys/menu")
+@RequestMapping("/rest/littlecat/ims/sys/menu")
 public class MenuController
 {
 	@Autowired

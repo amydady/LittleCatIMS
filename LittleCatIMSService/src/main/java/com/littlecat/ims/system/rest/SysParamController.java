@@ -18,7 +18,7 @@ import com.littlecat.ims.system.business.SysParamBusiness;
 import com.littlecat.ims.system.model.SysParamMO;
 
 @RestController
-@RequestMapping("/rest/littlecat/caobao/sys/param")
+@RequestMapping("/rest/littlecat/ims/sys/param")
 public class SysParamController
 {
 	@Autowired

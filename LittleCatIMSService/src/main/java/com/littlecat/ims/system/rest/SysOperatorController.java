@@ -26,7 +26,7 @@ import com.littlecat.ims.system.model.LoginReqInfo;
 import com.littlecat.ims.system.model.SysOperatorMO;
 
 @RestController
-@RequestMapping("/rest/littlecat/caobao/sys/operator")
+@RequestMapping("/rest/littlecat/ims/sys/operator")
 public class SysOperatorController
 {
 	@Autowired

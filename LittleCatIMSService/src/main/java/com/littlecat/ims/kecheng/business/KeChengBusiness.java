@@ -7,55 +7,55 @@ import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.littlecat.cbb.exception.LittleCatException;
-import com.littlecat.ims.student.dao.StudentDao;
-import com.littlecat.ims.student.model.StudentMO;
+import com.littlecat.ims.kecheng.dao.KeChengDao;
+import com.littlecat.ims.kecheng.model.KeChengMO;
 
 @Component
 @Transactional
 public class KeChengBusiness
 {
 	@Autowired
-	private StudentDao studentDao;
+	private KeChengDao keChengDao;
 
 	public void enable(String id) throws LittleCatException
 	{
-		studentDao.enable(id);
+		keChengDao.enable(id);
 	}
 
 	public void enable(List<String> ids) throws LittleCatException
 	{
-		studentDao.enable(ids);
+		keChengDao.enable(ids);
 	}
 
 	public void disable(String id) throws LittleCatException
 	{
-		studentDao.disable(id);
+		keChengDao.disable(id);
 	}
 	
 
 	public void disable(List<String> ids) throws LittleCatException
 	{
-		studentDao.disable(ids);
+		keChengDao.disable(ids);
 	}
 
-	public StudentMO getById(String id) throws LittleCatException
+	public KeChengMO getById(String id) throws LittleCatException
 	{
-		return studentDao.getById(id);
+		return keChengDao.getById(id);
 	}
 
-	public void modify(StudentMO mo) throws LittleCatException
+	public void modify(KeChengMO mo) throws LittleCatException
 	{
-		studentDao.modify(mo);
+		keChengDao.modify(mo);
 	}
 
-	public String add(StudentMO mo) throws LittleCatException
+	public String add(KeChengMO mo) throws LittleCatException
 	{
-		return studentDao.add(mo);
+		return keChengDao.add(mo);
 	}
 
-	public List<StudentMO> getList(String key) throws LittleCatException
+	public List<KeChengMO> getList(String key,String teacher) throws LittleCatException
 	{
-		return studentDao.getList(key);
+		return keChengDao.getList(key,teacher);
 	}
 	
 }

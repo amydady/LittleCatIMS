@@ -1,4 +1,4 @@
-package com.littlecat.ims.kecheng.dao;
+package com.littlecat.ims.basicinfo.dao;
 
 import java.util.List;
 
@@ -11,18 +11,18 @@ import com.littlecat.cbb.common.Consts;
 import com.littlecat.cbb.exception.LittleCatException;
 import com.littlecat.cbb.utils.StringUtil;
 import com.littlecat.cbb.utils.UUIDUtil;
+import com.littlecat.ims.basicinfo.model.DicContentMO;
 import com.littlecat.ims.common.consts.TableName;
 import com.littlecat.ims.common.utils.DaoUtil;
-import com.littlecat.ims.kecheng.model.KeChengMO;
 
 @Component
-public class KeChengDao
+public class DicContentDao
 {
-	private final String TABLE_NAME = TableName.Kecheng.getName();
+	private final String TABLE_NAME = TableName.DicContent.getName();
 
 	@Autowired
 	protected JdbcTemplate jdbcTemplate;
-
+	
 	public void enable(String id) throws LittleCatException
 	{
 		DaoUtil.enable(TABLE_NAME, id, jdbcTemplate);
@@ -42,19 +42,20 @@ public class KeChengDao
 	{
 		DaoUtil.disable(TABLE_NAME, ids, jdbcTemplate);
 	}
+	
 
-	public String add(KeChengMO mo) throws LittleCatException
+	public String add(DicContentMO mo) throws LittleCatException
 	{
 		if (StringUtil.isEmpty(mo.getId()))
 		{
 			mo.setId(UUIDUtil.createUUID());
 		}
 
-		String sql = "insert into " + TABLE_NAME + "(id,name,teacher,remark) values(?,?,?,?)";
+		String sql = "insert into " + TABLE_NAME + "(id,typeid,name,sortid) values(?,?,?,?)";
 
 		try
 		{
-			jdbcTemplate.update(sql, new Object[] { mo.getId(), mo.getName(), mo.getTeacher(), mo.getRemark() });
+			jdbcTemplate.update(sql, new Object[] { mo.getId(), mo.getTypeid(), mo.getName(), mo.getSortid() });
 		}
 		catch (DataAccessException e)
 		{
@@ -64,13 +65,13 @@ public class KeChengDao
 		return mo.getId();
 	}
 
-	public void modify(KeChengMO mo) throws LittleCatException
+	public void modify(DicContentMO mo) throws LittleCatException
 	{
-		String sql = "update " + TABLE_NAME + " set name=?,teacher=?,remark=? where id = ?";
+		String sql = "update " + TABLE_NAME + " set name=?,sortid=? where id = ?";
 
 		try
 		{
-			jdbcTemplate.update(sql, new Object[] { mo.getName(), mo.getTeacher(), mo.getRemark(), mo.getId() });
+			jdbcTemplate.update(sql, new Object[] { mo.getName(), mo.getSortid(), mo.getId() });
 		}
 		catch (DataAccessException e)
 		{
@@ -78,28 +79,16 @@ public class KeChengDao
 		}
 	}
 
-	public KeChengMO getById(String id) throws LittleCatException
+	public DicContentMO getById(String id) throws LittleCatException
 	{
-		return DaoUtil.getById(TABLE_NAME, id, jdbcTemplate, new KeChengMO.MOMapper());
+		return DaoUtil.getById(TABLE_NAME, id, jdbcTemplate, new DicContentMO.MOMapper());
 	}
 
-	public List<KeChengMO> getList(String key,String teacher) throws LittleCatException
+	public List<DicContentMO> getList(String typeid) throws LittleCatException
 	{
 		StringBuilder sql = new StringBuilder()
-				.append("select a.* from ").append(TABLE_NAME).append(" a ");
+				.append("select a.* from ").append(TABLE_NAME).append(" a where typeid='" + typeid + "' order by a.sortid");
 
-		sql.append(" where 1 = 1 ");
-		
-		if (StringUtil.isNotEmpty(teacher))
-		{
-			sql.append(" and a.teacher ='" + teacher + "'");
-		}
-		
-		if (StringUtil.isNotEmpty(key))
-		{
-			sql.append(" and a.name like '%" + key + "%'");
-		}
-
-		return jdbcTemplate.query(sql.toString(), new KeChengMO.MOMapper());
+		return jdbcTemplate.query(sql.toString(), new DicContentMO.MOMapper());
 	}
 }

@@ -1,0 +1,305 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="../lib/bootstrap/css/bootstrap.min.css">
+
+    <title>字典管理</title>
+</head>
+
+<body ng-app="myApp" ng-controller="myCtrl">
+    <div class="container-fluid">
+        <!-- 页面标题 -->
+        <div class="row" style="height:60px">
+            <div class="col">
+                <h4>字典管理</h4>
+            </div>
+        </div>
+
+
+        <!-- 操作按钮 -->
+        <div class="row">
+            <label for="selectSupplier" class="col-sm-1 col-form-label">字典类型</label>
+            <div class="col-sm-3">
+                <select class="form-control" id='dicTypeSelect' ng-model="dicTypeId"
+                    ng-change="onDicTypeSelectChange()">
+                    <option value="-1">请选择...</option>
+                    <option ng-repeat="x in dicTypeListData" value="{{x.id}}">{{x.name}}</option>
+                </select>
+            </div>
+
+            <div class="col-sm-3">
+                <button class="btn btn-primary" ng-click="onAdd()">添 加</button>
+            </div>
+        </div>
+
+        <hr />
+        <!-- 数据区域 -->
+        <div class="row">
+            <div class="col">
+                <table class="table table-striped table-hover" id="tableList">
+                    <thead class="bg-info text-white">
+                        <tr>
+                            <th scope="col">序 号</th>
+                            <th scope="col" ng-hide={{true}}>ID</th>
+                            <th scope="col">名 称</th>
+                            <th scope="col">排序编号</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr ng-repeat="x in listData">
+                            <td>{{ $index + 1 }}</td>
+                            <td ng-hide={{true}}>{{x.id}}</td>
+                            <th scope="row"><a href="#" ng-click="getDetailData(x.id)">{{x.name}}</a></td>
+                            <td>{{x.sortid}}</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+    </div>
+
+    <!-- Modal 字典内容维护弹出页面 -->
+    <div class="modal fade bd-example-modal-lg" id="dicContentMgrModal" tabindex="-1" role="dialog"
+        data-backdrop="static" aria-labelledby="dicContentMgrModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalLabel">字典内容维护【{{DicTypeName}}】</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <form>
+                        <div class="form-group row">
+                            <label for="inputName" class="col-sm-3 col-form-label">名称</label>
+                            <div class="col-sm-3">
+                                <input type="text" class="form-control" id="inputRate" ng-model="detailInfo.name">
+                            </div>
+                            <label for="inputName" class="col-sm-3 col-form-label">排序编号（整数）</label>
+                            <div class="col-sm-3">
+                                <input type="text" class="form-control" id="inputRate" ng-model="detailInfo.sortid">
+                            </div>
+                        </div>
+
+                        <div class="form-group row">
+                            <button class="btn btn-primary form-control" ng-click="onSave()">保 存</button>
+                        </div>
+
+
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal 提示框-->
+    <div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
+        aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalLabel">友情提示</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    {{modalContent}}
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">确 定</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+    <!-- Optional JavaScript -->
+    <!-- jQuery first, then Popper.js, then Bootstrap JS -->
+    <script src="../lib/jquery/jquery.3.2.1.js"></script>
+    <script src="../lib/popper/popper.1.12.9.js"></script>
+    <script src="../lib/bootstrap/js/bootstrap.min.js"></script>
+    <script src="../lib/angular-1.7.5/angular.min.js"></script>
+    <script src="../common/littleCatCommon.js"></script>
+
+    <script>
+        var app = angular.module('myApp', []);
+
+        app.controller('myCtrl', function ($scope, $http) {
+            $scope.search = {
+                name: ''
+            };
+            $scope.dicTypeId = '-1';
+
+            $scope.detailInfo = {
+                id: ''
+            };
+
+            $scope.getDetailData = function (id) {
+                $http.get(CommonConfig.RestBaseUrl.IMSService + 'basicinfo/getDicContentById?id=' + id)
+                    .then(function (result) {  //正确请求成功时处理
+                        $scope.detailInfo = result.data.data[0];
+                        $("#dicContentMgrModal").modal("show")
+
+                    }).catch(function (result) { //捕捉错误处理
+                        console.log(result);
+                    });
+            };
+
+            $scope.onAdd = function () {
+                if ($scope.dicTypeId == '-1') {
+                    $("#myModal").modal("show")
+                    $scope.modalContent = "请选择某个字典类型后进行维护！"
+                    return
+                }
+
+                $("#dicContentMgrModal").modal("show")
+            };
+
+            $scope.onSave = function () {
+                if (StringUtil.isEmpty($scope.detailInfo.id)) {//添加
+                    $scope.detailInfo.typeid = $scope.dicTypeId
+                    $http.post(CommonConfig.RestBaseUrl.IMSService + 'basicinfo/addDicContent', $scope.detailInfo, CommonConfig.httpReqConfig)
+                        .then(function (result) {  //正确请求成功时处理
+                            if (result.data.code != 'NONE_ERROR') {
+                                $("#myModal").modal("show")
+                                $scope.modalContent = "添加失败！"
+                                return
+                            }
+
+                            $("#myModal").modal("show")
+                            $scope.modalContent = "添加成功！"
+                            $scope.getContentByTypeId()
+                            $scope.detailInfo = {
+                                id: '',
+                                name: '',
+                                sortid: ''
+                            };
+
+                        }).catch(function (result) { //捕捉错误处理
+                            $("#myModal").modal("show")
+                            $scope.modalContent = "添加失败！"
+
+                            console.log(result);
+                        });
+                } else {//修改
+                    $http.put(CommonConfig.RestBaseUrl.IMSService + 'basicinfo/modifyDicContent', $scope.detailInfo, CommonConfig.httpReqConfig)
+                        .then(function (result) {  //正确请求成功时处理
+                            if (result.data.code != 'NONE_ERROR') {
+                                $("#myModal").modal("show")
+                                $scope.modalContent = "修改失败！"
+                                return
+                            }
+
+                            $("#myModal").modal("show")
+                            $scope.modalContent = "修改成功！"
+
+                            $scope.getContentByTypeId()
+
+                            $('#myModal').on('hidden.bs.modal', function () {
+                                $scope.detailInfo = {
+                                    id: '',
+                                    name: '',
+                                    sortid: ''
+                                };
+                            })
+
+                            console.log(result);
+                        }).catch(function (result) { //捕捉错误处理
+                            $("#myModal").modal("show")
+                            $scope.modalContent = "修改失败！"
+                            console.log(result);
+                        });
+                }
+            };
+
+            //表单验证
+            $scope.formValid = function () {
+                var validResult = true;
+
+                var inputName = $('#inputName');
+                if (StringUtil.isEmpty($scope.detailInfo.name)) {
+                    inputName.addClass('is-invalid');
+                    inputName.focus();
+                    validResult = false;
+                }
+                else {
+                    inputName.removeClass('is-invalid');
+                }
+
+                var inputSortId = $('#inputSortId');
+                if (StringUtil.isEmpty($scope.detailInfo.sortid)) {
+                    inputSortId.addClass('is-invalid');
+                    inputSortId.focus();
+                    validResult = false;
+                }
+                else {
+                    inputSortId.removeClass('is-invalid');
+                }
+
+
+                return validResult;
+            };
+
+            $scope.getDicTypeListData = function () {
+                $http.get(CommonConfig.RestBaseUrl.IMSService + 'basicinfo/getDicTypeList')
+                    .then(function (result) {  //正确请求成功时处理
+                        $scope.dicTypeListData = result.data.data;
+                    }).catch(function (result) { //捕捉错误处理
+                        console.log(result);
+                    });
+            };
+
+            $scope.getContentByTypeId = function () {
+                $http.get(CommonConfig.RestBaseUrl.IMSService + 'basicinfo/getDicContentList?dictype=' + $scope.dicTypeId)
+                    .then(function (result) {  //正确请求成功时处理
+                        $scope.listData = result.data.data;
+                    }).catch(function (result) { //捕捉错误处理
+                        console.log(result);
+                    });
+            };
+
+            $scope.onDicTypeSelectChange = function () {
+
+                var dicTypeSelect = document.getElementById('dicTypeSelect')
+                var selectIndex = dicTypeSelect.selectedIndex
+                if (selectIndex != '0') {
+                    $scope.DicTypeName = dicTypeSelect.options[dicTypeSelect.selectedIndex].text
+                }
+
+                $scope.getContentByTypeId()
+
+            };
+
+
+            $scope.onInputNameChanged = function () {
+                $scope.formValid();
+            };
+
+            $scope.onInputSortIdChanged = function () {
+                $scope.formValid();
+            };
+
+
+
+            $scope.enterEvent = function (e) {
+                var keycode = window.event ? e.keyCode : e.which;
+                if (keycode == 13) {
+                    $scope.onSearch();
+                }
+            };
+            $scope.getDicTypeListData()
+            // $scope.getData();
+        });
+    </script>
+</body>
+
+</html>
