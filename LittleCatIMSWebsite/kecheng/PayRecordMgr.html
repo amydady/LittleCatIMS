@@ -9,7 +9,7 @@
     <!-- Bootstrap CSS -->
     <link rel="stylesheet" href="../lib/bootstrap/css/bootstrap.min.css">
 
-    <title>学生信息管理</title>
+    <title>缴费管理</title>
 </head>
 
 <body ng-app="myApp" ng-controller="myCtrl">
@@ -17,18 +17,17 @@
         <!-- 页面标题 -->
         <div class="row" style="height:60px">
             <div class="col">
-                <h4>学生信息管理</h4>
+                <h4>缴费管理</h4>
             </div>
         </div>
 
 
         <!-- 操作按钮 -->
         <div class="row">
-            
 
             <div class="col-3">
                 <div class="input-group">
-                    <input type="text" class="form-control is-valid"  ng-keyup="enterEvent($event)"
+                    <input type="text" class="form-control is-valid" ng-keyup="enterEvent($event)"
                         ng-model="search.key">
                     <div class="input-group-prepend">
                         <button type="button" class="btn btn-outline-success" ng-click="onSearch()">查 询</button>
@@ -40,6 +39,10 @@
             </div>
         </div>
         <hr />
+
+        <div class="row">
+            
+        </div>
         <!-- 数据区域 -->
         <div class="row">
             <div class="col">
@@ -48,32 +51,24 @@
                         <tr>
                             <th scope="col">序 号</th>
                             <th scope="col" ng-hide={{true}}>ID</th>
-                            <th scope="col">姓名</th>
-                            <th scope="col">手机</th>
-                            <th scope="col">学校</th>
-                            <th scope="col">年级</th>
-                            <th scope="col">班级</th>
-                            <th scope="col">小区</th>
-                            <th scope="col">推荐人</th>
+                            <th scope="col">学生</th>
+                            <th scope="col">课程</th>
+                            <th scope="col">费用</th>
+                            <th scope="col">课次</th>
                             <th scope="col">备注</th>
-                            <th scope="col">创建时间</th>
-                            <th scope="col">是否有效</th>
+                            <th scope="col">时间</th>
                         </tr>
                     </thead>
                     <tbody>
                         <tr ng-repeat="x in listData">
                             <td>{{ $index + 1 }}</td>
                             <td ng-hide={{true}}>{{x.id}}</td>
-                            <th scope="row"><a href="#" ng-click="getDetailData(x.id)">{{x.name}}</a></td>
-                            <td>{{x.mobile}}</td>
-                            <td>{{x.xuexiao}}</td>
-                            <td>{{x.nianji}}</td>
-                            <td>{{x.banji}}</td>
-                            <td>{{x.xiaoqu}}</td>
-                            <td>{{x.tuijianren}}</td>
+                            <td>{{x.studentName}}</td>
+                            <td>{{x.kechengName}}</td>
+                            <td>{{x.fee}}</td>
+                            <td>{{x.times}}</td>
                             <td>{{x.remark}}</td>
                             <td>{{x.createTime}}</td>
-                            <td>{{x.enableV}}</td>
                         </tr>
                     </tbody>
                 </table>
@@ -88,7 +83,7 @@
         <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h5 class="modal-title" id="exampleModalLabel">学生信息维护</h5>
+                    <h5 class="modal-title" id="exampleModalLabel">课程信息维护</h5>
                     <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                         <span aria-hidden="true">&times;</span>
                     </button>
@@ -96,47 +91,25 @@
                 <div class="modal-body">
                     <form>
                         <div class="form-group row">
-                            <label for="inputName" class="col-sm-1 col-form-label">姓名</label>
-                            <div class="col-sm-3">
-                                <input type="text" class="form-control" ng-model="detailInfo.name">
+                            <label for="inputName" class="col-sm-2 col-form-label">学生</label>
+                            <div class="col-sm-4">
+                                <input type="text" class="form-control" readonly ng-click="onSelectStudent()" placeholder="点击选择" ng-model="studentName">
                             </div>
-                            <label for="inputName" class="col-sm-1 col-form-label">手机</label>
-                            <div class="col-sm-3">
-                                <input type="text" class="form-control" ng-model="detailInfo.mobile">
-
-                            </div>
-                            <label for="inputName" class="col-sm-1 col-form-label">小区</label>
-                            <div class="col-sm-3">
-                                <input type="text" class="form-control" ng-model="detailInfo.xiaoqu">
+                            <label for="inputName" class="col-sm-2 col-form-label">教师</label>
+                            <div class="col-sm-4">
+                                <select class="form-control" ng-model="detailInfo.teacher">
+                                    <option value="-1">请选择教师……</option>
+                                    <option ng-repeat="x in teacherListData" value="{{x.id}}">{{x.name}}</option>
+                                </select>
                             </div>
                         </div>
                         <div class="form-group row">
-                            <label for="inputName" class="col-sm-1 col-form-label">学校</label>
-                            <div class="col-sm-3">
-                                <input type="text" class="form-control" ng-model="detailInfo.xuexiao">
-                            </div>
-                            <label for="inputName" class="col-sm-1 col-form-label">年级</label>
-                            <div class="col-sm-3">
-                                <input type="text" class="form-control" ng-model="detailInfo.nianji">
-                            </div>
-                            <label for="inputName" class="col-sm-1 col-form-label">班级</label>
-                            <div class="col-sm-3">
-                                <input type="text" class="form-control" ng-model="detailInfo.banji">
-
-                            </div>
-                        </div>
-
-                        <div class="form-group row">
-                                <label for="inputName" class="col-sm-1 col-form-label">推荐人</label>
-                                <div class="col-sm-3">
-                                    <input type="text" class="form-control" ng-model="detailInfo.tuijianren">
-                                </div>
-                            <label for="inputName" class="col-sm-1 col-form-label">创建时间</label>
-                            <div class="col-sm-3">
+                            <label for="inputName" class="col-sm-2 col-form-label">创建时间</label>
+                            <div class="col-sm-4">
                                 <input type="text" class="form-control" readonly ng-model="detailInfo.createTime">
                             </div>
-                            <label for="inputName" class="col-sm-1 col-form-label">是否有效</label>
-                            <div class="col-sm-3">
+                            <label for="inputName" class="col-sm-2 col-form-label">是否有效</label>
+                            <div class="col-sm-4">
                                 <input type="text" class="form-control" readonly ng-model="detailInfo.enableV">
                             </div>
                         </div>
@@ -158,6 +131,49 @@
             </div>
         </div>
     </div>
+
+     <!-- Modal 选择学生弹出页面 -->
+     <div class="modal fade bd-example-modal-lg" id="studentSelectModal" tabindex="-1" role="dialog" data-backdrop="static"
+     aria-labelledby="detailModalLabel" aria-hidden="true">
+     <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
+         <div class="modal-content">
+             <div class="modal-header">
+                 <h5 class="modal-title" id="exampleModalLabel">学生选择</h5>
+                 <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                     <span aria-hidden="true">&times;</span>
+                 </button>
+             </div>
+             <div class="modal-body">
+                <table class="table table-striped table-hover" id="tableList">
+                    <thead class="bg-info text-white">
+                        <tr>
+                            <th scope="col">序 号</th>
+                            <th scope="col" ng-hide={{true}}>ID</th>
+                            <th scope="col">学生</th>
+                            <th scope="col">课程</th>
+                            <th scope="col">费用</th>
+                            <th scope="col">课次</th>
+                            <th scope="col">备注</th>
+                            <th scope="col">时间</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr ng-repeat="x in listData">
+                            <td>{{ $index + 1 }}</td>
+                            <td ng-hide={{true}}>{{x.id}}</td>
+                            <td>{{x.studentName}}</td>
+                            <td>{{x.kechengName}}</td>
+                            <td>{{x.fee}}</td>
+                            <td>{{x.times}}</td>
+                            <td>{{x.remark}}</td>
+                            <td>{{x.createTime}}</td>
+                        </tr>
+                    </tbody>
+                </table>
+             </div>
+         </div>
+     </div>
+ </div>
 
     <!-- Modal 提示框-->
     <div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
@@ -198,9 +214,33 @@
                 key: ''
             };
 
+            $scope.getTeacherListData = function () {
+                var data = {
+                    "condition": {
+                        "logicType": "and",
+                        "condItems": [
+                            {
+                                "fieldName": "enable",
+                                "opType": "equal",
+                                "value": $scope.enable
+                            }
+                        ]
+                    },
+                };
+
+                $http.post(CommonConfig.RestBaseUrl.IMSService + 'sys/operator/getList', data, CommonConfig.httpReqConfig)
+                    .then(function (result) {  //正确请求成功时处理
+                        $scope.teacherListData = result.data.data
+                    }).catch(function (result) { //捕捉错误处理
+                        console.log(result);
+                    });
+            };
+
+
+
             $scope.getData = function () {
 
-                $http.get(CommonConfig.RestBaseUrl.IMSService + 'student/getList?key=' + $scope.search.key)
+                $http.get(CommonConfig.RestBaseUrl.IMSService + 'kecheng/getList?key=' + $scope.search.key)
                     .then(function (result) {  //正确请求成功时处理
                         $scope.listData = result.data.data
                         console.log(result);
@@ -211,7 +251,7 @@
             };
 
             $scope.getDetailData = function (id) {
-                $http.get(CommonConfig.RestBaseUrl.IMSService + 'student/getById?id=' + id)
+                $http.get(CommonConfig.RestBaseUrl.IMSService + 'kecheng/getById?id=' + id)
                     .then(function (result) {  //正确请求成功时处理
                         $scope.detailInfo = result.data.data[0];
                         $("#detailModal").modal("show")
@@ -227,14 +267,21 @@
 
             $scope.onAdd = function () {
                 $scope.detailInfo = {
+                    teacher: '-1',
+                    name: '',
+                    enableV: '是'
                 };
 
                 $("#detailModal").modal("show")
             };
 
+            $scope.onSelectStudent = function(){
+                $("#studentSelectModal").modal("show")
+            };
+
             $scope.onSave = function () {
                 if (StringUtil.isEmpty($scope.detailInfo.id)) {//添加
-                    $http.post(CommonConfig.RestBaseUrl.IMSService + 'student/add', $scope.detailInfo, CommonConfig.httpReqConfig)
+                    $http.post(CommonConfig.RestBaseUrl.IMSService + 'kecheng/add', $scope.detailInfo, CommonConfig.httpReqConfig)
                         .then(function (result) {  //正确请求成功时处理
                             if (result.data.code != 'NONE_ERROR') {
                                 $("#myModal").modal("show")
@@ -257,7 +304,7 @@
                             console.log(result);
                         });
                 } else {//修改
-                    $http.put(CommonConfig.RestBaseUrl.IMSService + 'student/modify', $scope.detailInfo, CommonConfig.httpReqConfig)
+                    $http.put(CommonConfig.RestBaseUrl.IMSService + 'kecheng/modify', $scope.detailInfo, CommonConfig.httpReqConfig)
                         .then(function (result) {  //正确请求成功时处理
                             if (result.data.code != 'NONE_ERROR') {
                                 $("#myModal").modal("show")
@@ -286,6 +333,7 @@
                 }
             };
 
+            $scope.getTeacherListData()
             $scope.getData();
 
         });

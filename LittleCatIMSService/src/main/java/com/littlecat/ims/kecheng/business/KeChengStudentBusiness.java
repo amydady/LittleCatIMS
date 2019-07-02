@@ -37,9 +37,23 @@ public class KeChengStudentBusiness
 		return keChengStudentDao.getByKeCheng(student);
 	}
 
+	public void zanting(String id) throws LittleCatException
+	{
+		keChengStudentDao.zanting(id);
+	}
+
+	public void huifu(String id) throws LittleCatException
+	{
+		keChengStudentDao.huifu(id);
+	}
+
+	public void end(String id) throws LittleCatException
+	{
+		keChengStudentDao.end(id);
+	}
+
 	public boolean exists(String kecheng, String student) throws LittleCatException
 	{
 		return keChengStudentDao.exists(kecheng, student);
 	}
-
 }

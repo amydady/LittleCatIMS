@@ -151,6 +151,7 @@ CREATE TABLE `t_kecheng_student` (
 CREATE TABLE `t_kecheng_payrecord` (
 	`id` VARCHAR(125) NOT NULL,
 	`student` VARCHAR(255) NULL,
+	`kecheng` VARCHAR(255) NULL,
 	`fee` INT NULL,
 	`times` INT NULL,
 	`remark` VARCHAR(255) NULL,

@@ -12,6 +12,7 @@ import com.littlecat.cbb.exception.LittleCatException;
 import com.littlecat.cbb.utils.CollectionUtil;
 import com.littlecat.cbb.utils.StringUtil;
 import com.littlecat.cbb.utils.UUIDUtil;
+import com.littlecat.ims.common.consts.StudentKeChengState;
 import com.littlecat.ims.common.consts.TableName;
 import com.littlecat.ims.kecheng.model.KeChengStudentMO;
 
@@ -30,11 +31,11 @@ public class KeChengStudentDao
 			mo.setId(UUIDUtil.createUUID());
 		}
 
-		String sql = "insert into " + TABLE_NAME + "(id,kecheng,student,remark) values(?,?,?,?)";
+		String sql = "insert into " + TABLE_NAME + "(id,kecheng,student,state,remark) values(?,?,?,?)";
 
 		try
 		{
-			jdbcTemplate.update(sql, new Object[] { mo.getId(), mo.getKecheng(), mo.getStudent(), mo.getRemark() });
+			jdbcTemplate.update(sql, new Object[] { mo.getId(), mo.getKecheng(), mo.getStudent(),mo.getState(), mo.getRemark() });
 		}
 		catch (DataAccessException e)
 		{
@@ -88,6 +89,37 @@ public class KeChengStudentDao
 			throw new LittleCatException(Consts.ERROR_CODE_DATAACCESSEXCEPTION, e.getMessage(), e);
 		}
 	}
+	
+	public void zanting(String id) throws LittleCatException
+	{
+		setState(id,StudentKeChengState.zanting);
+	}
+	
+	public void huifu(String id) throws LittleCatException
+	{
+		setState(id,StudentKeChengState.zhengchang);
+	}
+	
+	public void end(String id) throws LittleCatException
+	{
+		setState(id,StudentKeChengState.jieshu);
+	}
+	
+	private void setState(String id,StudentKeChengState state) throws LittleCatException
+	{
+		String sql = "update " + TABLE_NAME + " set state = ? where id = ?";
+
+		try
+		{
+			jdbcTemplate.update(sql, new Object[] { state.getCode(), id });
+		}
+		catch (DataAccessException e)
+		{
+			throw new LittleCatException(Consts.ERROR_CODE_DATAACCESSEXCEPTION, e.getMessage(), e);
+		}
+	}
+	
+	
 
 	// public void delete(List<String> ids) throws LittleCatException
 	// {
