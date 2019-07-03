@@ -12,7 +12,6 @@ import com.littlecat.cbb.exception.LittleCatException;
 import com.littlecat.cbb.utils.StringUtil;
 import com.littlecat.cbb.utils.UUIDUtil;
 import com.littlecat.ims.common.consts.TableName;
-import com.littlecat.ims.common.utils.DaoUtil;
 import com.littlecat.ims.kecheng.model.PayRecordMO;
 
 @Component
@@ -32,11 +31,11 @@ public class PayRecordDao
 			mo.setId(UUIDUtil.createUUID());
 		}
 
-		String sql = "insert into " + TABLE_NAME + "(id,student,fee,times,remark) values(?,?,?,?,?)";
+		String sql = "insert into " + TABLE_NAME + "(id,student,kecheng,fee,times,remark) values(?,?,?,?,?,?)";
 
 		try
 		{
-			jdbcTemplate.update(sql, new Object[] { mo.getId(), mo.getStudent(), mo.getFee(),mo.getTimes(), mo.getRemark() });
+			jdbcTemplate.update(sql, new Object[] { mo.getId(), mo.getStudent(),mo.getKecheng(), mo.getFee(), mo.getTimes(), mo.getRemark() });
 		}
 		catch (DataAccessException e)
 		{
@@ -48,11 +47,11 @@ public class PayRecordDao
 
 	public void modify(PayRecordMO mo) throws LittleCatException
 	{
-		String sql = "update " + TABLE_NAME + " set student=?,fee=?,times=?,remark=? where id = ?";
+		String sql = "update " + TABLE_NAME + " set student=?,kecheng=?,fee=?,times=?,remark=? where id = ?";
 
 		try
 		{
-			jdbcTemplate.update(sql, new Object[] { mo.getStudent(), mo.getFee(),mo.getTimes(), mo.getRemark(), mo.getId() });
+			jdbcTemplate.update(sql, new Object[] { mo.getStudent(),mo.getKecheng(), mo.getFee(), mo.getTimes(), mo.getRemark(), mo.getId() });
 		}
 		catch (DataAccessException e)
 		{
@@ -62,15 +61,22 @@ public class PayRecordDao
 
 	public PayRecordMO getById(String id) throws LittleCatException
 	{
-		return DaoUtil.getById(TABLE_NAME, id, jdbcTemplate, new PayRecordMO.MOMapper());
+		StringBuilder sql = new StringBuilder()
+				.append("select a.*,b.name studentName,c.name kechengName from ").append(TABLE_NAME).append(" a ")
+				.append(" left join " + TABLE_NAME_STUDENT + " b on a.student = b.id")
+				.append(" left join " + TABLE_NAME_KECHENG + " c on a.kecheng=c.id ");
+
+		sql.append(" where a.id = ? ");
+
+		return jdbcTemplate.queryForObject(sql.toString(), new Object[] { id }, new PayRecordMO.MOMapper());
 	}
 
-	public List<PayRecordMO> getList(String studentId,String studentName) throws LittleCatException
+	public List<PayRecordMO> getList(String studentId, String studentName) throws LittleCatException
 	{
 		StringBuilder sql = new StringBuilder()
 				.append("select a.*,b.name studentName,c.name kechengName from ").append(TABLE_NAME).append(" a ")
-				.append(" inner join "+TABLE_NAME_STUDENT+" b on a.student = b.id")
-				.append(" inner join " +TABLE_NAME_KECHENG+" c on a.kecheng=c.id ");
+				.append(" left join " + TABLE_NAME_STUDENT + " b on a.student = b.id")
+				.append(" left join " + TABLE_NAME_KECHENG + " c on a.kecheng=c.id ");
 
 		sql.append(" where 1 = 1 ");
 
