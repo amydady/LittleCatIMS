@@ -1,19 +1,20 @@
 package com.littlecat.ims.common.consts;
 
 /**
- * 学生与课程关系状态
+ * 
+ * 沟通记录状态
  * 
  * @author amydady
  *
  */
-public enum StudentKeChengState
+public enum GouTongJiLuState
 {
-	zhengchang("1"), zanting("2"), jieshu("3"),
+	jinxingzhong("1"), guaqi("2"), yiwancheng("3"),
 	;
 
 	private String code;
 
-	StudentKeChengState(String code)
+	GouTongJiLuState(String code)
 	{
 		this.code = code;
 	}

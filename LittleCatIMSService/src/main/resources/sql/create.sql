@@ -159,3 +159,19 @@ CREATE TABLE `t_kecheng_payrecord` (
 	
 	PRIMARY KEY (`id`)
 );
+
+##personal#############################################################
+##沟通记录
+CREATE TABLE `t_personal_goutongjilu` (
+	`id` VARCHAR(255) NOT NULL,
+	`studentName` VARCHAR(255) NULL,
+	`topic` VARCHAR(255) NOT NULL,
+	`content` VARCHAR(255) NOT NULL,
+	`laterplan` VARCHAR(255) NOT NULL,
+	`remark` VARCHAR(255) NOT NULL,
+	`state` VARCHAR(10) NOT NULL,
+	`operator` VARCHAR(255) NOT NULL,
+	`createTime` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+	
+	PRIMARY KEY (`id`)
+);
