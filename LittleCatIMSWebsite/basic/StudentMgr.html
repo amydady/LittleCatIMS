@@ -24,11 +24,11 @@
 
         <!-- 操作按钮 -->
         <div class="row">
-            
+
 
             <div class="col-3">
                 <div class="input-group">
-                    <input type="text" class="form-control is-valid"  ng-keyup="enterEvent($event)"
+                    <input type="text" class="form-control is-valid" ng-keyup="enterEvent($event)"
                         ng-model="search.key">
                     <div class="input-group-prepend">
                         <button type="button" class="btn btn-outline-success" ng-click="onSearch()">查 询</button>
@@ -66,10 +66,10 @@
                             <td ng-hide={{true}}>{{x.id}}</td>
                             <th scope="row"><a href="#" ng-click="getDetailData(x.id)">{{x.name}}</a></td>
                             <td>{{x.mobile}}</td>
-                            <td>{{x.xuexiao}}</td>
-                            <td>{{x.nianji}}</td>
-                            <td>{{x.banji}}</td>
-                            <td>{{x.xiaoqu}}</td>
+                            <td>{{x.xuexiaoName}}</td>
+                            <td>{{x.nianjiName}}</td>
+                            <td>{{x.banjiName}}</td>
+                            <td>{{x.xiaoquName}}</td>
                             <td>{{x.tuijianren}}</td>
                             <td>{{x.remark}}</td>
                             <td>{{x.createTime}}</td>
@@ -107,30 +107,41 @@
                             </div>
                             <label for="inputName" class="col-sm-1 col-form-label">小区</label>
                             <div class="col-sm-3">
-                                <input type="text" class="form-control" ng-model="detailInfo.xiaoqu">
+                                <select class="form-control" ng-model="detailInfo.xiaoqu">
+                                    <option value="-1">请选择小区……</option>
+                                    <option ng-repeat="x in xiaoQuListData" value="{{x.id}}">{{x.name}}</option>
+                                </select>
                             </div>
                         </div>
                         <div class="form-group row">
                             <label for="inputName" class="col-sm-1 col-form-label">学校</label>
                             <div class="col-sm-3">
-                                <input type="text" class="form-control" ng-model="detailInfo.xuexiao">
+                                <select class="form-control" ng-model="detailInfo.xuexiao">
+                                    <option value="-1">请选择学校……</option>
+                                    <option ng-repeat="x in xueXiaoListData" value="{{x.id}}">{{x.name}}</option>
+                                </select>
                             </div>
                             <label for="inputName" class="col-sm-1 col-form-label">年级</label>
                             <div class="col-sm-3">
-                                <input type="text" class="form-control" ng-model="detailInfo.nianji">
+                                <select class="form-control" ng-model="detailInfo.nianji">
+                                    <option value="-1">请选择年级……</option>
+                                    <option ng-repeat="x in nianJiListData" value="{{x.id}}">{{x.name}}</option>
+                                </select>
                             </div>
                             <label for="inputName" class="col-sm-1 col-form-label">班级</label>
                             <div class="col-sm-3">
-                                <input type="text" class="form-control" ng-model="detailInfo.banji">
-
+                                <select class="form-control" ng-model="detailInfo.banji">
+                                    <option value="-1">请选择班级……</option>
+                                    <option ng-repeat="x in banJiListData" value="{{x.id}}">{{x.name}}</option>
+                                </select>
                             </div>
                         </div>
 
                         <div class="form-group row">
-                                <label for="inputName" class="col-sm-1 col-form-label">推荐人</label>
-                                <div class="col-sm-3">
-                                    <input type="text" class="form-control" ng-model="detailInfo.tuijianren">
-                                </div>
+                            <label for="inputName" class="col-sm-1 col-form-label">推荐人</label>
+                            <div class="col-sm-3">
+                                <input type="text" class="form-control" ng-model="detailInfo.tuijianren">
+                            </div>
                             <label for="inputName" class="col-sm-1 col-form-label">创建时间</label>
                             <div class="col-sm-3">
                                 <input type="text" class="form-control" readonly ng-model="detailInfo.createTime">
@@ -198,6 +209,52 @@
                 key: ''
             };
 
+
+
+            $scope.getXiaoQuData = function () {
+                $http.get(CommonConfig.RestBaseUrl.IMSService + 'basicinfo/getDicContentList?dictype=4')
+                    .then(function (result) {  //正确请求成功时处理
+                        $scope.xiaoQuListData = result.data.data
+                        console.log(result);
+
+                    }).catch(function (result) { //捕捉错误处理
+                        console.log(result);
+                    });
+            };
+
+            $scope.getXueXiaoData = function () {
+                $http.get(CommonConfig.RestBaseUrl.IMSService + 'basicinfo/getDicContentList?dictype=1')
+                    .then(function (result) {  //正确请求成功时处理
+                        $scope.xueXiaoListData = result.data.data
+                        console.log(result);
+
+                    }).catch(function (result) { //捕捉错误处理
+                        console.log(result);
+                    });
+            };
+
+            $scope.getNianJiData = function () {
+                $http.get(CommonConfig.RestBaseUrl.IMSService + 'basicinfo/getDicContentList?dictype=2')
+                    .then(function (result) {  //正确请求成功时处理
+                        $scope.nianJiListData = result.data.data
+                        console.log(result);
+
+                    }).catch(function (result) { //捕捉错误处理
+                        console.log(result);
+                    });
+            };
+
+            $scope.getBanJiData = function () {
+                $http.get(CommonConfig.RestBaseUrl.IMSService + 'basicinfo/getDicContentList?dictype=3')
+                    .then(function (result) {  //正确请求成功时处理
+                        $scope.banJiListData = result.data.data
+                        console.log(result);
+
+                    }).catch(function (result) { //捕捉错误处理
+                        console.log(result);
+                    });
+            };
+
             $scope.getData = function () {
 
                 $http.get(CommonConfig.RestBaseUrl.IMSService + 'student/getList?key=' + $scope.search.key)
@@ -227,6 +284,10 @@
 
             $scope.onAdd = function () {
                 $scope.detailInfo = {
+                    xiaoqu: '-1',
+                    xuexiao: '-1',
+                    nianji: '-1',
+                    banji: '-1',
                 };
 
                 $("#detailModal").modal("show")
@@ -286,7 +347,18 @@
                 }
             };
 
+            $scope.getXiaoQuData();
+            $scope.getXueXiaoData();
+            $scope.getNianJiData();
+            $scope.getBanJiData();
             $scope.getData();
+
+            $scope.detailInfo = {
+                xiaoqu: '-1',
+                xuexiao: '-1',
+                nianji: '-1',
+                banji: '-1',
+            };
 
         });
     </script>

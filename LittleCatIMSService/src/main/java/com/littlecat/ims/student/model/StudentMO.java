@@ -23,6 +23,10 @@ public class StudentMO extends BaseMO
 	
 
 	private String enableV;
+	private String xiaoquName;
+	private String xuexiaoName;
+	private String nianjiName;
+	private String banjiName;
 
 	public String getName()
 	{
@@ -138,6 +142,48 @@ public class StudentMO extends BaseMO
 	public void setTuijianren(String tuijianren)
 	{
 		this.tuijianren = tuijianren;
+	}
+
+
+
+	public String getXiaoquName()
+	{
+		return xiaoquName;
+	}
+
+	public void setXiaoquName(String xiaoquName)
+	{
+		this.xiaoquName = xiaoquName;
+	}
+
+	public String getXuexiaoName()
+	{
+		return xuexiaoName;
+	}
+
+	public void setXuexiaoName(String xuexiaoName)
+	{
+		this.xuexiaoName = xuexiaoName;
+	}
+
+	public String getNianjiName()
+	{
+		return nianjiName;
+	}
+
+	public void setNianjiName(String nianjiName)
+	{
+		this.nianjiName = nianjiName;
+	}
+
+	public String getBanjiName()
+	{
+		return banjiName;
+	}
+
+	public void setBanjiName(String banjiName)
+	{
+		this.banjiName = banjiName;
 	}
 
 

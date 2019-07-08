@@ -7,6 +7,7 @@ import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.littlecat.cbb.exception.LittleCatException;
+import com.littlecat.ims.basicinfo.business.DicContentBusiness;
 import com.littlecat.ims.student.dao.StudentDao;
 import com.littlecat.ims.student.model.StudentMO;
 
@@ -16,6 +17,9 @@ public class StudentBusiness
 {
 	@Autowired
 	private StudentDao studentDao;
+	
+	@Autowired
+	private DicContentBusiness dicContentBusiness;
 
 	public void enable(String id) throws LittleCatException
 	{
@@ -55,7 +59,17 @@ public class StudentBusiness
 
 	public List<StudentMO> getList(String key) throws LittleCatException
 	{
-		return studentDao.getList(key);
+		List<StudentMO> dataList = studentDao.getList(key);
+		
+		for(StudentMO data:dataList)
+		{
+			data.setXiaoquName(dicContentBusiness.getById(data.getXiaoqu()).getName());
+			data.setXuexiaoName(dicContentBusiness.getById(data.getXuexiao()).getName());
+			data.setNianjiName(dicContentBusiness.getById(data.getNianji()).getName());
+			data.setBanjiName(dicContentBusiness.getById(data.getBanji()).getName());
+		}
+		
+		return dataList;
 	}
 	
 }
