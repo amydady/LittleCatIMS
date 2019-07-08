@@ -17,7 +17,7 @@ public class StudentBusiness
 {
 	@Autowired
 	private StudentDao studentDao;
-	
+
 	@Autowired
 	private DicContentBusiness dicContentBusiness;
 
@@ -35,7 +35,6 @@ public class StudentBusiness
 	{
 		studentDao.disable(id);
 	}
-	
 
 	public void disable(List<String> ids) throws LittleCatException
 	{
@@ -60,16 +59,32 @@ public class StudentBusiness
 	public List<StudentMO> getList(String key) throws LittleCatException
 	{
 		List<StudentMO> dataList = studentDao.getList(key);
-		
-		for(StudentMO data:dataList)
+
+		for (StudentMO data : dataList)
 		{
-			data.setXiaoquName(dicContentBusiness.getById(data.getXiaoqu()).getName());
-			data.setXuexiaoName(dicContentBusiness.getById(data.getXuexiao()).getName());
-			data.setNianjiName(dicContentBusiness.getById(data.getNianji()).getName());
-			data.setBanjiName(dicContentBusiness.getById(data.getBanji()).getName());
+			if (!"-1".equals(data.getXiaoqu()))
+			{
+				data.setXiaoquName(dicContentBusiness.getById(data.getXiaoqu()).getName());
+			}
+
+			if (!"-1".equals(data.getXuexiao()))
+			{
+				data.setXuexiaoName(dicContentBusiness.getById(data.getXuexiao()).getName());
+			}
+
+			if (!"-1".equals(data.getNianji()))
+			{
+				data.setNianjiName(dicContentBusiness.getById(data.getNianji()).getName());
+			}
+
+			if (!"-1".equals(data.getBanji()))
+			{
+				data.setBanjiName(dicContentBusiness.getById(data.getBanji()).getName());
+			}
+
 		}
-		
+
 		return dataList;
 	}
-	
+
 }
