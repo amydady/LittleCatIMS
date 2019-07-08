@@ -13,7 +13,6 @@ import com.littlecat.cbb.utils.StringUtil;
 import com.littlecat.cbb.utils.UUIDUtil;
 import com.littlecat.ims.common.consts.GouTongJiLuState;
 import com.littlecat.ims.common.consts.TableName;
-import com.littlecat.ims.common.utils.DaoUtil;
 import com.littlecat.ims.personal.model.GouTongJiLuMO;
 
 @Component
@@ -25,24 +24,18 @@ public class GouTongJiLuDao
 	@Autowired
 	protected JdbcTemplate jdbcTemplate;
 
-	public void enable(String id) throws LittleCatException
+	public void setState(String id, GouTongJiLuState state) throws LittleCatException
 	{
-		DaoUtil.enable(TABLE_NAME, id, jdbcTemplate);
-	}
+		String sql = "update " + TABLE_NAME + " set state = ? where id = ?";
 
-	public void enable(List<String> ids) throws LittleCatException
-	{
-		DaoUtil.enable(TABLE_NAME, ids, jdbcTemplate);
-	}
-
-	public void disable(String id) throws LittleCatException
-	{
-		DaoUtil.disable(TABLE_NAME, id, jdbcTemplate);
-	}
-
-	public void disable(List<String> ids) throws LittleCatException
-	{
-		DaoUtil.disable(TABLE_NAME, ids, jdbcTemplate);
+		try
+		{
+			jdbcTemplate.update(sql, new Object[] { state.getCode(), id });
+		}
+		catch (DataAccessException e)
+		{
+			throw new LittleCatException(Consts.ERROR_CODE_DATAACCESSEXCEPTION, e.getMessage(), e);
+		}
 	}
 
 	public String add(GouTongJiLuMO mo) throws LittleCatException
