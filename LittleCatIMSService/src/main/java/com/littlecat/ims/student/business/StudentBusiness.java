@@ -6,6 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.littlecat.cbb.common.Consts;
 import com.littlecat.cbb.exception.LittleCatException;
 import com.littlecat.ims.basicinfo.business.DicContentBusiness;
 import com.littlecat.ims.student.dao.StudentDao;
@@ -20,7 +21,7 @@ public class StudentBusiness
 
 	@Autowired
 	private DicContentBusiness dicContentBusiness;
-
+	
 	public void enable(String id) throws LittleCatException
 	{
 		studentDao.enable(id);
@@ -62,26 +63,25 @@ public class StudentBusiness
 
 		for (StudentMO data : dataList)
 		{
-			if (!"-1".equals(data.getXiaoqu()))
+			if (!Consts.DEFAULT_NONE_SELECTVALUE.equals(data.getXiaoqu()))
 			{
 				data.setXiaoquName(dicContentBusiness.getById(data.getXiaoqu()).getName());
 			}
 
-			if (!"-1".equals(data.getXuexiao()))
+			if (!Consts.DEFAULT_NONE_SELECTVALUE.equals(data.getXuexiao()))
 			{
 				data.setXuexiaoName(dicContentBusiness.getById(data.getXuexiao()).getName());
 			}
 
-			if (!"-1".equals(data.getNianji()))
+			if (!Consts.DEFAULT_NONE_SELECTVALUE.equals(data.getNianji()))
 			{
 				data.setNianjiName(dicContentBusiness.getById(data.getNianji()).getName());
 			}
 
-			if (!"-1".equals(data.getBanji()))
+			if (!Consts.DEFAULT_NONE_SELECTVALUE.equals(data.getBanji()))
 			{
 				data.setBanjiName(dicContentBusiness.getById(data.getBanji()).getName());
 			}
-
 		}
 
 		return dataList;

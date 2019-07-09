@@ -61,7 +61,7 @@ public class GouTongJiLuDao
 
 	public void modify(GouTongJiLuMO mo) throws LittleCatException
 	{
-		String sql = "update " + TABLE_NAME + " set student = ?,topic = ?,content = ?,laterplan = ?,remark = ? where id = ?";
+		String sql = "update " + TABLE_NAME + " set studentName = ?,topic = ?,content = ?,laterplan = ?,remark = ? where id = ?";
 
 		try
 		{
