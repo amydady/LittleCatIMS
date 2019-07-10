@@ -85,7 +85,7 @@ public class KeChengDao
 		return DaoUtil.getById(TABLE_NAME, id, jdbcTemplate, new KeChengMO.MOMapper());
 	}
 
-	public List<KeChengMO> getList(String key,String teacher) throws LittleCatException
+	public List<KeChengMO> getList(String key,String teacher,String enable) throws LittleCatException
 	{
 		StringBuilder sql = new StringBuilder()
 				.append("select a.*,b.name teacherName from ").append(TABLE_NAME).append(" a ")
@@ -101,6 +101,11 @@ public class KeChengDao
 		if (StringUtil.isNotEmpty(key))
 		{
 			sql.append(" and a.name like '%" + key + "%'");
+		}
+		
+		if (StringUtil.isNotEmpty(enable))
+		{
+			sql.append(" and a.enable ='" + enable + "'");
 		}
 
 		return jdbcTemplate.query(sql.toString(), new KeChengMO.MOMapper());

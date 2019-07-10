@@ -144,25 +144,21 @@
                                         <th scope="col">序 号</th>
                                         <th scope="col" ng-hide={{true}}>ID</th>
                                         <th scope="col">姓名</th>
-                                        <th scope="col">手机</th>
                                         <th scope="col">学校</th>
                                         <th scope="col">年级</th>
                                         <th scope="col">班级</th>
-                                        <th scope="col">备注</th>
                                     </tr>
                                 </thead>
                                 <tbody>
                                     <tr ng-repeat="x in studentListData">
-                                        <th scope="row">{{x.index + 1}}</td>
+                                        <th scope="row">{{ $index + 1 }}</td>
                                         <td ng-hide={{true}}>{{x.id}}</td>
                                         <th scope="row"><a href="#"
                                                 ng-click="onSelectOneStudent(x.id,x.name)">{{x.name}}</a>
                                             </td>
-                                        <td>{{x.mobile}}</td>
-                                        <td>{{x.xuexiao}}</td>
-                                        <td>{{x.nianji}}</td>
-                                        <td>{{x.banji}}</td>
-                                        <td>{{x.remark}}</td>
+                                        <td>{{x.xuexiaoName}}</td>
+                                        <td>{{x.nianjiName}}</td>
+                                        <td>{{x.banjiName}}</td>
                                     </tr>
                                 </tbody>
                             </table>
@@ -252,7 +248,7 @@
                     kecheng: '-1'
                 };
             };
-            
+
 
             $scope.getData = function () {
 
@@ -298,7 +294,7 @@
                     return
                 }
 
-                if ($scope.detailInfo.kecheng=='-1') {
+                if ($scope.detailInfo.kecheng == '-1') {
                     $("#myModal").modal("show")
                     $scope.modalContent = "请选择课程！"
                     return

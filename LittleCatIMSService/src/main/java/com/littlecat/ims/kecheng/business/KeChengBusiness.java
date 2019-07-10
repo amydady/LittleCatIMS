@@ -53,9 +53,9 @@ public class KeChengBusiness
 		return keChengDao.add(mo);
 	}
 
-	public List<KeChengMO> getList(String key,String teacher) throws LittleCatException
+	public List<KeChengMO> getList(String key,String teacher,String enable) throws LittleCatException
 	{
-		return keChengDao.getList(key,teacher);
+		return keChengDao.getList(key,teacher,enable);
 	}
 	
 }
