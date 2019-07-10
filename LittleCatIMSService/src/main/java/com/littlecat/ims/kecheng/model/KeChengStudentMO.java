@@ -17,6 +17,9 @@ public class KeChengStudentMO extends BaseMO
 	private String state;
 	private String createTime;
 
+	private String kechengName;
+	private String studentName;
+
 	public String getKecheng()
 	{
 		return kecheng;
@@ -77,6 +80,26 @@ public class KeChengStudentMO extends BaseMO
 		this.state = state;
 	}
 
+	public String getKechengName()
+	{
+		return kechengName;
+	}
+
+	public void setKechengName(String kechengName)
+	{
+		this.kechengName = kechengName;
+	}
+
+	public String getStudentName()
+	{
+		return studentName;
+	}
+
+	public void setStudentName(String studentName)
+	{
+		this.studentName = studentName;
+	}
+
 	public static class MOMapper implements RowMapper<KeChengStudentMO>
 	{
 		@Override
@@ -92,11 +115,12 @@ public class KeChengStudentMO extends BaseMO
 			mo.setRemark(rs.getString("remark"));
 			mo.setState(rs.getString("state"));
 
-
 			// for display
 
 			try
 			{
+				mo.setKechengName(rs.getString("kechengName"));
+				mo.setStudentName(rs.getString("studentName"));
 			}
 			catch (Exception e)
 			{

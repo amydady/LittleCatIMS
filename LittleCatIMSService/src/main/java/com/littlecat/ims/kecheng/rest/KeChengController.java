@@ -20,7 +20,9 @@ import com.littlecat.cbb.exception.LittleCatException;
 import com.littlecat.cbb.rest.RestRsp;
 import com.littlecat.cbb.rest.RestSimpleRsp;
 import com.littlecat.ims.kecheng.business.KeChengBusiness;
+import com.littlecat.ims.kecheng.business.KeChengStudentBusiness;
 import com.littlecat.ims.kecheng.model.KeChengMO;
+import com.littlecat.ims.kecheng.model.KeChengStudentMO;
 
 @RestController
 @RequestMapping("/rest/littlecat/ims/kecheng")
@@ -28,6 +30,9 @@ public class KeChengController
 {
 	@Autowired
 	private KeChengBusiness keChengBusiness;
+	
+	@Autowired
+	private KeChengStudentBusiness keChengStudentBusiness;
 
 	private static final Logger logger = LoggerFactory.getLogger(KeChengController.class);
 
@@ -214,6 +219,57 @@ public class KeChengController
 		try
 		{
 			keChengBusiness.enable(ids);
+		}
+		catch (LittleCatException e)
+		{
+			result.setCode(e.getErrorCode());
+			result.setMessage(e.getMessage());
+			logger.error(e.getMessage(), e);
+		}
+		catch (Exception e)
+		{
+			result.setCode(Consts.ERROR_CODE_UNKNOW);
+			result.setMessage(e.getMessage());
+			logger.error(e.getMessage(), e);
+		}
+
+		return result;
+	}
+	
+	@PostMapping(value = "/addStudent")
+	public RestRsp<String> addStudent(@RequestBody KeChengStudentMO mo)
+	{
+		RestRsp<String> result = new RestRsp<String>();
+
+		try
+		{
+			result.getData().add(keChengStudentBusiness.add(mo));
+		}
+		catch (LittleCatException e)
+		{
+			result.setCode(e.getErrorCode());
+			result.setMessage(e.getMessage());
+			logger.error(e.getMessage(), e);
+		}
+		catch (Exception e)
+		{
+			result.setCode(Consts.ERROR_CODE_UNKNOW);
+			result.setMessage(e.getMessage());
+			logger.error(e.getMessage(), e);
+		}
+
+		return result;
+	}
+
+	
+	@GetMapping(value = "/getStudentList")
+	public RestRsp<KeChengStudentMO> getStudentList(@RequestParam String kecheng,@RequestParam @Nullable String state,@RequestParam @Nullable String key )
+	{
+		RestRsp<KeChengStudentMO> result = new RestRsp<KeChengStudentMO>();
+
+		try
+		{
+			result.getData().addAll(keChengStudentBusiness.getByKeCheng(kecheng, state, key));
 		}
 		catch (LittleCatException e)
 		{

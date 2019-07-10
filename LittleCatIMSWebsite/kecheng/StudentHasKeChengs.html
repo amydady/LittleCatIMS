@@ -1,0 +1,270 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="../lib/bootstrap/css/bootstrap.min.css">
+
+    <title>学员报课管理</title>
+</head>
+
+<body ng-app="myApp" ng-controller="myCtrl">
+    <div class="container-fluid">
+        <!-- 页面标题 -->
+        <div class="row" style="height:60px">
+            <div class="col">
+                <h4>学员报课管理（{{studentName}}）</h4>
+            </div>
+        </div>
+
+
+        <!-- 操作按钮 -->
+        <div class="row">
+
+            <div class="col-3">
+                <div class="input-group">
+                    <input type="text" class="form-control is-valid" ng-keyup="enterEvent($event)"
+                        ng-model="search.key">
+                    <div class="input-group-prepend">
+                        <button type="button" class="btn btn-outline-success" ng-click="onSearch()">查 询</button>
+                    </div>
+                </div>
+            </div>
+            <div class="col" align="right">
+                <button type="button" class="btn btn-primary" ng-click="onAdd()">添 加</button>
+            </div>
+        </div>
+        <hr />
+        <!-- 数据区域 -->
+        <div class="row">
+            <div class="col">
+                <table class="table table-striped table-hover" id="tableList">
+                    <thead class="bg-info text-white">
+                        <tr>
+                            <th scope="col">序 号</th>
+                            <th scope="col" ng-hide={{true}}>ID</th>
+                            <th scope="col">课程名称</th>
+                            <th scope="col">剩余课次</th>
+                            <th scope="col">备注</th>
+                            <th scope="col">创建时间</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr ng-repeat="x in listData">
+                            <td>{{ $index + 1 }}</td>
+                            <td ng-hide={{true}}>{{x.id}}</td>
+                            <th scope="row"><a href="#" ng-click="getDetailData(x.id)">{{x.kechengName}}</a></td>
+                            <td>{{x.remaintimes}}</td>
+                            <td>{{x.remark}}</td>
+                            <td>{{x.createTime}}</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+    </div>
+
+    <!-- Modal 字典内容维护弹出页面 -->
+    <div class="modal fade bd-example-modal-lg" id="detailModal" tabindex="-1" role="dialog" data-backdrop="static"
+        aria-labelledby="detailModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalLabel">课程信息维护</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <form>
+                        <div class="form-group row">
+                            <label for="inputName" class="col-sm-2 col-form-label">名称</label>
+                            <div class="col-sm-4">
+                                <input type="text" class="form-control" ng-model="detailInfo.name">
+                            </div>
+                            <label for="inputName" class="col-sm-2 col-form-label">教师</label>
+                            <div class="col-sm-4">
+                                <select class="form-control" ng-model="detailInfo.teacher">
+                                    <option value="-1">请选择教师……</option>
+                                    <option ng-repeat="x in teacherListData" value="{{x.id}}">{{x.name}}</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <label for="inputName" class="col-sm-2 col-form-label">创建时间</label>
+                            <div class="col-sm-4">
+                                <input type="text" class="form-control" readonly ng-model="detailInfo.createTime">
+                            </div>
+                            <label for="inputName" class="col-sm-2 col-form-label">是否有效</label>
+                            <div class="col-sm-4">
+                                <input type="text" class="form-control" readonly ng-model="detailInfo.enableV">
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <label for="inputName" class="col-sm-2 col-form-label">备注</label>
+                            <div class="col-sm-10">
+                                <input type="text" class="form-control" ng-model="detailInfo.remark">
+                            </div>
+
+                        </div>
+
+                        <div class="form-group row">
+                            <button class="btn btn-primary form-control" ng-click="onSave()">保 存</button>
+                        </div>
+
+
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal 提示框-->
+    <div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
+        aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalLabel">友情提示</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    {{modalContent}}
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">确 定</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+    <!-- Optional JavaScript -->
+    <!-- jQuery first, then Popper.js, then Bootstrap JS -->
+    <script src="../lib/jquery/jquery.3.2.1.js"></script>
+    <script src="../lib/popper/popper.1.12.9.js"></script>
+    <script src="../lib/bootstrap/js/bootstrap.min.js"></script>
+    <script src="../lib/angular-1.7.5/angular.min.js"></script>
+    <script src="../common/littleCatCommon.js"></script>
+
+    <script>
+        var app = angular.module('myApp', []);
+
+        app.controller('myCtrl', function ($scope, $http) {
+
+            $scope.search = {
+                key: ''
+            };
+
+            $scope.studentId = RequestUtil.getQueryParamByName("studentId")
+            $scope.studentName = RequestUtil.getQueryParamByName("studentName")
+
+            
+            $scope.state = '1'
+
+            $scope.getData = function () {
+
+                $http.get(CommonConfig.RestBaseUrl.IMSService + 'student/getKeChengList?student='+$scope.studentId+'&state='+$scope.state+'&key=' + $scope.search.key)
+                    .then(function (result) {  //正确请求成功时处理
+                        $scope.listData = result.data.data
+                        console.log(result);
+
+                    }).catch(function (result) { //捕捉错误处理
+                        console.log(result);
+                    });
+            };
+
+            $scope.getDetailData = function (id) {
+                $http.get(CommonConfig.RestBaseUrl.IMSService + 'kecheng/getById?id=' + id)
+                    .then(function (result) {  //正确请求成功时处理
+                        $scope.detailInfo = result.data.data[0];
+                        $("#detailModal").modal("show")
+
+                    }).catch(function (result) { //捕捉错误处理
+                        console.log(result);
+                    });
+            };
+
+            $scope.onSearch = function () {
+                $scope.getData();
+            };
+
+            $scope.onAdd = function () {
+                $scope.detailInfo = {
+                    teacher: '-1',
+                    name: '',
+                    enableV: '是'
+                };
+
+                $("#detailModal").modal("show")
+            };
+
+            $scope.onSave = function () {
+                if (StringUtil.isEmpty($scope.detailInfo.id)) {//添加
+                    $http.post(CommonConfig.RestBaseUrl.IMSService + 'kecheng/add', $scope.detailInfo, CommonConfig.httpReqConfig)
+                        .then(function (result) {  //正确请求成功时处理
+                            if (result.data.code != 'NONE_ERROR') {
+                                $("#myModal").modal("show")
+                                $scope.modalContent = "添加失败！"
+                                return
+                            }
+
+                            $("#myModal").modal("show")
+                            $scope.modalContent = "添加成功！"
+
+                            $scope.detailInfo = {
+                            };
+
+                            $scope.onSearch()
+
+                        }).catch(function (result) { //捕捉错误处理
+                            $("#myModal").modal("show")
+                            $scope.modalContent = "添加失败！"
+
+                            console.log(result);
+                        });
+                } else {//修改
+                    $http.put(CommonConfig.RestBaseUrl.IMSService + 'kecheng/modify', $scope.detailInfo, CommonConfig.httpReqConfig)
+                        .then(function (result) {  //正确请求成功时处理
+                            if (result.data.code != 'NONE_ERROR') {
+                                $("#myModal").modal("show")
+                                $scope.modalContent = "修改失败！"
+                                return
+                            }
+
+                            $("#myModal").modal("show")
+                            $scope.modalContent = "修改成功！"
+
+                            $scope.onSearch()
+
+                        }).catch(function (result) { //捕捉错误处理
+                            $("#myModal").modal("show")
+                            $scope.modalContent = "修改失败！"
+                            console.log(result);
+                        });
+                }
+            };
+
+
+            $scope.enterEvent = function (e) {
+                var keycode = window.event ? e.keyCode : e.which;
+                if (keycode == 13) {
+                    $scope.onSearch();
+                }
+            };
+
+            // $scope.getTeacherListData()
+            $scope.getData();
+
+        });
+    </script>
+</body>
+
+</html>

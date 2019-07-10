@@ -27,14 +27,14 @@ public class KeChengStudentBusiness
 		return keChengStudentDao.add(mo);
 	}
 
-	public List<KeChengStudentMO> getByKeCheng(String kecheng) throws LittleCatException
+	public List<KeChengStudentMO> getByKeCheng(String kecheng, String state, String key) throws LittleCatException
 	{
-		return keChengStudentDao.getByKeCheng(kecheng);
+		return keChengStudentDao.getByKeCheng(kecheng, state, key);
 	}
 
-	public List<KeChengStudentMO> getByStudent(String student) throws LittleCatException
+	public List<KeChengStudentMO> getByStudent(String student, String state, String key) throws LittleCatException
 	{
-		return keChengStudentDao.getByKeCheng(student);
+		return keChengStudentDao.getByStudent(student, state, key);
 	}
 
 	public void zanting(String id) throws LittleCatException

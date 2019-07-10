@@ -20,6 +20,8 @@ import com.littlecat.ims.kecheng.model.KeChengStudentMO;
 public class KeChengStudentDao
 {
 	private final String TABLE_NAME = TableName.KeChengStudent.getName();
+	private final String TABLE_NAME_STUDENT = TableName.Student.getName();
+	private final String TABLE_NAME_KECHENG = TableName.Kecheng.getName();
 
 	@Autowired
 	protected JdbcTemplate jdbcTemplate;
@@ -35,7 +37,7 @@ public class KeChengStudentDao
 
 		try
 		{
-			jdbcTemplate.update(sql, new Object[] { mo.getId(), mo.getKecheng(), mo.getStudent(),mo.getRemaintimes(),mo.getState(), mo.getRemark() });
+			jdbcTemplate.update(sql, new Object[] { mo.getId(), mo.getKecheng(), mo.getStudent(), mo.getRemaintimes(), mo.getState(), mo.getRemark() });
 		}
 		catch (DataAccessException e)
 		{
@@ -45,24 +47,46 @@ public class KeChengStudentDao
 		return mo.getId();
 	}
 
-	public List<KeChengStudentMO> getByKeCheng(String kecheng) throws LittleCatException
+	public List<KeChengStudentMO> getByKeCheng(String kecheng, String state, String key) throws LittleCatException
 	{
 		StringBuilder sql = new StringBuilder()
-				.append("select a.* from ").append(TABLE_NAME).append(" a ");
+				.append("select a.*,b.name studentName  from").append(TABLE_NAME).append(" a ")
+				.append(" inner join " + TABLE_NAME_STUDENT + " b on a.student = b.id ");
 
 		sql.append(" where a.kecheng = ? ");
 
-		return jdbcTemplate.query(sql.toString(), new Object[] { kecheng }, new KeChengStudentMO.MOMapper());
+		if (StringUtil.isNotEmpty(state))
+		{
+			sql.append(" and a.state = ? ");
+		}
+
+		if (StringUtil.isNotEmpty(key))
+		{
+			sql.append(" and b.name like '%" + key + "%' ");
+		}
+
+		return jdbcTemplate.query(sql.toString(), new Object[] { kecheng, state }, new KeChengStudentMO.MOMapper());
 	}
 
-	public List<KeChengStudentMO> getByStudent(String student) throws LittleCatException
+	public List<KeChengStudentMO> getByStudent(String student, String state, String key) throws LittleCatException
 	{
 		StringBuilder sql = new StringBuilder()
-				.append("select a.* from ").append(TABLE_NAME).append(" a ");
+				.append("select a.*,b.name kechengName from ").append(TABLE_NAME).append(" a ")
+				.append(" inner join " + TABLE_NAME_KECHENG + " b on a.kecheng = b.id ");
 
 		sql.append(" where a.student = ? ");
 
-		return jdbcTemplate.query(sql.toString(), new Object[] { student }, new KeChengStudentMO.MOMapper());
+		if (StringUtil.isNotEmpty(state))
+		{
+			sql.append(" and a.state = ? ");
+		}
+
+		if (StringUtil.isNotEmpty(key))
+		{
+			sql.append(" and b.name like '%" + key + "%' ");
+		}
+
+		return jdbcTemplate.query(sql.toString(), new Object[] { student, state }, new KeChengStudentMO.MOMapper());
 	}
 
 	public boolean exists(String kecheng, String student) throws LittleCatException
@@ -82,30 +106,30 @@ public class KeChengStudentDao
 
 		try
 		{
-			jdbcTemplate.update(sql, new Object[] { mo.getKecheng(),mo.getStudent(),mo.getRemaintimes(), mo.getRemark(), mo.getId() });
+			jdbcTemplate.update(sql, new Object[] { mo.getKecheng(), mo.getStudent(), mo.getRemaintimes(), mo.getRemark(), mo.getId() });
 		}
 		catch (DataAccessException e)
 		{
 			throw new LittleCatException(Consts.ERROR_CODE_DATAACCESSEXCEPTION, e.getMessage(), e);
 		}
 	}
-	
+
 	public void zanting(String id) throws LittleCatException
 	{
-		setState(id,StudentKeChengState.zanting);
+		setState(id, StudentKeChengState.zanting);
 	}
-	
+
 	public void huifu(String id) throws LittleCatException
 	{
-		setState(id,StudentKeChengState.zhengchang);
+		setState(id, StudentKeChengState.zhengchang);
 	}
-	
+
 	public void end(String id) throws LittleCatException
 	{
-		setState(id,StudentKeChengState.jieshu);
+		setState(id, StudentKeChengState.jieshu);
 	}
-	
-	private void setState(String id,StudentKeChengState state) throws LittleCatException
+
+	private void setState(String id, StudentKeChengState state) throws LittleCatException
 	{
 		String sql = "update " + TABLE_NAME + " set state = ? where id = ?";
 
@@ -118,8 +142,6 @@ public class KeChengStudentDao
 			throw new LittleCatException(Consts.ERROR_CODE_DATAACCESSEXCEPTION, e.getMessage(), e);
 		}
 	}
-	
-	
 
 	// public void delete(List<String> ids) throws LittleCatException
 	// {
