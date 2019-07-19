@@ -47,6 +47,16 @@ public class KeChengStudentDao
 		return mo.getId();
 	}
 
+	public KeChengStudentMO getById(String id) throws LittleCatException
+	{
+		StringBuilder sql = new StringBuilder()
+				.append("select a.* from ").append(TABLE_NAME).append(" a ");
+
+		sql.append(" where a.id = ? ");
+
+		return jdbcTemplate.queryForObject(sql.toString(), new Object[] { id }, new KeChengStudentMO.MOMapper());
+	}
+
 	public List<KeChengStudentMO> getByKeCheng(String kecheng, String state, String key) throws LittleCatException
 	{
 		StringBuilder sql = new StringBuilder()
@@ -89,7 +99,7 @@ public class KeChengStudentDao
 		return jdbcTemplate.query(sql.toString(), new Object[] { student, state }, new KeChengStudentMO.MOMapper());
 	}
 
-	public boolean exists(String kecheng, String student) throws LittleCatException
+	public String exists(String kecheng, String student) throws LittleCatException
 	{
 		StringBuilder sql = new StringBuilder()
 				.append("select a.* from ").append(TABLE_NAME).append(" a ")
@@ -97,7 +107,12 @@ public class KeChengStudentDao
 
 		List<KeChengStudentMO> list = jdbcTemplate.query(sql.toString(), new Object[] { kecheng, student }, new KeChengStudentMO.MOMapper());
 
-		return CollectionUtil.isNotEmpty(list);
+		if (CollectionUtil.isNotEmpty(list))
+		{
+			return list.get(0).getId();
+		}
+
+		return null;
 	}
 
 	public void modify(KeChengStudentMO mo) throws LittleCatException

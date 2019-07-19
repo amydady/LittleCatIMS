@@ -26,6 +26,11 @@ public class KeChengStudentBusiness
 	{
 		return keChengStudentDao.add(mo);
 	}
+	
+	public KeChengStudentMO getById(String id) throws LittleCatException
+	{
+		return keChengStudentDao.getById(id);
+	}
 
 	public List<KeChengStudentMO> getByKeCheng(String kecheng, String state, String key) throws LittleCatException
 	{
@@ -52,7 +57,7 @@ public class KeChengStudentBusiness
 		keChengStudentDao.end(id);
 	}
 
-	public boolean exists(String kecheng, String student) throws LittleCatException
+	public String exists(String kecheng, String student) throws LittleCatException
 	{
 		return keChengStudentDao.exists(kecheng, student);
 	}

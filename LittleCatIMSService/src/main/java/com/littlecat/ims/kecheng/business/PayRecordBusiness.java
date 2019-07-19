@@ -7,6 +7,7 @@ import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.littlecat.cbb.exception.LittleCatException;
+import com.littlecat.cbb.utils.StringUtil;
 import com.littlecat.ims.common.consts.StudentKeChengState;
 import com.littlecat.ims.kecheng.dao.PayRecordDao;
 import com.littlecat.ims.kecheng.model.KeChengStudentMO;
@@ -24,19 +25,41 @@ public class PayRecordBusiness
 
 	public void modify(PayRecordMO mo) throws LittleCatException
 	{
+		PayRecordMO oldMO = this.getById(mo.getId());
+
+		if (oldMO.getTimes() != mo.getTimes())
+		{
+			String kechengStudentId = keChengStudentBusiness.exists(mo.getKecheng(), mo.getStudent());
+			KeChengStudentMO keChengStudentMO = keChengStudentBusiness.getById(kechengStudentId);
+			keChengStudentMO.setRemaintimes(keChengStudentMO.getRemaintimes() + mo.getTimes() - oldMO.getTimes());
+			keChengStudentBusiness.modify(keChengStudentMO);
+		}
+		
 		payRecordDao.modify(mo);
 	}
 
 	public String add(PayRecordMO mo) throws LittleCatException
 	{
-		KeChengStudentMO keChengStudentMO = new KeChengStudentMO();
-		
-		keChengStudentMO.setKecheng(mo.getKecheng());
-		keChengStudentMO.setStudent(mo.getStudent());
-		keChengStudentMO.setRemaintimes(mo.getTimes());
-		keChengStudentMO.setState(StudentKeChengState.zhengchang.getCode());
+		String kechengStudentId = keChengStudentBusiness.exists(mo.getKecheng(), mo.getStudent());
 
-		keChengStudentBusiness.add(keChengStudentMO);
+		if (StringUtil.isEmpty(kechengStudentId))
+		{
+			KeChengStudentMO keChengStudentMO = new KeChengStudentMO();
+
+			keChengStudentMO.setKecheng(mo.getKecheng());
+			keChengStudentMO.setStudent(mo.getStudent());
+			keChengStudentMO.setRemaintimes(mo.getTimes());
+			keChengStudentMO.setState(StudentKeChengState.zhengchang.getCode());
+
+			keChengStudentBusiness.add(keChengStudentMO);
+		}
+		else
+		{
+			KeChengStudentMO keChengStudentMO = keChengStudentBusiness.getById(kechengStudentId);
+			keChengStudentMO.setRemaintimes(keChengStudentMO.getRemaintimes() + mo.getTimes());
+			keChengStudentBusiness.modify(keChengStudentMO);
+		}
+
 		return payRecordDao.add(mo);
 	}
 
