@@ -60,7 +60,7 @@ public class KeChengStudentDao
 	public List<KeChengStudentMO> getByKeCheng(String kecheng, String state, String key) throws LittleCatException
 	{
 		StringBuilder sql = new StringBuilder()
-				.append("select a.*,b.name studentName  from").append(TABLE_NAME).append(" a ")
+				.append("select a.*,b.name studentName  from ").append(TABLE_NAME).append(" a ")
 				.append(" inner join " + TABLE_NAME_STUDENT + " b on a.student = b.id ");
 
 		sql.append(" where a.kecheng = ? ");

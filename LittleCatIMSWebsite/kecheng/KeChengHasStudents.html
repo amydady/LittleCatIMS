@@ -9,7 +9,7 @@
     <!-- Bootstrap CSS -->
     <link rel="stylesheet" href="../lib/bootstrap/css/bootstrap.min.css">
 
-    <title>学员报课信息（</title>
+    <title>课程学员信息（</title>
 </head>
 
 <body ng-app="myApp" ng-controller="myCtrl">
@@ -17,7 +17,7 @@
         <!-- 页面标题 -->
         <div class="row" style="height:60px">
             <div class="col">
-                <h4>学员报课信息（{{studentName}}）</h4>
+                <h4>课程学员信息（{{kechengName}}）</h4>
             </div>
         </div>
 
@@ -34,6 +34,9 @@
                     </div>
                 </div>
             </div>
+            <!-- <div class="col" align="right">
+                <button type="button" class="btn btn-primary" ng-click="onAdd()">添 加</button>
+            </div> -->
         </div>
         <hr />
         <!-- 数据区域 -->
@@ -44,7 +47,7 @@
                         <tr>
                             <th scope="col">序 号</th>
                             <th scope="col" ng-hide={{true}}>ID</th>
-                            <th scope="col">课程名称</th>
+                            <th scope="col">学生姓名</th>
                             <th scope="col">剩余课次</th>
                             <th scope="col">备注</th>
                             <th scope="col">创建时间</th>
@@ -54,7 +57,7 @@
                         <tr ng-repeat="x in listData">
                             <td>{{ $index + 1 }}</td>
                             <td ng-hide={{true}}>{{x.id}}</td>
-                            <td>{{x.kechengName}}</td>
+                            <td>{{x.studentName}}</td>
                             <td>{{x.remaintimes}}</td>
                             <td>{{x.remark}}</td>
                             <td>{{x.createTime}}</td>
@@ -106,78 +109,33 @@
                 key: ''
             };
 
-            $scope.studentId = RequestUtil.getQueryParamByName("studentId")
-            $scope.studentName = RequestUtil.getQueryParamByName("studentName")
+            $scope.kechengId = RequestUtil.getQueryParamByName("kechengId")
+            $scope.kechengName = RequestUtil.getQueryParamByName("kechengName")
 
-            if(StringUtil.isEmpty($scope.studentId)){
-                window.location='../basic/StudentMgr.html'
+            if(StringUtil.isEmpty($scope.kechengId)){
+                window.location='../kecheng/KeChengMgr.html'
             }
 
 
             $scope.state = '1'
 
+
             $scope.getData = function () {
 
-                $http.get(CommonConfig.RestBaseUrl.IMSService + 'student/getKeChengList?student=' + $scope.studentId + '&state=' + $scope.state + '&key=' + $scope.search.key)
+                $http.get(CommonConfig.RestBaseUrl.IMSService + 'kecheng/getStudentList?kecheng=' + $scope.kechengId + '&state=' + $scope.state + '&key=' + $scope.search.key)
                     .then(function (result) {  //正确请求成功时处理
                         $scope.listData = result.data.data
-                        console.log(result);
+                        console.log($scope.listData)
 
                     }).catch(function (result) { //捕捉错误处理
                         console.log(result);
                     });
             };
 
-
             $scope.onSearch = function () {
                 $scope.getData();
             };
-
-            $scope.onSave = function () {
-                if (StringUtil.isEmpty($scope.detailInfo.id)) {//添加
-                    $http.post(CommonConfig.RestBaseUrl.IMSService + 'kecheng/add', $scope.detailInfo, CommonConfig.httpReqConfig)
-                        .then(function (result) {  //正确请求成功时处理
-                            if (result.data.code != 'NONE_ERROR') {
-                                $("#myModal").modal("show")
-                                $scope.modalContent = "添加失败！"
-                                return
-                            }
-
-                            $("#myModal").modal("show")
-                            $scope.modalContent = "添加成功！"
-
-                            $scope.detailInfo = {
-                            };
-
-                            $scope.onSearch()
-
-                        }).catch(function (result) { //捕捉错误处理
-                            $("#myModal").modal("show")
-                            $scope.modalContent = "添加失败！"
-
-                            console.log(result);
-                        });
-                } else {//修改
-                    $http.put(CommonConfig.RestBaseUrl.IMSService + 'kecheng/modify', $scope.detailInfo, CommonConfig.httpReqConfig)
-                        .then(function (result) {  //正确请求成功时处理
-                            if (result.data.code != 'NONE_ERROR') {
-                                $("#myModal").modal("show")
-                                $scope.modalContent = "修改失败！"
-                                return
-                            }
-
-                            $("#myModal").modal("show")
-                            $scope.modalContent = "修改成功！"
-
-                            $scope.onSearch()
-
-                        }).catch(function (result) { //捕捉错误处理
-                            $("#myModal").modal("show")
-                            $scope.modalContent = "修改失败！"
-                            console.log(result);
-                        });
-                }
-            };
+            
 
 
             $scope.enterEvent = function (e) {

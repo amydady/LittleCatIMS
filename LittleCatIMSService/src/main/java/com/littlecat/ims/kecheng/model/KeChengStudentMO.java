@@ -120,6 +120,14 @@ public class KeChengStudentMO extends BaseMO
 			try
 			{
 				mo.setKechengName(rs.getString("kechengName"));
+			}
+			catch (Exception e)
+			{
+
+			}
+			
+			try
+			{
 				mo.setStudentName(rs.getString("studentName"));
 			}
 			catch (Exception e)

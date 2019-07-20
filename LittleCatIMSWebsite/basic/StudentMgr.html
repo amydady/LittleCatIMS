@@ -58,6 +58,7 @@
                             <th scope="col">备注</th>
                             <th scope="col">创建时间</th>
                             <th scope="col">是否有效</th>
+                            <th scope="col">操 作</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -74,6 +75,10 @@
                             <td>{{x.remark}}</td>
                             <td>{{x.createTime}}</td>
                             <td>{{x.enableV}}</td>
+                            <td>
+                                <button type="button" class="btn btn-secondary btn-sm"
+                                    ng-click="seekechenginfo(x.id,x.name)">查看课程</button>
+                            </td>
                         </tr>
                     </tbody>
                 </table>
@@ -341,6 +346,12 @@
                             console.log(result);
                         });
                 }
+            };
+
+            //跳转查看学生课程页面
+            $scope.seekechenginfo = function (id,name) {
+
+                window.location = '../kecheng/StudentHasKeChengs.html?studentId='+id+'&studentName='+name
             };
 
 
