@@ -100,6 +100,20 @@ CREATE TABLE `t_kecheng_student` (
 	
 	PRIMARY KEY (`id`)
 );
+drop table t_kecheng_timesrecord;
+CREATE TABLE `t_kecheng_timesrecord` (
+	`id` VARCHAR(125) NOT NULL,
+	`kecheng` VARCHAR(255) NOT NULL,
+	`student` VARCHAR(255) NULL,
+	`year` int NULL,
+	`month` int NULL,
+	`day` int NULL,
+	`remark` VARCHAR(255) NULL,
+	`operator` VARCHAR(255) NOT NULL,
+	`createTime` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+	
+	PRIMARY KEY (`id`)
+);
 
 ##交费记录
 CREATE TABLE `t_kecheng_payrecord` (
