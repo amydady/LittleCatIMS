@@ -27,12 +27,14 @@ CREATE TABLE `t_sys_sysoperator` (
 	`password` VARCHAR(255) NOT NULL,
 	`name` VARCHAR(255) NULL,
 	`remark` VARCHAR(255) NULL,
+	`isboss` VARCHAR(1) NULL DEFAULT 'N',
 	`createTime` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
 	`enable` VARCHAR(1) NOT NULL DEFAULT 'Y',
 	
 	PRIMARY KEY (`id`),
 	UNIQUE KEY `username` (`username`)
 );
+
 
 #字典
 CREATE TABLE `t_basic_dicType` (

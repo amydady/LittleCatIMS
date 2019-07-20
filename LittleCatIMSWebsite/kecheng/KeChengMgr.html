@@ -160,7 +160,17 @@
         var app = angular.module('myApp', []);
 
         app.controller('myCtrl', function ($scope, $http) {
+            if (StringUtil.isEmpty(sessionStorage.getItem("currentUser"))) {//尚未登录
+                window.location = '../main/login.html';
+            }
 
+            $scope.currentUser = JSON.parse(sessionStorage.getItem("currentUser"));
+
+            if ($scope.currentUser.isboss != 'Y') {
+                window.location = '../main/NoPermission.html';
+                return;
+            }
+            
             $scope.search = {
                 key: ''
             };

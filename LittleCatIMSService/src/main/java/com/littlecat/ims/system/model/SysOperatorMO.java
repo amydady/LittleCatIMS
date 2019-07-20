@@ -19,6 +19,7 @@ public class SysOperatorMO extends BaseMO
 	private String password;
 	private String name;
 	private String remark;
+	private String isboss;
 	private String createTime;
 	private String enable;
 
@@ -87,6 +88,16 @@ public class SysOperatorMO extends BaseMO
 		this.remark = remark;
 	}
 
+	public String getIsboss()
+	{
+		return isboss;
+	}
+
+	public void setIsboss(String isboss)
+	{
+		this.isboss = isboss;
+	}
+
 	public static class MOMapper implements RowMapper<SysOperatorMO>
 	{
 		@Override
@@ -98,6 +109,7 @@ public class SysOperatorMO extends BaseMO
 			mo.setUsername(rs.getString("username"));
 			mo.setName(rs.getString("name"));
 			mo.setRemark(rs.getString("remark"));
+			mo.setIsboss(rs.getString("isboss"));
 			mo.setCreateTime(StringUtil.replace(rs.getString("createTime"), ".0", ""));
 			mo.setEnable(rs.getString("enable"));
 			

@@ -84,10 +84,16 @@
     var app = angular.module('myApp', []);
 
     app.controller('myCtrl', ['$scope', '$http', '$location', function ($scope, $http, $location) {
+      
+      if (StringUtil.isEmpty(sessionStorage.getItem("currentUser"))) {
+        window.location = '../main/login.html';
+      }
+
+      $scope.currentUser = JSON.parse(sessionStorage.getItem("currentUser"));
 
 
       $scope.getDetailInfo = function () {
-        $http.get(CommonConfig.RestBaseUrl.IMSService + 'sys/operator/getbyid?id=' + sessionStorage.getItem("currentUserId"))
+        $http.get(CommonConfig.RestBaseUrl.IMSService + 'sys/operator/getbyid?id=' + $scope.currentUser.id)
           .then(function (result) {  //正确请求成功时处理
             $scope.detailInfo = result.data.data[0];
 
@@ -126,10 +132,6 @@
       $scope.changepwd = function () {
         window.location = "changepwd.html";
       };
-
-      if (StringUtil.isEmpty(sessionStorage.getItem("currentUserId"))) {//尚未登录
-        window.location = '../main/login.html';
-      }
 
       $scope.getDetailInfo();
 

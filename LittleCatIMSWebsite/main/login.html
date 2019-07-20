@@ -91,8 +91,8 @@
                             return;
                         }
 
-                        window.sessionStorage.setItem("currentUserId", result.data.data[0].id);
-                        window.sessionStorage.setItem("currentUserName", result.data.data[0].name);
+
+                        window.sessionStorage.setItem("currentUser", JSON.stringify(result.data.data[0]));
                         window.location = 'main.html';
 
 

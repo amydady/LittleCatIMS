@@ -1,0 +1,162 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="../lib/bootstrap/css/bootstrap.min.css">
+
+    <title>没有权限</title>
+</head>
+
+<body ng-app="myApp" ng-controller="myCtrl">
+    <div class="jumbotron">
+        <div class="container" align='center' >
+            <h1>对不起，你没有足够的权限!</h1>
+        </div>
+      </div>
+
+
+    <!-- Optional JavaScript -->
+    <!-- jQuery first, then Popper.js, then Bootstrap JS -->
+    <script src="../lib/jquery/jquery.3.2.1.js"></script>
+    <script src="../lib/popper/popper.1.12.9.js"></script>
+    <script src="../lib/bootstrap/js/bootstrap.min.js"></script>
+    <script src="../lib/angular-1.7.5/angular.min.js"></script>
+    <script src="../common/littleCatCommon.js"></script>
+
+    <script>
+        var app = angular.module('myApp', []);
+
+        app.controller('myCtrl', function ($scope, $http) {
+
+            $scope.search = {
+                key: ''
+            };
+
+            $scope.getTeacherListData = function () {
+                var data = {
+                    "condition": {
+                        "logicType": "and",
+                        "condItems": [
+                            {
+                                "fieldName": "enable",
+                                "opType": "equal",
+                                "value": $scope.enable
+                            }
+                        ]
+                    },
+                };
+
+                $http.post(CommonConfig.RestBaseUrl.IMSService + 'sys/operator/getList', data, CommonConfig.httpReqConfig)
+                    .then(function (result) {  //正确请求成功时处理
+                        $scope.teacherListData = result.data.data
+                    }).catch(function (result) { //捕捉错误处理
+                        console.log(result);
+                    });
+            };
+
+
+
+            $scope.getData = function () {
+
+                $http.get(CommonConfig.RestBaseUrl.IMSService + 'kecheng/getList?key=' + $scope.search.key)
+                    .then(function (result) {  //正确请求成功时处理
+                        $scope.listData = result.data.data
+                        console.log(result);
+
+                    }).catch(function (result) { //捕捉错误处理
+                        console.log(result);
+                    });
+            };
+
+            $scope.getDetailData = function (id) {
+                $http.get(CommonConfig.RestBaseUrl.IMSService + 'kecheng/getById?id=' + id)
+                    .then(function (result) {  //正确请求成功时处理
+                        $scope.detailInfo = result.data.data[0];
+                        $("#detailModal").modal("show")
+
+                    }).catch(function (result) { //捕捉错误处理
+                        console.log(result);
+                    });
+            };
+
+            $scope.onSearch = function () {
+                $scope.getData();
+            };
+
+            $scope.onAdd = function () {
+                $scope.detailInfo = {
+                    teacher: '-1',
+                    name: '',
+                    enableV: '是'
+                };
+
+                $("#detailModal").modal("show")
+            };
+
+            $scope.onSave = function () {
+                if (StringUtil.isEmpty($scope.detailInfo.id)) {//添加
+                    $http.post(CommonConfig.RestBaseUrl.IMSService + 'kecheng/add', $scope.detailInfo, CommonConfig.httpReqConfig)
+                        .then(function (result) {  //正确请求成功时处理
+                            if (result.data.code != 'NONE_ERROR') {
+                                $("#myModal").modal("show")
+                                $scope.modalContent = "添加失败！"
+                                return
+                            }
+
+                            $("#myModal").modal("show")
+                            $scope.modalContent = "添加成功！"
+
+                            $scope.detailInfo = {
+                            };
+
+                            $scope.onSearch()
+
+                        }).catch(function (result) { //捕捉错误处理
+                            $("#myModal").modal("show")
+                            $scope.modalContent = "添加失败！"
+
+                            console.log(result);
+                        });
+                } else {//修改
+                    $http.put(CommonConfig.RestBaseUrl.IMSService + 'kecheng/modify', $scope.detailInfo, CommonConfig.httpReqConfig)
+                        .then(function (result) {  //正确请求成功时处理
+                            if (result.data.code != 'NONE_ERROR') {
+                                $("#myModal").modal("show")
+                                $scope.modalContent = "修改失败！"
+                                return
+                            }
+
+                            $("#myModal").modal("show")
+                            $scope.modalContent = "修改成功！"
+
+                            $scope.onSearch()
+
+                        }).catch(function (result) { //捕捉错误处理
+                            $("#myModal").modal("show")
+                            $scope.modalContent = "修改失败！"
+                            console.log(result);
+                        });
+                }
+            };
+
+
+            $scope.enterEvent = function (e) {
+                var keycode = window.event ? e.keyCode : e.which;
+                if (keycode == 13) {
+                    $scope.onSearch();
+                }
+            };
+
+            $scope.getTeacherListData()
+            $scope.getData();
+
+        });
+    </script>
+</body>
+
+</html>

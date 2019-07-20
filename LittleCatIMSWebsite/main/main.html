@@ -125,7 +125,7 @@
             </ul>
 
           </div>
-          <span style="color: snow" >哈喽，{{currentUserName}}！</span>
+          <span style="color: snow" >哈喽，{{currentUser.name}}！</span>
 
         </nav>
       </div>
@@ -195,11 +195,11 @@
 
     app.controller('myCtrl', ['$scope', '$http', '$location', function ($scope, $http, $location) {
 
-      if (StringUtil.isEmpty(sessionStorage.getItem("currentUserId"))) {//尚未登录
+      if (StringUtil.isEmpty(sessionStorage.getItem("currentUser"))) {//尚未登录
         window.location = '../main/login.html';
       }
 
-      $scope.currentUserName = sessionStorage.getItem("currentUserName")
+      $scope.currentUser = JSON.parse(sessionStorage.getItem("currentUser"));
 
       //获取进入页面时的MenuID
       $scope.menuId = RequestUtil.getQueryParamByName('menuId');
