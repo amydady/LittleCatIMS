@@ -46,6 +46,14 @@ public class TimesRecordBusiness
 	{
 		return timesRecordDao.add(mo);
 	}
+	
+	public void add(List<TimesRecordMO> mos) throws LittleCatException
+	{
+		for(TimesRecordMO mo:mos)
+		{
+			add(mo);
+		}
+	}
 
 	public TimesRecordMO getById(String id) throws LittleCatException
 	{

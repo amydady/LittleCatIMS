@@ -55,6 +55,31 @@ public class TimesRecordController
 
 		return result;
 	}
+	
+	@PostMapping(value = "/batchadd")
+	public RestSimpleRsp batchadd(@RequestBody List<TimesRecordMO> mos)
+	{
+		RestSimpleRsp result = new RestSimpleRsp();
+
+		try
+		{
+			timesRecordBusiness.add(mos);
+		}
+		catch (LittleCatException e)
+		{
+			result.setCode(e.getErrorCode());
+			result.setMessage(e.getMessage());
+			logger.error(e.getMessage(), e);
+		}
+		catch (Exception e)
+		{
+			result.setCode(Consts.ERROR_CODE_UNKNOW);
+			result.setMessage(e.getMessage());
+			logger.error(e.getMessage(), e);
+		}
+		
+		return result;
+	}
 
 	@PutMapping(value = "/modify")
 	public RestSimpleRsp modify(@RequestBody TimesRecordMO mo)

@@ -88,7 +88,6 @@
         </div>
 
     </div>
-
     <!-- Modal 课时登记弹出页面 -->
     <div class="modal fade bd-example-modal-lg" id="detailModal" tabindex="-1" role="dialog" data-backdrop="static"
         aria-labelledby="detailModalLabel" aria-hidden="true">
@@ -96,44 +95,54 @@
             <div class="modal-content">
                 <div class="modal-header">
                     <h5 class="modal-title" id="exampleModalLabel">课时登记（{{kechengName}}）</h5>
+                    <div class="alert alert-warning" role="alert">
+                        时间默认当天，注意修改确认
+                    </div>
                     <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                         <span aria-hidden="true">&times;</span>
                     </button>
                 </div>
                 <div class="modal-body">
                     <div class="row">
-                        <div class="col">
+                        <div class="col-6">
                             <div class="input-group">
                                 <input type="text" class="form-control is-valid" ng-keyup="enterEvent($event)"
-                                    ng-model="search.year" placeholder="年">
+                                    ng-model="detailInfo.year" placeholder="年">
                                 <input type="text" class="form-control is-valid" ng-keyup="enterEvent($event)"
-                                    ng-model="search.month" placeholder="月">
+                                    ng-model="detailInfo.month" placeholder="月">
                                 <input type="text" class="form-control is-valid" ng-keyup="enterEvent($event)"
-                                    ng-model="search.day" placeholder="日">
+                                    ng-model="detailInfo.day" placeholder="日">
+
                             </div>
+
+                        </div>
+                        <div class="col" align="right">
+                            <button type="button" class="btn btn-primary" ng-click="onSave()">确定记录课次</button>
                         </div>
                     </div>
+
+                    <hr />
                     <div class="row">
                         <div class="col">
-                                <table class="table table-striped table-hover" id="studentTableList">
-                                        <thead class="bg-info text-white">
-                                            <tr>
-                                                <th scope="col">序 号</th>
-                                                <th scope="col" ng-hide={{true}}>ID</th>
-                                                <th scope="col">学生姓名</th>
-                                                <th scope="col">备注</th>
-                                            </tr>
-                                        </thead>
-                                        <tbody>
-                                            <tr ng-repeat="x in studentListData">
-                                                <td>{{ $index + 1 }}</td>
-                                                <td ng-hide={{true}}>{{x.id}}</td>
-                                                <td>{{x.studentName}}</td>
-                                                <td>{{x.remark}}</td>
-                                                
-                                            </tr>
-                                        </tbody>
-                                    </table>
+                            <table class="table table-striped table-hover" id="studentTableList">
+                                <thead class="bg-info text-white">
+                                    <tr>
+                                        <th scope="col"><input type="checkbox" id="cbxSelectAllOrCancel"
+                                                ng-click="onSelectAllOrCancel()"></th>
+                                        <th scope="col" ng-hide={{true}}>ID</th>
+                                        <th scope="col">学生姓名</th>
+                                        <th scope="col">备注</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr ng-repeat="x in studentListData">
+                                        <td><input type="checkbox"></td>
+                                        <td ng-hide={{true}}>{{x.id}}</td>
+                                        <td>{{x.studentName}}</td>
+                                        <td><input type="text" class="form-control" id='tbx_remark'></td>
+                                    </tr>
+                                </tbody>
+                            </table>
                         </div>
                     </div>
                 </div>
@@ -176,6 +185,13 @@
 
         app.controller('myCtrl', function ($scope, $http) {
 
+            if (StringUtil.isEmpty(sessionStorage.getItem("currentUser"))) {//尚未登录
+                window.location = '../main/login.html';
+            }
+
+            $scope.currentUser = JSON.parse(sessionStorage.getItem("currentUser"));
+
+
             $scope.search = {
                 key: '',
                 year: '',
@@ -190,7 +206,18 @@
                 window.location = '../kecheng/KeChengMgr.html'
             }
 
-            $scope.getStudentData = function(){
+            $scope.onSelectAllOrCancel = function () {
+                TableUtil.selectAllOrCncel('studentTableList', !$scope.selectAll, 1, $scope.studentListData.length);
+                $scope.selectAll = !$scope.selectAll;
+            };
+
+            //重置记录的选择状态
+            $scope.resetSelectStatus = function () {
+                document.getElementById('cbxSelectAllOrCancel').checked = false;
+                $scope.selectAll = false;
+            }
+
+            $scope.getStudentData = function () {
                 $http.get(CommonConfig.RestBaseUrl.IMSService + 'kecheng/getStudentList?kecheng=' + $scope.kechengId)
                     .then(function (result) {  //正确请求成功时处理
                         $scope.studentListData = result.data.data
@@ -234,54 +261,63 @@
                 $("#detailModal").modal("show")
             };
 
+
             $scope.onSave = function () {
-                if (StringUtil.isEmpty($scope.detailInfo.id)) {//添加
-                    $http.post(CommonConfig.RestBaseUrl.IMSService + 'student/add', $scope.detailInfo, CommonConfig.httpReqConfig)
-                        .then(function (result) {  //正确请求成功时处理
-                            if (result.data.code != 'NONE_ERROR') {
-                                $("#myModal").modal("show")
-                                $scope.modalContent = "添加失败！"
-                                return
-                            }
+                var data = []
 
-                            $("#myModal").modal("show")
-                            $scope.modalContent = "添加成功！"
+                var table = document.getElementById('studentTableList')
+                for (var i = 1; i < 1 + $scope.studentListData.length; i++) {
+                    var row = table.rows[i];
+                    var inputs = row.getElementsByTagName('input');
+                    var remark = ''
+                    for (var j = 0; j < inputs.length; j++) {
+                        if (inputs[j].type == 'text') {
+                            remark = inputs[j].value
+                        }
+                    }
 
-                            $scope.detailInfo = {
-                                xiaoqu: '-1',
-                                xuexiao: '-1',
-                                nianji: '-1',
-                                banji: '-1',
-                            };
+                    data.push(
+                        {
+                            kecheng:$scope.kechengId,
+                            student:$scope.studentListData[i-1],
+                            year:$scope.detailInfo.year,
+                            month:$scope.detailInfo.month,
+                            day:$scope.detailInfo.day,
+                            remark:remark,
+                            operator:$scope.currentUser.id
+                        }
+                    )
+                }
 
-                            $scope.onSearch()
-
-                        }).catch(function (result) { //捕捉错误处理
+                $http.post(CommonConfig.RestBaseUrl.IMSService + 'timesrecord/batchadd', data, CommonConfig.httpReqConfig)
+                    .then(function (result) {  //正确请求成功时处理
+                        if (result.data.code != 'NONE_ERROR') {
                             $("#myModal").modal("show")
                             $scope.modalContent = "添加失败！"
 
-                            console.log(result);
+                            $('#myModal').on('hidden.bs.modal', function (e) {
+
+                            });
+
+                            return
+                        }
+
+                        $("#myModal").modal("show")
+                        $scope.modalContent = "添加成功！"
+
+                        $('#myModal').on('hidden.bs.modal', function (e) {
+                            $("#detailModal").modal("hidden")
                         });
-                } else {//修改
-                    $http.put(CommonConfig.RestBaseUrl.IMSService + 'student/modify', $scope.detailInfo, CommonConfig.httpReqConfig)
-                        .then(function (result) {  //正确请求成功时处理
-                            if (result.data.code != 'NONE_ERROR') {
-                                $("#myModal").modal("show")
-                                $scope.modalContent = "修改失败！"
-                                return
-                            }
 
-                            $("#myModal").modal("show")
-                            $scope.modalContent = "修改成功！"
 
-                            $scope.onSearch()
+                    }).catch(function (result) { //捕捉错误处理
+                        $("#myModal").modal("show")
+                        $scope.modalContent = "添加失败！"
 
-                        }).catch(function (result) { //捕捉错误处理
-                            $("#myModal").modal("show")
-                            $scope.modalContent = "修改失败！"
-                            console.log(result);
-                        });
-                }
+                        console.log(result);
+                    });
+
+
             };
 
             //跳转查看学生课程页面
@@ -298,14 +334,17 @@
                 }
             };
 
+
+            $scope.selectAll = false;
+
             $scope.getData();
 
             $scope.detailInfo = {
-                xiaoqu: '-1',
-                xuexiao: '-1',
-                nianji: '-1',
-                banji: '-1',
+                year: new Date().format('yyyy'),
+                month: new Date().format('MM'),
+                day: new Date().format('dd')
             };
+
 
         });
     </script>

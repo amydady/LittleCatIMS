@@ -112,7 +112,8 @@ CREATE TABLE `t_kecheng_timesrecord` (
 	`operator` VARCHAR(255) NOT NULL,
 	`createTime` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
 	
-	PRIMARY KEY (`id`)
+	PRIMARY KEY (`id`),
+	UNIQUE KEY `name` (`kecheng`,`student`,`year`,`month`,`day`)
 );
 
 ##交费记录
