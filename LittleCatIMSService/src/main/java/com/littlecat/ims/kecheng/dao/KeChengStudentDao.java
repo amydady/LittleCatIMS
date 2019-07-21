@@ -67,7 +67,7 @@ public class KeChengStudentDao
 
 		if (StringUtil.isNotEmpty(state))
 		{
-			sql.append(" and a.state = ? ");
+			sql.append(" and a.state = '" + state + "'");
 		}
 
 		if (StringUtil.isNotEmpty(key))
@@ -75,7 +75,7 @@ public class KeChengStudentDao
 			sql.append(" and b.name like '%" + key + "%' ");
 		}
 
-		return jdbcTemplate.query(sql.toString(), new Object[] { kecheng, state }, new KeChengStudentMO.MOMapper());
+		return jdbcTemplate.query(sql.toString(), new Object[] { kecheng }, new KeChengStudentMO.MOMapper());
 	}
 
 	public List<KeChengStudentMO> getByStudent(String student, String state, String key) throws LittleCatException

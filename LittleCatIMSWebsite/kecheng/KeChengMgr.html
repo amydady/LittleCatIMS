@@ -67,6 +67,9 @@
                             <td>
                                 <button type="button" class="btn btn-secondary btn-sm"
                                     ng-click="seestudentinfo(x.id,x.name)">查看学员</button>
+                                    
+                                <button type="button" class="btn btn-secondary btn-sm"
+                                ng-click="seetimesinfo(x.id,x.name)">课次记录</button>
                             </td>
                         </tr>
                     </tbody>
@@ -291,6 +294,11 @@
             $scope.seestudentinfo = function (id, name) {
                 window.location = '../kecheng/KeChengHasStudents.html?kechengId=' + id + '&kechengName=' + name
             };
+
+            $scope.seetimesinfo = function (id, name) {
+                window.location = '../kecheng/TimesMgr.html?kechengId=' + id + '&kechengName=' + name
+            };
+            
 
 
             $scope.enterEvent = function (e) {

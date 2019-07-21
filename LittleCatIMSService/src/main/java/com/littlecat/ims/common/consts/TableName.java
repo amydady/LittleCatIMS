@@ -25,6 +25,7 @@ public enum TableName
 	Kecheng("t_kecheng"),
 	KeChengStudent("t_kecheng_student"),
 	PayRecord("t_kecheng_payrecord"),
+	TimesRecord("t_kecheng_timesrecord"),
 	
 	
 	

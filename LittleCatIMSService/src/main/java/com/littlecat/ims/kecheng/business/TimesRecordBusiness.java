@@ -17,6 +17,26 @@ public class TimesRecordBusiness
 	@Autowired
 	private TimesRecordDao timesRecordDao;
 
+	public void enable(String id) throws LittleCatException
+	{
+		timesRecordDao.enable(id);
+	}
+
+	public void enable(List<String> ids) throws LittleCatException
+	{
+		timesRecordDao.enable(ids);
+	}
+
+	public void disable(String id) throws LittleCatException
+	{
+		timesRecordDao.disable(id);
+	}
+
+	public void disable(List<String> ids) throws LittleCatException
+	{
+		timesRecordDao.disable(ids);
+	}
+
 	public void modify(TimesRecordMO mo) throws LittleCatException
 	{
 		timesRecordDao.modify(mo);
@@ -32,9 +52,9 @@ public class TimesRecordBusiness
 		return timesRecordDao.getById(id);
 	}
 
-	public List<TimesRecordMO> getList(String kecheng, String student, String year, String month, String day, String operator) throws LittleCatException
+	public List<TimesRecordMO> getList(String kecheng, String student, String year, String month, String day, String operator,String key) throws LittleCatException
 	{
-		return timesRecordDao.getList(kecheng, student, year, month, day, operator);
+		return timesRecordDao.getList(kecheng, student, year, month, day, operator,key);
 	}
 
 	public void delete(List<String> ids) throws LittleCatException

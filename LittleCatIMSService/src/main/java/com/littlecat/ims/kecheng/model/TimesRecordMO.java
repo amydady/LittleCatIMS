@@ -18,10 +18,12 @@ public class TimesRecordMO extends BaseMO
 	private String remark;
 	private String operator;
 	private String createTime;
+	private String enable;
 
 	private String kechengName;
 	private String studentName;
 	private String operatorName;
+	private String enableV;
 
 	public String getKecheng()
 	{
@@ -133,6 +135,26 @@ public class TimesRecordMO extends BaseMO
 		this.operatorName = operatorName;
 	}
 
+	public String getEnable()
+	{
+		return enable;
+	}
+
+	public void setEnable(String enable)
+	{
+		this.enable = enable;
+	}
+
+	public String getEnableV()
+	{
+		return enableV;
+	}
+
+	public void setEnableV(String enableV)
+	{
+		this.enableV = enableV;
+	}
+
 	public static class MOMapper implements RowMapper<TimesRecordMO>
 	{
 		@Override
@@ -151,7 +173,8 @@ public class TimesRecordMO extends BaseMO
 			mo.setCreateTime(StringUtil.replace(rs.getString("createTime"), ".0", ""));
 
 			// for display
-
+			mo.setEnableV(mo.enable.equals("Y") ? "是" : "否");
+			
 			try
 			{
 				mo.setKechengName(rs.getString("kechengName"));

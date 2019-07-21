@@ -18,7 +18,7 @@ import com.littlecat.ims.kecheng.model.TimesRecordMO;
 @Component
 public class TimesRecordDao
 {
-	private final String TABLE_NAME = TableName.KeChengStudent.getName();
+	private final String TABLE_NAME = TableName.TimesRecord.getName();
 	private final String TABLE_NAME_STUDENT = TableName.Student.getName();
 	private final String TABLE_NAME_KECHENG = TableName.Kecheng.getName();
 	private final String TABLE_NAME_SYSOPERATOR = TableName.SysOperator.getName();
@@ -26,6 +26,26 @@ public class TimesRecordDao
 	@Autowired
 	protected JdbcTemplate jdbcTemplate;
 
+	public void enable(String id) throws LittleCatException
+	{
+		DaoUtil.enable(TABLE_NAME, id, jdbcTemplate);
+	}
+
+	public void enable(List<String> ids) throws LittleCatException
+	{
+		DaoUtil.enable(TABLE_NAME, ids, jdbcTemplate);
+	}
+
+	public void disable(String id) throws LittleCatException
+	{
+		DaoUtil.disable(TABLE_NAME, id, jdbcTemplate);
+	}
+
+	public void disable(List<String> ids) throws LittleCatException
+	{
+		DaoUtil.disable(TABLE_NAME, ids, jdbcTemplate);
+	}
+	
 	public String add(TimesRecordMO mo) throws LittleCatException
 	{
 		if (StringUtil.isEmpty(mo.getId()))
@@ -57,7 +77,7 @@ public class TimesRecordDao
 		return jdbcTemplate.queryForObject(sql.toString(), new Object[] { id }, new TimesRecordMO.MOMapper());
 	}
 
-	public List<TimesRecordMO> getList(String kecheng, String student, String year, String month, String day, String operator) throws LittleCatException
+	public List<TimesRecordMO> getList(String kecheng, String student, String year, String month, String day, String operator,String key) throws LittleCatException
 	{
 		StringBuilder sql = new StringBuilder()
 				.append("select a.*,b.name studentName,c.name kechengName,d.name operatorName  from ").append(TABLE_NAME).append(" a ")
@@ -94,6 +114,11 @@ public class TimesRecordDao
 		if (StringUtil.isNotEmpty(operator))
 		{
 			sql.append(" and a.operator = '" + operator + "' ");
+		}
+		
+		if (StringUtil.isNotEmpty(key))
+		{
+			sql.append(" and (b.name like '%" + key + "%' or c.name like '%"+key+"%') ");
 		}
 
 		return jdbcTemplate.query(sql.toString(), new TimesRecordMO.MOMapper());
