@@ -240,17 +240,6 @@
                     });
             };
 
-            $scope.getDetailData = function (id) {
-                $http.get(CommonConfig.RestBaseUrl.IMSService + 'student/getById?id=' + id)
-                    .then(function (result) {  //正确请求成功时处理
-                        $scope.detailInfo = result.data.data[0];
-                        $("#detailModal").modal("show")
-
-                    }).catch(function (result) { //捕捉错误处理
-                        console.log(result);
-                    });
-            };
-
             $scope.onSearch = function () {
                 $scope.getData();
             };
@@ -270,24 +259,38 @@
                     var row = table.rows[i];
                     var inputs = row.getElementsByTagName('input');
                     var remark = ''
+                    var needProcess = true
                     for (var j = 0; j < inputs.length; j++) {
                         if (inputs[j].type == 'text') {
                             remark = inputs[j].value
                         }
-                    }
 
+                        if (inputs[j].type == 'checkbox') {
+                            if (!inputs[j].checked) {
+                                needProcess = false
+                                break
+                            }
+                        }
+
+
+                    }
+                    if (!needProcess) {
+                        continue
+                    }
                     data.push(
                         {
-                            kecheng:$scope.kechengId,
-                            student:$scope.studentListData[i-1],
-                            year:$scope.detailInfo.year,
-                            month:$scope.detailInfo.month,
-                            day:$scope.detailInfo.day,
-                            remark:remark,
-                            operator:$scope.currentUser.id
+                            kecheng: $scope.kechengId,
+                            student: $scope.studentListData[i - 1].student,
+                            year: $scope.detailInfo.year,
+                            month: $scope.detailInfo.month,
+                            day: $scope.detailInfo.day,
+                            remark: remark,
+                            operator: $scope.currentUser.id
                         }
                     )
                 }
+
+                console.log('data:', data)
 
                 $http.post(CommonConfig.RestBaseUrl.IMSService + 'timesrecord/batchadd', data, CommonConfig.httpReqConfig)
                     .then(function (result) {  //正确请求成功时处理
@@ -306,7 +309,7 @@
                         $scope.modalContent = "添加成功！"
 
                         $('#myModal').on('hidden.bs.modal', function (e) {
-                            $("#detailModal").modal("hidden")
+                            $("#detailModal").modal("hide")
                         });
 
 

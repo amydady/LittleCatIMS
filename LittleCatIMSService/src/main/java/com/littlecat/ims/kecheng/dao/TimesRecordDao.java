@@ -120,7 +120,7 @@ public class TimesRecordDao
 		{
 			sql.append(" and (b.name like '%" + key + "%' or c.name like '%"+key+"%') ");
 		}
-
+		
 		return jdbcTemplate.query(sql.toString(), new TimesRecordMO.MOMapper());
 	}
 

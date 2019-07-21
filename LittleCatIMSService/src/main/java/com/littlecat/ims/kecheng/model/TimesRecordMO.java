@@ -12,9 +12,9 @@ public class TimesRecordMO extends BaseMO
 {
 	private String kecheng;
 	private String student;
-	private int year;
-	private int month;
-	private int day;
+	private String year;
+	private String month;
+	private String day;
 	private String remark;
 	private String operator;
 	private String createTime;
@@ -45,32 +45,32 @@ public class TimesRecordMO extends BaseMO
 		this.student = student;
 	}
 
-	public int getYear()
+	public String getYear()
 	{
 		return year;
 	}
 
-	public void setYear(int year)
+	public void setYear(String year)
 	{
 		this.year = year;
 	}
 
-	public int getMonth()
+	public String getMonth()
 	{
 		return month;
 	}
 
-	public void setMonth(int month)
+	public void setMonth(String month)
 	{
 		this.month = month;
 	}
 
-	public int getDay()
+	public String getDay()
 	{
 		return day;
 	}
 
-	public void setDay(int day)
+	public void setDay(String day)
 	{
 		this.day = day;
 	}
@@ -165,11 +165,12 @@ public class TimesRecordMO extends BaseMO
 			mo.setId(rs.getString("id"));
 			mo.setKecheng(rs.getString("kecheng"));
 			mo.setStudent(rs.getString("student"));
-			mo.setYear(rs.getInt("year"));
-			mo.setMonth(rs.getInt("month"));
-			mo.setDay(rs.getInt("day"));
+			mo.setYear(rs.getString("year"));
+			mo.setMonth(rs.getString("month"));
+			mo.setDay(rs.getString("day"));
 			mo.setRemark(rs.getString("remark"));
 			mo.setOperator(rs.getString("operator"));
+			mo.setEnable(rs.getString("enable"));
 			mo.setCreateTime(StringUtil.replace(rs.getString("createTime"), ".0", ""));
 
 			// for display
