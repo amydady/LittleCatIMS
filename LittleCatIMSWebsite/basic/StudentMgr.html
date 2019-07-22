@@ -208,6 +208,14 @@
 
         app.controller('myCtrl', function ($scope, $http) {
 
+            if (StringUtil.isEmpty(sessionStorage.getItem("currentUser"))) {//尚未登录
+                window.location = '../main/login.html';
+            }
+
+            $scope.currentUser = JSON.parse(sessionStorage.getItem("currentUser"));
+
+
+
             $scope.search = {
                 key: ''
             };
@@ -251,6 +259,7 @@
                 $http.get(CommonConfig.RestBaseUrl.IMSService + 'basicinfo/getDicContentList?dictype=3')
                     .then(function (result) {  //正确请求成功时处理
                         $scope.banJiListData = result.data.data
+
                         console.log(result);
 
                     }).catch(function (result) { //捕捉错误处理
@@ -263,7 +272,14 @@
                 $http.get(CommonConfig.RestBaseUrl.IMSService + 'student/getList?key=' + $scope.search.key)
                     .then(function (result) {  //正确请求成功时处理
                         $scope.listData = result.data.data
-                        console.log(result);
+                        if ($scope.currentUser.isboss != 'Y') {
+                            for (var i = 0; i < $scope.listData.length; i++) {
+                                if(StringUtil.isNotEmpty($scope.listData[i].mobile)){
+                                    $scope.listData[i].mobile='*****'
+                                }
+                                    
+                            }
+                        }
 
                     }).catch(function (result) { //捕捉错误处理
                         console.log(result);
@@ -347,9 +363,9 @@
             };
 
             //跳转查看学生课程页面
-            $scope.seekechenginfo = function (id,name) {
+            $scope.seekechenginfo = function (id, name) {
 
-                window.location = '../kecheng/StudentHasKeChengs.html?studentId='+id+'&studentName='+name
+                window.location = '../kecheng/StudentHasKeChengs.html?studentId=' + id + '&studentName=' + name
             };
 
 
