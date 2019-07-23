@@ -77,6 +77,18 @@ public class KeChengStudentDao
 
 		return jdbcTemplate.query(sql.toString(), new Object[] { kecheng }, new KeChengStudentMO.MOMapper());
 	}
+	
+	public KeChengStudentMO getByKeChengAndStudent(String kecheng, String student) throws LittleCatException
+	{
+		StringBuilder sql = new StringBuilder()
+				.append("select a.*,b.name studentName  from ").append(TABLE_NAME).append(" a ")
+				.append(" inner join " + TABLE_NAME_STUDENT + " b on a.student = b.id ");
+
+		sql.append(" where a.kecheng = ? and a.student = ? ");
+
+
+		return jdbcTemplate.queryForObject(sql.toString(), new Object[] { kecheng,student }, new KeChengStudentMO.MOMapper());
+	}
 
 	public List<KeChengStudentMO> getByStudent(String student, String state, String key) throws LittleCatException
 	{

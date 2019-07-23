@@ -41,6 +41,11 @@ public class KeChengStudentBusiness
 	{
 		return keChengStudentDao.getByStudent(student, state, key);
 	}
+	
+	public KeChengStudentMO getByKeChengAndStudent(String kecheng, String student) throws LittleCatException
+	{
+		return keChengStudentDao.getByKeChengAndStudent(kecheng, student);
+	}
 
 	public void zanting(String id) throws LittleCatException
 	{

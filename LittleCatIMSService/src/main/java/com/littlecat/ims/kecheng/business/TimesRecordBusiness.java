@@ -7,7 +7,9 @@ import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.littlecat.cbb.exception.LittleCatException;
+import com.littlecat.ims.kecheng.dao.KeChengStudentDao;
 import com.littlecat.ims.kecheng.dao.TimesRecordDao;
+import com.littlecat.ims.kecheng.model.KeChengStudentMO;
 import com.littlecat.ims.kecheng.model.TimesRecordMO;
 
 @Component
@@ -16,6 +18,9 @@ public class TimesRecordBusiness
 {
 	@Autowired
 	private TimesRecordDao timesRecordDao;
+	
+	@Autowired
+	private KeChengStudentDao keChengStudentDao;
 
 	public void enable(String id) throws LittleCatException
 	{
@@ -44,6 +49,9 @@ public class TimesRecordBusiness
 
 	public String add(TimesRecordMO mo) throws LittleCatException
 	{
+		KeChengStudentMO keChengStudentMO = keChengStudentDao.getByKeChengAndStudent(mo.getKecheng(), mo.getStudent());
+		keChengStudentMO.setRemaintimes(keChengStudentMO.getRemaintimes() - 1);
+		keChengStudentDao.modify(keChengStudentMO);
 		return timesRecordDao.add(mo);
 	}
 	
