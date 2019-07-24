@@ -94,7 +94,6 @@ CREATE TABLE `t_kecheng_student` (
 	`kecheng` VARCHAR(255) NOT NULL,
 	`student` VARCHAR(255) NULL,
 	`remaintimes` INT NULL,
-	`remark` VARCHAR(255) NULL,
 	`state` VARCHAR(255) NULL,
 	`createTime` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
 	

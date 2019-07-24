@@ -27,6 +27,7 @@ public class StudentMO extends BaseMO
 	private String xuexiaoName;
 	private String nianjiName;
 	private String banjiName;
+	private String tuijianrenName;
 
 	public String getName()
 	{
@@ -188,6 +189,18 @@ public class StudentMO extends BaseMO
 
 
 
+	public String getTuijianrenName()
+	{
+		return tuijianrenName;
+	}
+
+	public void setTuijianrenName(String tuijianrenName)
+	{
+		this.tuijianrenName = tuijianrenName;
+	}
+
+
+
 	public static class MOMapper implements RowMapper<StudentMO>
 	{
 		@Override
@@ -212,7 +225,7 @@ public class StudentMO extends BaseMO
 
 			try
 			{
-
+				mo.setTuijianrenName(rs.getString("tuijianrenName"));
 			}
 			catch (Exception e)
 			{

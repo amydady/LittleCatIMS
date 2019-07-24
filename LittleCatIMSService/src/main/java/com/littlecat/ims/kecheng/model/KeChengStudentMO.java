@@ -13,7 +13,6 @@ public class KeChengStudentMO extends BaseMO
 	private String kecheng;
 	private String student;
 	private int remaintimes;
-	private String remark;
 	private String state;
 	private String createTime;
 
@@ -38,16 +37,6 @@ public class KeChengStudentMO extends BaseMO
 	public void setStudent(String student)
 	{
 		this.student = student;
-	}
-
-	public String getRemark()
-	{
-		return remark;
-	}
-
-	public void setRemark(String remark)
-	{
-		this.remark = remark;
 	}
 
 	public String getCreateTime()
@@ -112,7 +101,6 @@ public class KeChengStudentMO extends BaseMO
 			mo.setStudent(rs.getString("student"));
 			mo.setRemaintimes(rs.getInt("remaintimes"));
 			mo.setCreateTime(StringUtil.replace(rs.getString("createTime"), ".0", ""));
-			mo.setRemark(rs.getString("remark"));
 			mo.setState(rs.getString("state"));
 
 			// for display

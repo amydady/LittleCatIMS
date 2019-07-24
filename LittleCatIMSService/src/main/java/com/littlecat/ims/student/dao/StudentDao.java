@@ -54,7 +54,7 @@ public class StudentDao
 
 		try
 		{
-			jdbcTemplate.update(sql, new Object[] { mo.getId(), mo.getName(), mo.getMobile(), mo.getXuexiao(), mo.getNianji(), mo.getBanji(), mo.getXiaoqu(),mo.getTuijianren(), mo.getRemark() });
+			jdbcTemplate.update(sql, new Object[] { mo.getId(), mo.getName(), mo.getMobile(), mo.getXuexiao(), mo.getNianji(), mo.getBanji(), mo.getXiaoqu(), mo.getTuijianren(), mo.getRemark() });
 		}
 		catch (DataAccessException e)
 		{
@@ -70,7 +70,7 @@ public class StudentDao
 
 		try
 		{
-			jdbcTemplate.update(sql, new Object[] { mo.getName(), mo.getMobile(), mo.getXuexiao(), mo.getNianji(), mo.getBanji(), mo.getXiaoqu(),mo.getTuijianren(), mo.getRemark(), mo.getId() });
+			jdbcTemplate.update(sql, new Object[] { mo.getName(), mo.getMobile(), mo.getXuexiao(), mo.getNianji(), mo.getBanji(), mo.getXiaoqu(), mo.getTuijianren(), mo.getRemark(), mo.getId() });
 		}
 		catch (DataAccessException e)
 		{
@@ -86,13 +86,14 @@ public class StudentDao
 	public List<StudentMO> getList(String key) throws LittleCatException
 	{
 		StringBuilder sql = new StringBuilder()
-				.append("select a.* from ").append(TABLE_NAME).append(" a ");
+				.append("select a.*,b.name tuijianrenName from ").append(TABLE_NAME).append(" a ")
+				.append(" left join " + TABLE_NAME + " b on a.tuijianren = b.id ");
 
 		if (StringUtil.isNotEmpty(key))
 		{
 			sql.append(" where a.name like '%" + key + "%'");
 		}
-		
+
 		sql.append(" order by a.name ");
 
 		return jdbcTemplate.query(sql.toString(), new StudentMO.MOMapper());
