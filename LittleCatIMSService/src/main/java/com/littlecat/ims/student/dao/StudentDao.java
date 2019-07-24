@@ -92,6 +92,8 @@ public class StudentDao
 		{
 			sql.append(" where a.name like '%" + key + "%'");
 		}
+		
+		sql.append(" order by a.name ");
 
 		return jdbcTemplate.query(sql.toString(), new StudentMO.MOMapper());
 	}

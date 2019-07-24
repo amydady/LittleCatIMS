@@ -107,6 +107,8 @@ public class KeChengDao
 		{
 			sql.append(" and a.enable ='" + enable + "'");
 		}
+		
+		sql.append(" order by a.name ");
 
 		return jdbcTemplate.query(sql.toString(), new KeChengMO.MOMapper());
 	}

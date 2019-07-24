@@ -89,6 +89,8 @@ public class PayRecordDao
 		{
 			sql.append(" and b.id = '" + studentId + "'");
 		}
+		
+		sql.append(" order by a.createTime desc");
 
 		return jdbcTemplate.query(sql.toString(), new PayRecordMO.MOMapper());
 	}
