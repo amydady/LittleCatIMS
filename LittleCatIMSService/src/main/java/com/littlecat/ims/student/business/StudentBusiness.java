@@ -56,6 +56,11 @@ public class StudentBusiness
 	{
 		return studentDao.add(mo);
 	}
+	
+	public List<StudentMO> getByTuiJianren(String tuijianren) throws LittleCatException
+	{
+		return studentDao.getByTuiJianren(tuijianren);
+	}
 
 	public List<StudentMO> getList(String key) throws LittleCatException
 	{

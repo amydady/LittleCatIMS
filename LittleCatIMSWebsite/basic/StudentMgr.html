@@ -70,12 +70,14 @@
                             <td>{{x.nianjiName}}</td>
                             <td>{{x.banjiName}}</td>
                             <td>{{x.xiaoquName}}</td>
-                            <td>{{x.tuijianren}}</td>
+                            <td>{{x.tuijianrenName}}</td>
                             <td>{{x.createTime}}</td>
                             <td>{{x.enableV}}</td>
                             <td>
                                 <button type="button" class="btn btn-secondary btn-sm"
                                     ng-click="seekechenginfo(x.id,x.name)">查看课程</button>
+                                <button type="button" class="btn btn-secondary btn-sm"
+                                    ng-click="seetuijianreninfo(x.id,x.name)">推荐的人</button>
                             </td>
                         </tr>
                     </tbody>
@@ -85,7 +87,7 @@
 
     </div>
 
-    <!-- Modal 字典内容维护弹出页面 -->
+    <!-- Modal 学生信息维护弹出页面 -->
     <div class="modal fade bd-example-modal-lg" id="detailModal" tabindex="-1" role="dialog" data-backdrop="static"
         aria-labelledby="detailModalLabel" aria-hidden="true">
         <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
@@ -143,10 +145,9 @@
                         <div class="form-group row">
                             <label for="inputName" class="col-sm-1 col-form-label">推荐人</label>
                             <div class="col-sm-3">
-                                <select class="form-control" ng-model="detailInfo.tuijianren">
-                                    <option value="-1">请选择……</option>
-                                    <option ng-repeat="x in banJiListData" value="{{x.id}}">{{x.name}}</option>
-                                </select>                            </div>
+                                <input type="text" class="form-control" readonly ng-click="onSelectStudent()"
+                                    placeholder="点击选择" ng-model="detailInfo.tuijianrenName">
+                            </div>
                             <label for="inputName" class="col-sm-1 col-form-label">创建时间</label>
                             <div class="col-sm-3">
                                 <input type="text" class="form-control" readonly ng-model="detailInfo.createTime">
@@ -175,64 +176,107 @@
         </div>
     </div>
 
-     <!-- Modal 选择学生弹出页面 -->
-     <div class="modal fade bd-example-modal-lg" id="studentSelectModal" tabindex="-1" role="dialog"
-     data-backdrop="static" aria-labelledby="detailModalLabel" aria-hidden="true">
-     <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
-         <div class="modal-content">
-             <div class="modal-header">
-                 <h5 class="modal-title" id="exampleModalLabel">学生选择</h5>
-                 <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                     <span aria-hidden="true">&times;</span>
-                 </button>
-             </div>
-             <div class="modal-body">
-                 <!-- 操作按钮 -->
-                 <div class="row">
-                     <div class="col-6">
-                         <div class="input-group">
-                             <input type="text" class="form-control is-valid" ng-model="search.studentKey">
-                             <div class="input-group-prepend">
-                                 <button type="button" class="btn btn-outline-success" ng-click="onStudentSearch()">查
-                                     询</button>
-                             </div>
-                         </div>
-                     </div>
-                 </div>
-                 <hr />
+    <!-- Modal 选择学生弹出页面 -->
+    <div class="modal fade bd-example-modal-lg" id="studentSelectModal" tabindex="-1" role="dialog"
+        data-backdrop="static" aria-labelledby="detailModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalLabel">学生选择</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <!-- 操作按钮 -->
+                    <div class="row">
+                        <div class="col-6">
+                            <div class="input-group">
+                                <input type="text" class="form-control is-valid" ng-model="search.studentKey">
+                                <div class="input-group-prepend">
+                                    <button type="button" class="btn btn-outline-success" ng-click="onStudentSearch()">查
+                                        询</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <hr />
 
-                 <div class="row">
-                     <div class="col">
-                         <table class="table table-striped table-hover" id="studentTableList">
-                             <thead class="bg-info text-white">
-                                 <tr>
-                                     <th scope="col">序 号</th>
-                                     <th scope="col" ng-hide={{true}}>ID</th>
-                                     <th scope="col">姓名</th>
-                                     <th scope="col">学校</th>
-                                     <th scope="col">年级</th>
-                                     <th scope="col">班级</th>
-                                 </tr>
-                             </thead>
-                             <tbody>
-                                 <tr ng-repeat="x in studentListData">
-                                     <th scope="row">{{ $index + 1 }}</td>
-                                     <td ng-hide={{true}}>{{x.id}}</td>
-                                     <th scope="row"><a href="#"
-                                             ng-click="onSelectOneStudent(x.id,x.name)">{{x.name}}</a>
-                                         </td>
-                                     <td>{{x.xuexiaoName}}</td>
-                                     <td>{{x.nianjiName}}</td>
-                                     <td>{{x.banjiName}}</td>
-                                 </tr>
-                             </tbody>
-                         </table>
-                     </div>
-                 </div>
-             </div>
-         </div>
-     </div>
- </div>
+                    <div class="row">
+                        <div class="col">
+                            <table class="table table-striped table-hover" id="studentTableList">
+                                <thead class="bg-info text-white">
+                                    <tr>
+                                        <th scope="col">序 号</th>
+                                        <th scope="col" ng-hide={{true}}>ID</th>
+                                        <th scope="col">姓名</th>
+                                        <th scope="col">学校</th>
+                                        <th scope="col">年级</th>
+                                        <th scope="col">班级</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr ng-repeat="x in studentListData">
+                                        <th scope="row">{{ $index + 1 }}</td>
+                                        <td ng-hide={{true}}>{{x.id}}</td>
+                                        <th scope="row"><a href="#"
+                                                ng-click="onSelectOneStudent(x.id,x.name)">{{x.name}}</a>
+                                            </td>
+                                        <td>{{x.xuexiaoName}}</td>
+                                        <td>{{x.nianjiName}}</td>
+                                        <td>{{x.banjiName}}</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal 推荐人列表弹出页面 -->
+    <div class="modal fade bd-example-modal-lg" id="tuijianderenModalLabel" tabindex="-1" role="dialog"
+        data-backdrop="static" aria-labelledby="tuijianderenModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalLabel">（{{CurrentStudentName}}）推荐的人</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <div class="row">
+                        <div class="col">
+                            <table class="table table-striped table-hover" id="tuijianderenTableList">
+                                <thead class="bg-info text-white">
+                                    <tr>
+                                        <th scope="col">序 号</th>
+                                        <th scope="col" ng-hide={{true}}>ID</th>
+                                        <th scope="col">姓名</th>
+                                        <th scope="col">学校</th>
+                                        <th scope="col">年级</th>
+                                        <th scope="col">班级</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr ng-repeat="x in tuijianderenListData">
+                                        <th scope="row">{{ $index + 1 }}</td>
+                                        <td ng-hide={{true}}>{{x.id}}</td>
+                                        <td>{{x.name}}</td>
+                                        <td>{{x.xuexiaoName}}</td>
+                                        <td>{{x.nianjiName}}</td>
+                                        <td>{{x.banjiName}}</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
 
     <!-- Modal 提示框-->
     <div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
@@ -328,6 +372,27 @@
                     });
             };
 
+            $scope.onSelectOneStudent = function (id, name) {
+                $scope.detailInfo.tuijianrenName = name
+                $scope.detailInfo.tuijianren = id
+                $("#studentSelectModal").modal("hide")
+            };
+
+
+            $scope.onStudentSearch = function () {
+                $scope.getTuiJianrenData();
+            };
+
+            $scope.onSelectStudent = function () {
+                $scope.detailInfo.tuijianrenName = ''
+                $scope.detailInfo.tuijianren = ''
+                $scope.studentListData = []
+                $scope.search.studentKey = ''
+
+                $("#detailModal").modal("hide")
+                $("#studentSelectModal").modal("show")
+            };
+
             $scope.getData = function () {
 
                 $http.get(CommonConfig.RestBaseUrl.IMSService + 'student/getList?key=' + $scope.search.key)
@@ -335,12 +400,23 @@
                         $scope.listData = result.data.data
                         if ($scope.currentUser.isboss != 'Y') {
                             for (var i = 0; i < $scope.listData.length; i++) {
-                                if(StringUtil.isNotEmpty($scope.listData[i].mobile)){
-                                    $scope.listData[i].mobile='*****'
+                                if (StringUtil.isNotEmpty($scope.listData[i].mobile)) {
+                                    $scope.listData[i].mobile = '*****'
                                 }
-                                    
+
                             }
                         }
+
+                    }).catch(function (result) { //捕捉错误处理
+                        console.log(result);
+                    });
+            };
+
+            $scope.getTuiJianrenData = function () {
+
+                $http.get(CommonConfig.RestBaseUrl.IMSService + 'student/getList?key=' + $scope.search.studentKey)
+                    .then(function (result) {  //正确请求成功时处理
+                        $scope.studentListData = result.data.data
 
                     }).catch(function (result) { //捕捉错误处理
                         console.log(result);
@@ -429,6 +505,24 @@
 
                 window.location = '../kecheng/StudentHasKeChengs.html?studentId=' + id + '&studentName=' + name
             };
+
+            //查看推荐的人列表
+            $scope.seetuijianreninfo = function (id, name) {
+                $scope.CurrentStudentName = name
+                $http.get(CommonConfig.RestBaseUrl.IMSService + 'student/getByTuiJianRen?tuijianren=' + id)
+                    .then(function (result) {  //正确请求成功时处理
+                        $scope.tuijianderenListData = result.data.data
+                    }).catch(function (result) { //捕捉错误处理
+                        console.log(result);
+                    });
+                $("#tuijianderenModalLabel").modal("show")
+            };
+
+
+
+            $('#studentSelectModal').on('hidden.bs.modal', function () {
+                $("#detailModal").modal("show")
+            })
 
 
             $scope.enterEvent = function (e) {

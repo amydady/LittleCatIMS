@@ -135,6 +135,31 @@ public class StudentController
 
 		return result;
 	}
+	
+	@GetMapping(value = "/getByTuiJianRen")
+	public RestRsp<StudentMO> getByTuiJianRen(@RequestParam @Nullable String tuijianren)
+	{
+		RestRsp<StudentMO> result = new RestRsp<StudentMO>();
+
+		try
+		{
+			result.getData().addAll(studentBusiness.getByTuiJianren(tuijianren));
+		}
+		catch (LittleCatException e)
+		{
+			result.setCode(e.getErrorCode());
+			result.setMessage(e.getMessage());
+			logger.error(e.getMessage(), e);
+		}
+		catch (Exception e)
+		{
+			result.setCode(Consts.ERROR_CODE_UNKNOW);
+			result.setMessage(e.getMessage());
+			logger.error(e.getMessage(), e);
+		}
+
+		return result;
+	}
 
 	@PutMapping(value = "/disable/{id}")
 	public RestSimpleRsp disable(@PathVariable String id)

@@ -80,7 +80,12 @@ public class StudentDao
 
 	public StudentMO getById(String id) throws LittleCatException
 	{
-		return DaoUtil.getById(TABLE_NAME, id, jdbcTemplate, new StudentMO.MOMapper());
+		StringBuilder sql = new StringBuilder()
+				.append("select a.*,b.name tuijianrenName from ").append(TABLE_NAME).append(" a ")
+				.append(" left join " + TABLE_NAME + " b on a.tuijianren = b.id ")
+				.append(" where a.id = ?");
+
+		return jdbcTemplate.queryForObject(sql.toString(), new Object[] { id }, new StudentMO.MOMapper());
 	}
 
 	public List<StudentMO> getList(String key) throws LittleCatException
@@ -97,5 +102,14 @@ public class StudentDao
 		sql.append(" order by a.name ");
 
 		return jdbcTemplate.query(sql.toString(), new StudentMO.MOMapper());
+	}
+
+	public List<StudentMO> getByTuiJianren(String tuijianren) throws LittleCatException
+	{
+		StringBuilder sql = new StringBuilder()
+				.append("select a.*  from ").append(TABLE_NAME).append(" a ")
+				.append(" where a.tuijianren = ? ");
+
+		return jdbcTemplate.query(sql.toString(), new Object[] { tuijianren }, new StudentMO.MOMapper());
 	}
 }
