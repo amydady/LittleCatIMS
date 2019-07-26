@@ -5,6 +5,6 @@
 
 
 待同步修改：
-t_kecheng_payrecord 表增加字段 paydate
+
 
 上次停留位置：
