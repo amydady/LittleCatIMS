@@ -15,6 +15,7 @@ public class PayRecordMO extends BaseMO
 	private int fee;
 	private int times;
 	private String remark;
+	private String paydate;
 	private String createTime;
 
 	// just for view
@@ -101,6 +102,16 @@ public class PayRecordMO extends BaseMO
 		this.kecheng = kecheng;
 	}
 
+	public String getPaydate()
+	{
+		return paydate;
+	}
+
+	public void setPaydate(String paydate)
+	{
+		this.paydate = paydate;
+	}
+
 	public static class MOMapper implements RowMapper<PayRecordMO>
 	{
 		@Override
@@ -115,6 +126,7 @@ public class PayRecordMO extends BaseMO
 			mo.setTimes(rs.getInt("times"));
 			mo.setCreateTime(StringUtil.replace(rs.getString("createTime"), ".0", ""));
 			mo.setRemark(rs.getString("remark"));
+			mo.setPaydate(rs.getString("paydate"));
 
 			// for display
 

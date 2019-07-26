@@ -31,11 +31,11 @@ public class PayRecordDao
 			mo.setId(UUIDUtil.createUUID());
 		}
 
-		String sql = "insert into " + TABLE_NAME + "(id,student,kecheng,fee,times,remark) values(?,?,?,?,?,?)";
+		String sql = "insert into " + TABLE_NAME + "(id,student,kecheng,fee,times,paydate,remark) values(?,?,?,?,?,?,?)";
 
 		try
 		{
-			jdbcTemplate.update(sql, new Object[] { mo.getId(), mo.getStudent(),mo.getKecheng(), mo.getFee(), mo.getTimes(), mo.getRemark() });
+			jdbcTemplate.update(sql, new Object[] { mo.getId(), mo.getStudent(),mo.getKecheng(), mo.getFee(), mo.getTimes(),mo.getPaydate(), mo.getRemark() });
 		}
 		catch (DataAccessException e)
 		{
@@ -47,11 +47,11 @@ public class PayRecordDao
 
 	public void modify(PayRecordMO mo) throws LittleCatException
 	{
-		String sql = "update " + TABLE_NAME + " set student=?,kecheng=?,fee=?,times=?,remark=? where id = ?";
+		String sql = "update " + TABLE_NAME + " set student=?,kecheng=?,fee=?,times=?,paydate = ?,remark=? where id = ?";
 
 		try
 		{
-			jdbcTemplate.update(sql, new Object[] { mo.getStudent(),mo.getKecheng(), mo.getFee(), mo.getTimes(), mo.getRemark(), mo.getId() });
+			jdbcTemplate.update(sql, new Object[] { mo.getStudent(),mo.getKecheng(), mo.getFee(), mo.getTimes(), mo.getPaydate(),mo.getRemark(), mo.getId() });
 		}
 		catch (DataAccessException e)
 		{

@@ -124,6 +124,7 @@ CREATE TABLE `t_kecheng_payrecord` (
 	`fee` INT NULL,
 	`times` INT NULL,
 	`remark` VARCHAR(255) NULL,
+	`paydate` DATE  NULL,
 	`createTime` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
 	
 	PRIMARY KEY (`id`)
