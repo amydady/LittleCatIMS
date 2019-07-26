@@ -67,9 +67,9 @@
                             <td>
                                 <button type="button" class="btn btn-secondary btn-sm"
                                     ng-click="seestudentinfo(x.id,x.name)">查看学员</button>
-                                    
+
                                 <button type="button" class="btn btn-secondary btn-sm"
-                                ng-click="seetimesinfo(x.id,x.name)">课次记录</button>
+                                    ng-click="seetimesinfo(x.id,x.name)">课次记录</button>
                             </td>
                         </tr>
                     </tbody>
@@ -175,8 +175,8 @@
             $scope.currentUser = JSON.parse(sessionStorage.getItem("currentUser"));
 
             if ($scope.currentUser.isboss != 'Y') {
-                window.location = '../main/NoPermission.html';
-                return;
+                // window.location = '../main/NoPermission.html';
+                // return;
             }
 
             $scope.search = {
@@ -235,6 +235,15 @@
             };
 
             $scope.onAdd = function () {
+
+                if ($scope.currentUser.isboss != 'Y') {
+                    $scope.modalContent = '您没有足够的权限！'
+                    $("#myModal").modal("show")
+                    return
+                }
+                
+               
+
                 $scope.detailInfo = {
                     teacher: '-1',
                     name: '',
@@ -245,6 +254,12 @@
             };
 
             $scope.onSave = function () {
+                if ($scope.currentUser.isboss != 'Y') {
+                    $scope.modalContent = '您没有足够的权限！'
+                    $("#myModal").modal("show")
+                    return
+                }
+                
                 if (StringUtil.isEmpty($scope.detailInfo.id)) {//添加
                     $http.post(CommonConfig.RestBaseUrl.IMSService + 'kecheng/add', $scope.detailInfo, CommonConfig.httpReqConfig)
                         .then(function (result) {  //正确请求成功时处理
@@ -298,7 +313,7 @@
             $scope.seetimesinfo = function (id, name) {
                 window.location = '../kecheng/TimesMgr.html?kechengId=' + id + '&kechengName=' + name
             };
-            
+
 
 
             $scope.enterEvent = function (e) {

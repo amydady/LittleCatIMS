@@ -290,7 +290,11 @@
                     )
                 }
 
-                console.log('data:', data)
+                if (data.length == 0) {
+                    $scope.modalContent = "未选择任何学生！"
+                    $("#myModal").modal("show")
+                    return
+                }
 
                 $http.post(CommonConfig.RestBaseUrl.IMSService + 'timesrecord/batchadd', data, CommonConfig.httpReqConfig)
                     .then(function (result) {  //正确请求成功时处理
