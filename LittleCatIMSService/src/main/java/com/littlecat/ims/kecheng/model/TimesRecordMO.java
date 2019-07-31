@@ -15,6 +15,7 @@ public class TimesRecordMO extends BaseMO
 	private String year;
 	private String month;
 	private String day;
+	private String starttime;
 	private String remark;
 	private String operator;
 	private String createTime;
@@ -155,6 +156,16 @@ public class TimesRecordMO extends BaseMO
 		this.enableV = enableV;
 	}
 
+	public String getStarttime()
+	{
+		return starttime;
+	}
+
+	public void setStarttime(String starttime)
+	{
+		this.starttime = starttime;
+	}
+
 	public static class MOMapper implements RowMapper<TimesRecordMO>
 	{
 		@Override
@@ -168,6 +179,7 @@ public class TimesRecordMO extends BaseMO
 			mo.setYear(rs.getString("year"));
 			mo.setMonth(rs.getString("month"));
 			mo.setDay(rs.getString("day"));
+			mo.setStarttime(rs.getString("starttime"));
 			mo.setRemark(rs.getString("remark"));
 			mo.setOperator(rs.getString("operator"));
 			mo.setEnable(rs.getString("enable"));
@@ -175,7 +187,7 @@ public class TimesRecordMO extends BaseMO
 
 			// for display
 			mo.setEnableV(mo.enable.equals("Y") ? "是" : "否");
-			
+
 			try
 			{
 				mo.setKechengName(rs.getString("kechengName"));
@@ -193,7 +205,7 @@ public class TimesRecordMO extends BaseMO
 			{
 
 			}
-			
+
 			try
 			{
 				mo.setOperatorName(rs.getString("operatorName"));

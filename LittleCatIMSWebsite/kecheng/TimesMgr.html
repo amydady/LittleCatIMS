@@ -58,6 +58,7 @@
                             <th scope="col">年</th>
                             <th scope="col">月</th>
                             <th scope="col">日</th>
+                            <th scope="col">上课时间</th>
                             <th scope="col">备注</th>
                             <th scope="col">记录时间</th>
                             <th scope="col">记录人</th>
@@ -73,6 +74,7 @@
                             <td>{{x.year}}</td>
                             <td>{{x.month}}</td>
                             <td>{{x.day}}</td>
+                            <td>{{x.starttime}}</td>
                             <td>{{x.remark}}</td>
                             <td>{{x.createTime}}</td>
                             <td>{{x.operatorName}}</td>
@@ -104,20 +106,21 @@
                 </div>
                 <div class="modal-body">
                     <div class="row">
-                        <div class="col-6">
+                        <div class="col-10">
                             <div class="input-group">
-                                <input type="text" class="form-control is-valid" ng-keyup="enterEvent($event)"
+                                <input type="text" class="form-control is-valid col-2" ng-keyup="enterEvent($event)"
                                     ng-model="detailInfo.year" placeholder="年">
-                                <input type="text" class="form-control is-valid" ng-keyup="enterEvent($event)"
+                                <input type="text" class="form-control is-valid col-2" ng-keyup="enterEvent($event)"
                                     ng-model="detailInfo.month" placeholder="月">
-                                <input type="text" class="form-control is-valid" ng-keyup="enterEvent($event)"
+                                <input type="text" class="form-control is-valid col-2" ng-keyup="enterEvent($event)"
                                     ng-model="detailInfo.day" placeholder="日">
-
+                                <input type="text" class="form-control is-valid col-4" ng-keyup="enterEvent($event)"
+                                    ng-model="detailInfo.starttime" placeholder="开始时间，如18:00">
                             </div>
 
                         </div>
                         <div class="col" align="right">
-                            <button type="button" class="btn btn-primary" ng-click="onSave()">确定记录课次</button>
+                            <button type="button" class="btn btn-primary" ng-click="onSave()">确定</button>
                         </div>
                     </div>
 
@@ -199,6 +202,15 @@
                 day: ''
             };
 
+            $scope.restDetailInfo = function () {
+                $scope.detailInfo = {
+                    year: new Date().format('yyyy'),
+                    month: new Date().format('MM'),
+                    day: new Date().format('dd'),
+                    starttime: ''
+                };
+            };
+
             $scope.kechengId = RequestUtil.getQueryParamByName("kechengId")
             $scope.kechengName = RequestUtil.getQueryParamByName("kechengName")
 
@@ -247,6 +259,7 @@
             $scope.onAdd = function () {
                 $scope.getStudentData()
                 $scope.resetSelectStatus()
+                $scope.restDetailInfo()
                 $("#detailModal").modal("show")
             };
 
@@ -284,6 +297,7 @@
                             year: $scope.detailInfo.year,
                             month: $scope.detailInfo.month,
                             day: $scope.detailInfo.day,
+                            starttime: $scope.detailInfo.starttime,
                             remark: remark,
                             operator: $scope.currentUser.id
                         }
@@ -313,6 +327,7 @@
                         $scope.modalContent = "添加成功！"
 
                         $('#myModal').on('hidden.bs.modal', function (e) {
+                            $scope.onSearch()
                             $("#detailModal").modal("hide")
                         });
 
@@ -343,14 +358,10 @@
 
 
             $scope.selectAll = false;
-
+            $scope.restDetailInfo()
             $scope.getData();
 
-            $scope.detailInfo = {
-                year: new Date().format('yyyy'),
-                month: new Date().format('MM'),
-                day: new Date().format('dd')
-            };
+
 
 
         });

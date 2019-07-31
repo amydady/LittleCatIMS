@@ -107,13 +107,14 @@ CREATE TABLE `t_kecheng_timesrecord` (
 	`year` VARCHAR(50) NULL,
 	`month` VARCHAR(50) NULL,
 	`day` VARCHAR(50) NULL,
+	`starttime` VARCHAR(50) NULL,
 	`remark` VARCHAR(255) NULL,
 	`operator` VARCHAR(255) NOT NULL,
 	`enable` VARCHAR(1) NOT NULL DEFAULT 'Y',
 	`createTime` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
 	
 	PRIMARY KEY (`id`),
-	UNIQUE KEY `name` (`kecheng`,`student`,`year`,`month`,`day`)
+	UNIQUE KEY `name` (`kecheng`,`student`,`year`,`month`,`day`,`starttime`)
 );
 
 ##交费记录

@@ -53,11 +53,11 @@ public class TimesRecordDao
 			mo.setId(UUIDUtil.createUUID());
 		}
 
-		String sql = "insert into " + TABLE_NAME + "(id,kecheng,student,year,month,day,remark,operator) values(?,?,?,?,?,?,?,?)";
+		String sql = "insert into " + TABLE_NAME + "(id,kecheng,student,year,month,day,starttime,remark,operator) values(?,?,?,?,?,?,?,?,?)";
 
 		try
 		{
-			jdbcTemplate.update(sql, new Object[] { mo.getId(), mo.getKecheng(), mo.getStudent(), mo.getYear(), mo.getMonth(), mo.getDay(), mo.getRemark(), mo.getOperator() });
+			jdbcTemplate.update(sql, new Object[] { mo.getId(), mo.getKecheng(), mo.getStudent(), mo.getYear(), mo.getMonth(), mo.getDay(),mo.getStarttime(), mo.getRemark(), mo.getOperator() });
 		}
 		catch (DataAccessException e)
 		{
@@ -126,11 +126,11 @@ public class TimesRecordDao
 
 	public void modify(TimesRecordMO mo) throws LittleCatException
 	{
-		String sql = "update " + TABLE_NAME + " set year = ?,month = ?,day = ?,remark = ? where id = ?";
+		String sql = "update " + TABLE_NAME + " set year = ?,month = ?,day = ?,starttime = ?,remark = ? where id = ?";
 
 		try
 		{
-			jdbcTemplate.update(sql, new Object[] { mo.getYear(), mo.getMonth(), mo.getDay(), mo.getRemark(), mo.getId() });
+			jdbcTemplate.update(sql, new Object[] { mo.getYear(), mo.getMonth(), mo.getDay(),mo.getStarttime(), mo.getRemark(), mo.getId() });
 		}
 		catch (DataAccessException e)
 		{
