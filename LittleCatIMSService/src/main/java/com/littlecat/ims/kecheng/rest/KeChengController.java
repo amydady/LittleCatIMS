@@ -285,4 +285,29 @@ public class KeChengController
 
 		return result;
 	}
+	
+	@GetMapping(value = "/getTimesRemainInfo")
+	public RestRsp<KeChengStudentMO> getTimesRemainInfo(@RequestParam @Nullable String key)
+	{
+		RestRsp<KeChengStudentMO> result = new RestRsp<KeChengStudentMO>();
+
+		try
+		{
+			result.getData().addAll(keChengStudentBusiness.getTimesRemainInfo(key));
+		}
+		catch (LittleCatException e)
+		{
+			result.setCode(e.getErrorCode());
+			result.setMessage(e.getMessage());
+			logger.error(e.getMessage(), e);
+		}
+		catch (Exception e)
+		{
+			result.setCode(Consts.ERROR_CODE_UNKNOW);
+			result.setMessage(e.getMessage());
+			logger.error(e.getMessage(), e);
+		}
+
+		return result;
+	}
 }

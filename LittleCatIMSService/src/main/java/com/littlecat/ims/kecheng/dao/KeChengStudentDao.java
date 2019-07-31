@@ -77,7 +77,7 @@ public class KeChengStudentDao
 
 		return jdbcTemplate.query(sql.toString(), new Object[] { kecheng }, new KeChengStudentMO.MOMapper());
 	}
-	
+
 	public KeChengStudentMO getByKeChengAndStudent(String kecheng, String student) throws LittleCatException
 	{
 		StringBuilder sql = new StringBuilder()
@@ -86,8 +86,7 @@ public class KeChengStudentDao
 
 		sql.append(" where a.kecheng = ? and a.student = ? ");
 
-
-		return jdbcTemplate.queryForObject(sql.toString(), new Object[] { kecheng,student }, new KeChengStudentMO.MOMapper());
+		return jdbcTemplate.queryForObject(sql.toString(), new Object[] { kecheng, student }, new KeChengStudentMO.MOMapper());
 	}
 
 	public List<KeChengStudentMO> getByStudent(String student, String state, String key) throws LittleCatException
@@ -109,6 +108,25 @@ public class KeChengStudentDao
 		}
 
 		return jdbcTemplate.query(sql.toString(), new Object[] { student, state }, new KeChengStudentMO.MOMapper());
+	}
+
+	public List<KeChengStudentMO> getTimesRemainInfo(String key) throws LittleCatException
+	{
+		StringBuilder sql = new StringBuilder()
+				.append("select a.*,b.name studentName,c.name kechengName  from ").append(TABLE_NAME).append(" a ")
+				.append(" inner join " + TABLE_NAME_STUDENT + " b on a.student = b.id ")
+				.append(" inner join " + TABLE_NAME_KECHENG + " c on a.kecheng = c.id ");
+
+		sql.append(" where a.remaintimes <= 3 ");
+
+		if (StringUtil.isNotEmpty(key))
+		{
+			sql.append(" and (b.name like '%" + key + "%' or  c.name like '%" + key + "%')");
+		}
+		
+		sql.append(" order by c.name,a.remaintimes");
+
+		return jdbcTemplate.query(sql.toString(), new KeChengStudentMO.MOMapper());
 	}
 
 	public String exists(String kecheng, String student) throws LittleCatException
