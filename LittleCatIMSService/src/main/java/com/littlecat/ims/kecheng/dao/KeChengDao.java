@@ -18,9 +18,8 @@ import com.littlecat.ims.kecheng.model.KeChengMO;
 @Component
 public class KeChengDao
 {
-	private final String TABLE_NAME = TableName.Kecheng.getName();	
+	private final String TABLE_NAME = TableName.Kecheng.getName();
 	private final String TABLE_NAME_SYSOPERATOR = TableName.SysOperator.getName();
-
 
 	@Autowired
 	protected JdbcTemplate jdbcTemplate;
@@ -43,6 +42,20 @@ public class KeChengDao
 	public void disable(List<String> ids) throws LittleCatException
 	{
 		DaoUtil.disable(TABLE_NAME, ids, jdbcTemplate);
+	}
+
+	public void close(String id) throws LittleCatException
+	{
+		String sql = "update " + TABLE_NAME + " set enable='C' where id = ?";
+
+		try
+		{
+			jdbcTemplate.update(sql, new Object[] { id });
+		}
+		catch (DataAccessException e)
+		{
+			throw new LittleCatException(Consts.ERROR_CODE_DATAACCESSEXCEPTION, e.getMessage(), e);
+		}
 	}
 
 	public String add(KeChengMO mo) throws LittleCatException
@@ -85,29 +98,29 @@ public class KeChengDao
 		return DaoUtil.getById(TABLE_NAME, id, jdbcTemplate, new KeChengMO.MOMapper());
 	}
 
-	public List<KeChengMO> getList(String key,String teacher,String enable) throws LittleCatException
+	public List<KeChengMO> getList(String key, String teacher, String enable) throws LittleCatException
 	{
 		StringBuilder sql = new StringBuilder()
 				.append("select a.*,b.name teacherName from ").append(TABLE_NAME).append(" a ")
 				.append(" left join " + TABLE_NAME_SYSOPERATOR + " b on a.teacher = b.id ");
 
 		sql.append(" where 1 = 1 ");
-		
+
 		if (StringUtil.isNotEmpty(teacher))
 		{
 			sql.append(" and a.teacher ='" + teacher + "'");
 		}
-		
+
 		if (StringUtil.isNotEmpty(key))
 		{
 			sql.append(" and a.name like '%" + key + "%'");
 		}
-		
+
 		if (StringUtil.isNotEmpty(enable))
 		{
 			sql.append(" and a.enable ='" + enable + "'");
 		}
-		
+
 		sql.append(" order by a.name ");
 
 		return jdbcTemplate.query(sql.toString(), new KeChengMO.MOMapper());

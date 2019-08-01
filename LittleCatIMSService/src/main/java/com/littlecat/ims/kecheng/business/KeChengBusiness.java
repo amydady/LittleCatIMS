@@ -31,11 +31,15 @@ public class KeChengBusiness
 	{
 		keChengDao.disable(id);
 	}
-	
 
 	public void disable(List<String> ids) throws LittleCatException
 	{
 		keChengDao.disable(ids);
+	}
+
+	public void close(String id) throws LittleCatException
+	{
+		keChengDao.close(id);
 	}
 
 	public KeChengMO getById(String id) throws LittleCatException
@@ -53,9 +57,9 @@ public class KeChengBusiness
 		return keChengDao.add(mo);
 	}
 
-	public List<KeChengMO> getList(String key,String teacher,String enable) throws LittleCatException
+	public List<KeChengMO> getList(String key, String teacher, String enable) throws LittleCatException
 	{
-		return keChengDao.getList(key,teacher,enable);
+		return keChengDao.getList(key, teacher, enable);
 	}
-	
+
 }

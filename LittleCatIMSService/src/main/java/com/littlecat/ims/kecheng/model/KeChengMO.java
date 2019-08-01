@@ -7,6 +7,7 @@ import org.springframework.jdbc.core.RowMapper;
 
 import com.littlecat.cbb.common.BaseMO;
 import com.littlecat.cbb.utils.StringUtil;
+import com.littlecat.ims.common.consts.KeChengState;
 
 public class KeChengMO extends BaseMO
 {
@@ -104,7 +105,7 @@ public class KeChengMO extends BaseMO
 			mo.setRemark(rs.getString("remark"));
 
 			// for display
-			mo.setEnableV(mo.enable.equals("Y") ? "是" : "否");
+			mo.setEnableV(KeChengState.getNameByCode(mo.getEnable()));
 
 			try
 			{

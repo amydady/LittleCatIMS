@@ -110,6 +110,16 @@ public class KeChengStudentDao
 		return jdbcTemplate.query(sql.toString(), new Object[] { student, state }, new KeChengStudentMO.MOMapper());
 	}
 
+	public List<KeChengStudentMO> getNoEndTimesByKecheng(String kecheng) throws LittleCatException
+	{
+		StringBuilder sql = new StringBuilder()
+				.append("select a.* from ").append(TABLE_NAME).append(" a ");
+
+		sql.append(" where a.kecheng = ? and a.remaintimes != 0 ");
+
+		return jdbcTemplate.query(sql.toString(), new Object[] { kecheng }, new KeChengStudentMO.MOMapper());
+	}
+
 	public List<KeChengStudentMO> getTimesRemainInfo(String key) throws LittleCatException
 	{
 		StringBuilder sql = new StringBuilder()
@@ -123,7 +133,7 @@ public class KeChengStudentDao
 		{
 			sql.append(" and (b.name like '%" + key + "%' or  c.name like '%" + key + "%')");
 		}
-		
+
 		sql.append(" order by c.name,a.remaintimes");
 
 		return jdbcTemplate.query(sql.toString(), new KeChengStudentMO.MOMapper());

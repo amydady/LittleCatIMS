@@ -47,6 +47,11 @@ public class KeChengStudentBusiness
 		return keChengStudentDao.getByKeChengAndStudent(kecheng, student);
 	}
 	
+	public List<KeChengStudentMO> getNoEndTimesByKecheng(String kecheng) throws LittleCatException
+	{
+		return keChengStudentDao.getNoEndTimesByKecheng(kecheng);
+	}
+	
 	public List<KeChengStudentMO> getTimesRemainInfo(String key) throws LittleCatException
 	{
 		return keChengStudentDao.getTimesRemainInfo(key);

@@ -39,6 +39,31 @@
             </div>
         </div>
         <hr />
+        <!-- tab切换 -->
+        <div class="row">
+            <div class="col">
+                <ul class="nav nav-tabs" id="myTab" role="tablist">
+
+                    <li class="nav-item">
+                        <a class="nav-link active" id="enable-tab" data-toggle="tab" href="#enable"
+                            ng-click='onEnableTabClick()' role="tab" aria-controls="enable" aria-selected="false">正常</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" id="disable-tab" data-toggle="tab" href="#disable"
+                            ng-click='onClosedTabClick()' role="tab" aria-controls="disable"
+                            aria-selected="false">已关闭</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" id="disable-tab" data-toggle="tab" href="#disable"
+                            ng-click='onDisableTabClick()' role="tab" aria-controls="disable"
+                            aria-selected="false">已失效</a>
+                    </li>
+
+
+                </ul>
+            </div>
+        </div>
+        <br />
         <!-- 数据区域 -->
         <div class="row">
             <div class="col">
@@ -51,7 +76,7 @@
                             <th scope="col">教师</th>
                             <th scope="col">备注</th>
                             <th scope="col">创建时间</th>
-                            <th scope="col">是否有效</th>
+                            <th scope="col">状态</th>
                             <th scope="col">操 作</th>
                         </tr>
                     </thead>
@@ -66,10 +91,16 @@
                             <td>{{x.enableV}}</td>
                             <td>
                                 <button type="button" class="btn btn-secondary btn-sm"
-                                    ng-click="seestudentinfo(x.id,x.name)">查看学员</button>
+                                    ng-click="seestudentinfo(x.id,x.name)">学员</button>
 
                                 <button type="button" class="btn btn-secondary btn-sm"
-                                    ng-click="seetimesinfo(x.id,x.name)">课次记录</button>
+                                    ng-click="seetimesinfo(x.id,x.name)">课次</button>
+                                <button type="button" class="btn btn-secondary btn-sm" ng-click="onEnable(x.id)"
+                                    ng-hide="needHideEnable">生效</button>
+                                <button type="button" class="btn btn-secondary btn-sm" ng-click="onDisable(x.id)"
+                                    ng-hide="needHideDisable">失效</button>
+                                <button type="button" class="btn btn-secondary btn-sm" ng-click="onClose(x.id)"
+                                    ng-hide="needHideClose">关闭</button>
                             </td>
                         </tr>
                     </tbody>
@@ -209,7 +240,7 @@
 
             $scope.getData = function () {
 
-                $http.get(CommonConfig.RestBaseUrl.IMSService + 'kecheng/getList?key=' + $scope.search.key)
+                $http.get(CommonConfig.RestBaseUrl.IMSService + 'kecheng/getList?key=' + $scope.search.key + '&enable=' + $scope.state)
                     .then(function (result) {  //正确请求成功时处理
                         $scope.listData = result.data.data
                         console.log(result);
@@ -230,6 +261,55 @@
                     });
             };
 
+            $scope.onEnableTabClick = function () {
+                $scope.needHideEnable = true;
+                $scope.needHideDisable = false;
+                $scope.needHideClose = false;
+                $scope.state = "Y";
+                $scope.getData();
+            };
+
+            $scope.onDisableTabClick = function () {
+                $scope.needHideEnable = false;
+                $scope.needHideDisable = true;
+                $scope.needHideClose = false;
+                $scope.state = "N";
+                $scope.getData();
+            };
+
+            $scope.onClosedTabClick = function () {
+                $scope.needHideEnable = true;
+                $scope.needHideDisable = true;
+                $scope.needHideClose = true;
+                $scope.state = "C";
+                $scope.getData();
+            };
+
+            $scope.onClose = function (id) {
+                $http.get(CommonConfig.RestBaseUrl.IMSService + 'kecheng/getNoEndTimesByKecheng?kecheng=' + id)
+                    .then(function (result) {  //正确请求成功时处理
+                        if (result.data.data.length > 0) {
+                            $scope.modalContent = '该课程课时尚未全部结清，不能关闭！'
+                            $("#myModal").modal("show")
+                            return
+                        }
+                        $http.put(CommonConfig.RestBaseUrl.IMSService + 'kecheng/close/' + id)
+                            .then(function (result) {  //正确请求成功时处理
+                                if (result.data.code == "NONE_ERROR") {
+                                    $scope.modalContent = '课程关闭成功！';
+                                    $scope.getData();
+                                }
+                                else {
+                                    $scope.modalContent = '课程关闭失败！';
+                                }
+                            }).catch(function (result) { //捕捉错误处理
+                                console.log(result);
+                            });
+                    }).catch(function (result) { //捕捉错误处理
+                        console.log(result);
+                    });
+            };
+
             $scope.onSearch = function () {
                 $scope.getData();
             };
@@ -241,8 +321,8 @@
                     $("#myModal").modal("show")
                     return
                 }
-                
-               
+
+
 
                 $scope.detailInfo = {
                     teacher: '-1',
@@ -259,7 +339,7 @@
                     $("#myModal").modal("show")
                     return
                 }
-                
+
                 if (StringUtil.isEmpty($scope.detailInfo.id)) {//添加
                     $http.post(CommonConfig.RestBaseUrl.IMSService + 'kecheng/add', $scope.detailInfo, CommonConfig.httpReqConfig)
                         .then(function (result) {  //正确请求成功时处理
@@ -322,6 +402,11 @@
                     $scope.onSearch();
                 }
             };
+
+            $scope.state = "Y";
+            $scope.needHideEnable = true;
+            $scope.needHideDisable = false;
+            $scope.needHideClose = false;
 
             $scope.getTeacherListData()
             $scope.getData();

@@ -236,6 +236,31 @@ public class KeChengController
 		return result;
 	}
 
+	@PutMapping(value = "/close/{id}")
+	public RestSimpleRsp close(@PathVariable String id)
+	{
+		RestSimpleRsp result = new RestSimpleRsp();
+
+		try
+		{
+			keChengBusiness.close(id);
+		}
+		catch (LittleCatException e)
+		{
+			result.setCode(e.getErrorCode());
+			result.setMessage(e.getMessage());
+			logger.error(e.getMessage(), e);
+		}
+		catch (Exception e)
+		{
+			result.setCode(Consts.ERROR_CODE_UNKNOW);
+			result.setMessage(e.getMessage());
+			logger.error(e.getMessage(), e);
+		}
+
+		return result;
+	}
+
 	@PostMapping(value = "/addStudent")
 	public RestRsp<String> addStudent(@RequestBody KeChengStudentMO mo)
 	{
@@ -286,6 +311,33 @@ public class KeChengController
 		return result;
 	}
 	
+	
+	
+	@GetMapping(value = "/getNoEndTimesByKecheng")
+	public RestRsp<KeChengStudentMO> getNoEndTimesByKecheng(@RequestParam @Nullable String kecheng)
+	{
+		RestRsp<KeChengStudentMO> result = new RestRsp<KeChengStudentMO>();
+
+		try
+		{
+			result.getData().addAll(keChengStudentBusiness.getNoEndTimesByKecheng(kecheng));
+		}
+		catch (LittleCatException e)
+		{
+			result.setCode(e.getErrorCode());
+			result.setMessage(e.getMessage());
+			logger.error(e.getMessage(), e);
+		}
+		catch (Exception e)
+		{
+			result.setCode(Consts.ERROR_CODE_UNKNOW);
+			result.setMessage(e.getMessage());
+			logger.error(e.getMessage(), e);
+		}
+
+		return result;
+	}
+
 	@GetMapping(value = "/getTimesRemainInfo")
 	public RestRsp<KeChengStudentMO> getTimesRemainInfo(@RequestParam @Nullable String key)
 	{
