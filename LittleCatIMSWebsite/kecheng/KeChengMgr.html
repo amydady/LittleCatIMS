@@ -285,6 +285,47 @@
                 $scope.getData();
             };
 
+            $scope.onEnable = function (id) {
+                $http.put(CommonConfig.RestBaseUrl.IMSService + 'kecheng/enable/' + id)
+                    .then(function (result) {  //正确请求成功时处理
+                        if (result.data.code == "NONE_ERROR") {
+                            $scope.modalContent = '课程生效成功！';
+                            $scope.getData();
+                        }
+                        else {
+                            $scope.modalContent = '课程生效失败！';
+                        }
+                    }).catch(function (result) { //捕捉错误处理
+                        console.log(result);
+                    });
+            };
+
+            $scope.onDisable = function (id) {
+                $http.get(CommonConfig.RestBaseUrl.IMSService + 'kecheng/getStudentList?kecheng=' + id)
+                    .then(function (result) {  //正确请求成功时处理
+                        if (result.data.data.length > 0) {
+                            $scope.modalContent = '该课程已有报名信息，不能失效！'
+                            $("#myModal").modal("show")
+                            return
+                        }
+
+                        $http.put(CommonConfig.RestBaseUrl.IMSService + 'kecheng/disable/' + id)
+                            .then(function (result) {  //正确请求成功时处理
+                                if (result.data.code == "NONE_ERROR") {
+                                    $scope.modalContent = '课程失效成功！';
+                                    $scope.getData();
+                                }
+                                else {
+                                    $scope.modalContent = '课程失效失败！';
+                                }
+                            }).catch(function (result) { //捕捉错误处理
+                                console.log(result);
+                            });
+                    }).catch(function (result) { //捕捉错误处理
+                        console.log(result);
+                    });
+            };
+
             $scope.onClose = function (id) {
                 $http.get(CommonConfig.RestBaseUrl.IMSService + 'kecheng/getNoEndTimesByKecheng?kecheng=' + id)
                     .then(function (result) {  //正确请求成功时处理

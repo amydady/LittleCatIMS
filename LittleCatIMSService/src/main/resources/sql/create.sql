@@ -131,6 +131,19 @@ CREATE TABLE `t_kecheng_payrecord` (
 	PRIMARY KEY (`id`)
 );
 
+##结转记录
+CREATE TABLE `t_kecheng_jiezhuanrecord` (
+	`id` VARCHAR(125) NOT NULL,
+	`student` VARCHAR(255) NULL,
+	`kechengs` VARCHAR(255) NULL,
+	`kechengd` VARCHAR(255) NULL,
+	`times` INT NULL,
+	`createTime` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+	`operator` VARCHAR(255) NOT NULL,
+	
+	PRIMARY KEY (`id`)
+);
+
 ##personal#############################################################
 ##沟通记录
 CREATE TABLE `t_personal_goutongjilu` (

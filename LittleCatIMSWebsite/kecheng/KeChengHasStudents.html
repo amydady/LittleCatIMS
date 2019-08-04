@@ -50,6 +50,7 @@
                             <th scope="col">学生姓名</th>
                             <th scope="col">剩余课次</th>
                             <th scope="col">创建时间</th>
+                            <th scope="col">操作</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -59,6 +60,8 @@
                             <td>{{x.studentName}}</td>
                             <td>{{x.remaintimes}}</td>
                             <td>{{x.createTime}}</td>
+                            <td><button type="button" class="btn btn-secondary btn-sm"
+                                 ng-hide="x.remaintimes==0"   ng-click="jiezhuan(x.student,x.kecheng,x.remaintimes)">结转</button></td>
                         </tr>
                     </tbody>
                 </table>
@@ -67,7 +70,54 @@
 
     </div>
 
-
+    <!-- Modal 选择结转目标课程弹出页面 -->
+    <div class="modal fade bd-example-modal-lg" id="kechengdSelectModal" tabindex="-1" role="dialog"
+        data-backdrop="static" aria-labelledby="kechengdSelectModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalLabel">选择结转的目标课程</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <div class="input-group">
+                        <input type="text" class="form-control is-valid" ng-keyup="enterEvent($event)"
+                            ng-model="search.kechengkey">
+                        <div class="input-group-prepend">
+                            <button type="button" class="btn btn-outline-success" ng-click="onSearchDestKeCheng()">查
+                                询</button>
+                        </div>
+                    </div>
+                    <hr />
+                    <table class="table table-striped table-hover" id="kechengdTableList">
+                        <thead class="bg-info text-white">
+                            <tr>
+                                <th scope="col">序 号</th>
+                                <th scope="col" ng-hide={{true}}>ID</th>
+                                <th scope="col">课程名称</th>
+                                <th scope="col">教师姓名</th>
+                                <th scope="col">备注</th>
+                                <th scope="col">操作</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr ng-repeat="x in kechengdListData">
+                                <td>{{ $index + 1 }}</td>
+                                <td ng-hide={{true}}>{{x.id}}</td>
+                                <td>{{x.name}}</td>
+                                <td>{{x.teacherName}}</td>
+                                <td>{{x.remark}}</td>
+                                <td><button type="button" class="btn btn-secondary btn-sm"
+                                        ng-click="selectKechengd(x.id)">选择</button></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
     <!-- Modal 提示框-->
     <div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
         aria-hidden="true">
@@ -102,16 +152,23 @@
         var app = angular.module('myApp', []);
 
         app.controller('myCtrl', function ($scope, $http) {
+            if (StringUtil.isEmpty(sessionStorage.getItem("currentUser"))) {//尚未登录
+                window.location = '../main/login.html';
+            }
+
+            $scope.currentUser = JSON.parse(sessionStorage.getItem("currentUser"));
+
 
             $scope.search = {
-                key: ''
+                key: '',
+                kechengkey:''
             };
 
             $scope.kechengId = RequestUtil.getQueryParamByName("kechengId")
             $scope.kechengName = RequestUtil.getQueryParamByName("kechengName")
 
-            if(StringUtil.isEmpty($scope.kechengId)){
-                window.location='../kecheng/KeChengMgr.html'
+            if (StringUtil.isEmpty($scope.kechengId)) {
+                window.location = '../kecheng/KeChengMgr.html'
             }
 
 
@@ -130,10 +187,65 @@
                     });
             };
 
+            $scope.getDestKeChengData = function () {
+
+                $http.get(CommonConfig.RestBaseUrl.IMSService + 'kecheng/getList?key=' + $scope.search.kechengkey + '&enable=Y')
+                    .then(function (result) {  //正确请求成功时处理
+                        $scope.kechengdListData = []
+                        for(var i = 0;i<result.data.data.length;i++){
+                            if(result.data.data[i].id != $scope.kechengId)
+                            {
+                                $scope.kechengdListData.push(result.data.data[i])
+                            }
+                        }
+                        console.log('kechengds:', $scope.kechengdListData)
+
+                    }).catch(function (result) { //捕捉错误处理
+                        console.log(result);
+                    });
+            };
+
+            $scope.selectKechengd =  function(id){
+                $scope.JieZhuanInfo.kechengd=id
+                $http.post(CommonConfig.RestBaseUrl.IMSService + 'jiezhuanrecord/add',$scope.JieZhuanInfo,CommonConfig.httpReqConfig)
+                    .then(function (result) {  //正确请求成功时处理
+                        if (result.data.code == "NONE_ERROR") {
+                            $("#kechengdSelectModal").modal("hide")
+                            $scope.modalContent = '课程结转成功！';
+                            $("#myModal").modal("show")
+                            $scope.getData();
+                        }
+                        else {
+                            $scope.modalContent = '课程结转失败！';
+                            $("#myModal").modal("show")
+                        }
+                    }).catch(function (result) { //捕捉错误处理
+                        console.log(result);
+                    });
+            };
+
             $scope.onSearch = function () {
                 $scope.getData();
             };
-            
+
+            $scope.onSearchDestKeCheng = function () {
+                $scope.getDestKeChengData();
+            };
+
+
+
+            $scope.jiezhuan = function (student, kecheng, remaintimes) {
+                $scope.JieZhuanInfo = {
+                    student:student,
+                    kechengs:kecheng,
+                    times:remaintimes,
+                    operator:$scope.currentUser.id
+                };
+
+                $scope.getDestKeChengData()
+                $("#kechengdSelectModal").modal("show")
+            };
+
 
 
             $scope.enterEvent = function (e) {
