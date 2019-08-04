@@ -17,7 +17,7 @@
         <!-- 页面标题 -->
         <div class="row" style="height:60px">
             <div class="col">
-                <h4>课时管理（{{kechengName}}）</h4>
+                <h4>课时管理（{{kechengName}}:{{kechengStateName}}）</h4>
             </div>
         </div>
 
@@ -42,7 +42,7 @@
                 </div>
             </div>
             <div class="col" align="right">
-                <button type="button" class="btn btn-primary" ng-click="onAdd()">课时登记</button>
+                <button type="button" class="btn btn-primary" ng-click="onAdd()" ng-hide="kechengState!='Y'">课时登记</button>
             </div>
         </div>
         <hr />
@@ -213,6 +213,9 @@
 
             $scope.kechengId = RequestUtil.getQueryParamByName("kechengId")
             $scope.kechengName = RequestUtil.getQueryParamByName("kechengName")
+
+            $scope.kechengState = RequestUtil.getQueryParamByName("state")
+            $scope.kechengStateName = RequestUtil.getQueryParamByName("statename")
 
             if (StringUtil.isEmpty($scope.kechengId)) {
                 window.location = '../kecheng/KeChengMgr.html'

@@ -91,10 +91,10 @@
                             <td>{{x.enableV}}</td>
                             <td>
                                 <button type="button" class="btn btn-secondary btn-sm"
-                                    ng-click="seestudentinfo(x.id,x.name)">学员</button>
+                                   ng-hide="x.enable=='N'" ng-click="seestudentinfo(x.id,x.name)">学员</button>
 
                                 <button type="button" class="btn btn-secondary btn-sm"
-                                    ng-click="seetimesinfo(x.id,x.name)">课次</button>
+                                ng-hide="x.enable=='N'" ng-click="seetimesinfo(x.id,x.name,x.enable,x.enableV)">课次</button>
                                 <button type="button" class="btn btn-secondary btn-sm" ng-click="onEnable(x.id)"
                                     ng-hide="needHideEnable">生效</button>
                                 <button type="button" class="btn btn-secondary btn-sm" ng-click="onDisable(x.id)"
@@ -394,6 +394,7 @@
                             $scope.modalContent = "添加成功！"
 
                             $scope.detailInfo = {
+                                teacher:'-1'
                             };
 
                             $scope.onSearch()
@@ -431,8 +432,8 @@
                 window.location = '../kecheng/KeChengHasStudents.html?kechengId=' + id + '&kechengName=' + name
             };
 
-            $scope.seetimesinfo = function (id, name) {
-                window.location = '../kecheng/TimesMgr.html?kechengId=' + id + '&kechengName=' + name
+            $scope.seetimesinfo = function (id, name,state,statename) {
+                window.location = '../kecheng/TimesMgr.html?kechengId=' + id + '&kechengName=' + name+'&state='+state+'&statename='+statename
             };
 
 
