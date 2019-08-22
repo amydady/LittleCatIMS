@@ -32,6 +32,7 @@ public enum TableName
 	
 	//personal
 	GouTongJiLu("t_personal_goutongjilu"),
+	LeaveRecord("t_staff_leaverecord"),
 	;
 
 	private String name;

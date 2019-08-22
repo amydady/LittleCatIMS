@@ -1,0 +1,470 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="../lib/bootstrap/css/bootstrap.min.css">
+
+    <title>请假管理</title>
+</head>
+
+<body ng-app="myApp" ng-controller="myCtrl">
+    <div class="container-fluid">
+        <!-- 页面标题 -->
+        <div class="row" style="height:60px">
+            <div class="col">
+                <h4>请假管理</h4>
+            </div>
+        </div>
+
+        <!-- 操作按钮 -->
+        <div class="row">
+            <div class="col-8">
+                <div class="input-group">
+                    <input type="text" class="form-control is-valid" placeholder="开始日期，形如：20190101"
+                        ng-keyup="enterEvent($event)" ng-model="search.beginDate">
+                    <input type="text" class="form-control is-valid" placeholder="截止日期，形如：20190101"
+                        ng-keyup="enterEvent($event)" ng-model="search.endDate">
+                    <input type="text" class="form-control is-valid" ng-keyup="enterEvent($event)"
+                        ng-model="search.key">
+
+                    <div class="input-group-prepend">
+                        <button type="button" class="btn btn-outline-success" ng-click="onSearch()">查 询</button>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col" align="right">
+                <button type="button" class="btn btn-success" ng-click='onAdd()'>新增请假</button>
+            </div>
+        </div>
+        <br />
+        <ul class="nav nav-tabs" id="myTab" role="tablist">
+
+            <li class="nav-item">
+                <a class="nav-link active" data-toggle="tab" href="#" ng-click='ondaishenpiTabClick()' role="tab"
+                    aria-controls="enable" aria-selected="false">待审批</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" data-toggle="tab" href="#" ng-click='onpassTabClick()' role="tab"
+                    aria-controls="disable" aria-selected="false">审批通过</a>
+            </li>
+
+            <li class="nav-item">
+                <a class="nav-link" data-toggle="tab" href="#" ng-click='onyijiesuanTabClick()' role="tab"
+                    aria-controls="disable" aria-selected="false">已结算</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" data-toggle="tab" href="#" ng-click='onyibubanTabClick()' role="tab"
+                    aria-controls="disable" aria-selected="false">已补班</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" data-toggle="tab" href="#" ng-click='onnotpassTabClick()' role="tab"
+                    aria-controls="disable" aria-selected="false">审批未通过</a>
+            </li>
+        </ul>
+        <br />
+
+        <!-- 数据区域 -->
+        <div class="row">
+            <div class="col">
+                <table class="table table-striped table-hover" id="table">
+                    <thead class="bg-info text-white">
+                        <tr>
+                            <th scope="col">序号</th>
+                            <th scope="col" ng-hide={{true}}>ID</th>
+                            <th scope="col">申请人</th>
+                            <th scope="col">请假日期</th>
+                            <th scope="col">备注</th>
+                            <th scope="col">创建时间</th>
+                            <th scope="col">操 作</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr ng-repeat="x in listData">
+                            <td>{{ $index + 1 }}</td>
+                            <td ng-hide={{true}}>{{x.id}}</td>
+                            <th scope="row"><a href="#" ng-click="getDetailData(x.id)">{{x.staffName}}</a></td>
+                            <td>{{x.leavedate}}</td>
+                            <td>{{x.remark}}</td>
+                            <td>{{x.createTime}}</td>
+                            <td>
+                                <button type="button" class="btn btn-secondary btn-sm" ng-click="onPass(x.id)"
+                                    ng-hide="needHidePass">审批通过</button>
+                                <button type="button" class="btn btn-secondary btn-sm" ng-click="onNotPass(x.id)"
+                                    ng-hide="needHideNotPass">审批不过</button>
+                                <button type="button" class="btn btn-secondary btn-sm" ng-click="onJieSuan(x.id)"
+                                    ng-hide="needHideJieSuan">确认结算</button>
+                                <button type="button" class="btn btn-secondary btn-sm" ng-click="onBuBan(x.id)"
+                                    ng-hide="needHideBuBan">确认补班</button>
+                                <button type="button" class="btn btn-secondary btn-sm" ng-click="onCancel(x.id,x.staff)"
+                                    ng-hide="needHideCancel">撤销申请</button>
+
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal 字典内容维护弹出页面 -->
+    <div class="modal fade bd-example-modal-lg" id="detailModal" tabindex="-1" role="dialog" data-backdrop="static"
+        aria-labelledby="detailModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalLabel">请假申请信息</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <form>
+                        <div class="form-group row">
+                            <label for="inputName" class="col-sm-2 col-form-label">申请人</label>
+                            <div class="col-sm-4">
+                                <input type="text" class="form-control" readonly ng-model="currentUser.name">
+                            </div>
+                            <label for="inputName" class="col-sm-2 col-form-label">请假日期</label>
+                            <div class="col-sm-4">
+                                <input type="text" class="form-control" placeholder="形如:20190101"
+                                    ng-model="detailInfo.leavedate">
+                            </div>
+
+                        </div>
+
+                        <div class="form-group row">
+                            <label for="inputName" class="col-sm-2 col-form-label">备注</label>
+                            <div class="col-sm-10">
+                                <input type="text" class="form-control" ng-model="detailInfo.remark">
+                            </div>
+
+                        </div>
+                        <div class="form-group row">
+
+                            <label for="inputName" class="col-sm-2 col-form-label">创建时间</label>
+                            <div class="col-sm-4">
+                                <input type="text" class="form-control" readonly ng-model="detailInfo.createTime">
+                            </div>
+                            <label for="inputName" class="col-sm-2 col-form-label">状态</label>
+                            <div class=" col-sm-4">
+                                <input type="text" class="form-control" readonly ng-model="detailInfo.stateName">
+                            </div>
+                        </div>
+
+
+                        <div class="form-group row">
+                            <button class="btn btn-primary form-control" ng-click="onSave()" ng-hide="needHideSave">保
+                                存</button>
+                        </div>
+
+
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal -->
+    <div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
+        aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalLabel">友情提示</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    {{modalContent}}
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">确 定</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+
+
+    <!-- Optional JavaScript -->
+    <!-- jQuery first, then Popper.js, then Bootstrap JS -->
+    <script src="../lib/jquery/jquery.3.2.1.js"></script>
+    <script src="../lib/popper/popper.1.12.9.js"></script>
+    <script src="../lib/bootstrap/js/bootstrap.min.js"></script>
+    <script src="../lib/angular-1.7.5/angular.min.js"></script>
+    <script src="../common/littleCatCommon.js"></script>
+
+    <script>
+
+        var app = angular.module('myApp', []);
+
+        app.controller('myCtrl', function ($scope, $http) {
+
+            if (StringUtil.isEmpty(sessionStorage.getItem("currentUser"))) {
+                window.location = '../main/login.html';
+            }
+
+            $scope.currentUser = JSON.parse(sessionStorage.getItem("currentUser"));
+
+            $scope.search = {
+                staff:'',
+                beginDate: '',
+                endDate: '',
+                key: ''
+            };
+
+            $scope.getData = function () {
+
+                if($scope.currentUser.isboss != 'Y'){
+                    $scope.search.staff = $scope.currentUser.id
+                }
+
+                $http.get(CommonConfig.RestBaseUrl.IMSService + 'personal/leaverecord/getList?key=' + $scope.search.key + '&state=' + $scope.state+ '&staff=' + $scope.search.staff + '&beginDate=' + $scope.search.beginDate + '&endDate=' + $scope.search.endDate)
+                    .then(function (result) {  //正确请求成功时处理
+                        $scope.listData = result.data.data
+                    }).catch(function (result) { //捕捉错误处理
+                        console.log(result);
+                    });
+            };
+
+            $scope.getDetailData = function (id) {
+                $http.get(CommonConfig.RestBaseUrl.IMSService + 'personal/leaverecord/getById?id=' + id)
+                    .then(function (result) {  //正确请求成功时处理
+                        $scope.detailInfo = result.data.data[0];
+
+                        $("#detailModal").modal("show")
+
+                    }).catch(function (result) { //捕捉错误处理
+                        console.log(result);
+                    });
+            };
+
+            $('#detailModal').on('hidden.bs.modal', function (e) {
+                $scope.getData();
+            });
+
+            $scope.hideAllButton = function () {
+                $scope.needHidePass = true;
+                $scope.needHideNotPass = true;
+                $scope.needHideJieSuan = true;
+                $scope.needHideBuBan = true;
+                $scope.needHideCancel = true;
+                $scope.needHideSave = true;
+            };
+
+
+            $scope.onAdd = function () {
+                $scope.detailInfo = {};
+                $scope.needHideSave = false;
+
+                $("#detailModal").modal("show")
+            };
+
+            $scope.ondaishenpiTabClick = function () {
+                $scope.hideAllButton()
+
+                if ($scope.currentUser.isboss == 'Y') {
+                    $scope.needHidePass = false;
+                    $scope.needHideNotPass = false;
+                }
+
+                $scope.needHideCancel = false;
+                $scope.needHideSave = false;
+                $scope.state = "1";
+                $scope.getData();
+            };
+
+            $scope.onpassTabClick = function () {
+                $scope.hideAllButton()
+                $scope.needHideJieSuan = false;
+                $scope.needHideBuBan = false;
+                $scope.state = "2";
+                $scope.getData();
+            };
+
+
+
+            $scope.onyijiesuanTabClick = function () {
+                $scope.hideAllButton()
+                $scope.state = "3";
+                $scope.getData();
+            };
+
+            $scope.onyibubanTabClick = function () {
+                $scope.hideAllButton()
+                $scope.state = "4";
+                $scope.getData();
+            };
+
+            $scope.onnotpassTabClick = function () {
+                $scope.hideAllButton()
+                $scope.state = "9";
+                $scope.getData();
+            };
+
+
+
+            $scope.onSave = function () {
+                $scope.detailInfo.staff = $scope.currentUser.id
+                if (StringUtil.isEmpty($scope.detailInfo.id)) {//添加
+                    $http.post(CommonConfig.RestBaseUrl.IMSService + 'personal/leaverecord/add', $scope.detailInfo, CommonConfig.httpReqConfig)
+                        .then(function (result) {  //正确请求成功时处理
+                            if (result.data.code != 'NONE_ERROR') {
+                                $("#myModal").modal("show")
+                                $scope.modalContent = "添加失败！"
+                                return
+                            }
+
+                            $("#myModal").modal("show")
+                            $scope.modalContent = "添加成功！"
+
+                            $scope.detailInfo = {
+                            };
+
+                        }).catch(function (result) { //捕捉错误处理
+                            $("#myModal").modal("show")
+                            $scope.modalContent = "添加失败！"
+
+                            console.log(result);
+                        });
+                } else {//修改
+                    $http.put(CommonConfig.RestBaseUrl.IMSService + 'personal/leaverecord/modify', $scope.detailInfo, CommonConfig.httpReqConfig)
+                        .then(function (result) {  //正确请求成功时处理
+                            if (result.data.code != 'NONE_ERROR') {
+                                $("#myModal").modal("show")
+                                $scope.modalContent = "修改失败！"
+                                return
+                            }
+
+                            $("#myModal").modal("show")
+                            $scope.modalContent = "修改成功！"
+
+                        }).catch(function (result) { //捕捉错误处理
+                            $("#myModal").modal("show")
+                            $scope.modalContent = "修改失败！"
+                            console.log(result);
+                        });
+                }
+            };
+
+
+            $scope.onPass = function (id) {
+
+                $http.put(CommonConfig.RestBaseUrl.IMSService + 'personal/leaverecord/approve/' + id + '/1')
+                    .then(function (result) {  //正确请求成功时处理
+                        if (result.data.code == "NONE_ERROR") {
+                            $scope.modalContent = '审批成功！';
+                            $scope.getData();
+                        }
+                        else {
+                            $scope.modalContent = '审批失败！';
+                        }
+                    }).catch(function (result) { //捕捉错误处理
+                        console.log(result);
+                    });
+            };
+
+            $scope.onNotPass = function (id) {
+
+                $http.put(CommonConfig.RestBaseUrl.IMSService + 'personal/leaverecord/approve/' + id + '/0')
+                    .then(function (result) {  //正确请求成功时处理
+                        if (result.data.code == "NONE_ERROR") {
+                            $scope.modalContent = '审批成功！';
+                            $scope.getData();
+                        }
+                        else {
+                            $scope.modalContent = '审批失败！';
+                        }
+                    }).catch(function (result) { //捕捉错误处理
+                        console.log(result);
+                    });
+            };
+
+            $scope.onJieSuan = function (id) {
+
+                $http.put(CommonConfig.RestBaseUrl.IMSService + 'personal/leaverecord/jiesuan/' + id)
+                    .then(function (result) {  //正确请求成功时处理
+                        if (result.data.code == "NONE_ERROR") {
+                            $scope.modalContent = '确认结算成功！';
+                            $scope.getData();
+                        }
+                        else {
+                            $scope.modalContent = '确认结算失败！';
+                        }
+                    }).catch(function (result) { //捕捉错误处理
+                        console.log(result);
+                    });
+            };
+
+            $scope.onBuBan = function (id) {
+
+                $http.put(CommonConfig.RestBaseUrl.IMSService + 'personal/leaverecord/buban/' + id)
+                    .then(function (result) {  //正确请求成功时处理
+                        if (result.data.code == "NONE_ERROR") {
+                            $scope.modalContent = '确认补班成功！';
+                            $scope.getData();
+                        }
+                        else {
+                            $scope.modalContent = '确认补班失败！';
+                        }
+                    }).catch(function (result) { //捕捉错误处理
+                        console.log(result);
+                    });
+            };
+
+            $scope.onCancel = function (id,staff) {
+
+                if(staff != $scope.currentUser.id){
+                    $scope.modalContent = '非本人不能撤销申请！';
+                    $("#myModal").modal("show")
+                    return
+                }
+
+                
+
+                $http.delete(CommonConfig.RestBaseUrl.IMSService + 'personal/leaverecord/delete/' + id)
+                    .then(function (result) {  //正确请求成功时处理
+                        if (result.data.code == "NONE_ERROR") {
+                            $scope.modalContent = '撤销请假申请成功';
+                            $("#myModal").modal("show")
+                            $scope.getData();
+                        }
+                        else {
+                            $scope.modalContent = '撤销请假申请失败！';
+                            $("#myModal").modal("show")
+                        }
+                    }).catch(function (result) { //捕捉错误处理
+                        console.log(result);
+                    });
+            };
+
+            $scope.onSearch = function () {
+                $scope.getData();
+            };
+
+            $scope.enterEvent = function (e) {
+                var keycode = window.event ? e.keyCode : e.which;
+                if (keycode == 13) {
+                    $scope.onSearch();
+                }
+            };
+
+            //页面初始化
+            $scope.state = "1";
+            $scope.ondaishenpiTabClick()
+            $scope.getData();
+        });
+
+    </script>
+
+</body>
+
+</html>

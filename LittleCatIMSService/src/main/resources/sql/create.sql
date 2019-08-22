@@ -35,6 +35,18 @@ CREATE TABLE `t_sys_sysoperator` (
 	UNIQUE KEY `username` (`username`)
 );
 
+#员工请假记录
+CREATE TABLE `t_staff_leaverecord` (
+	`id` VARCHAR(255) NOT NULL,
+	`staff` VARCHAR(255) NOT NULL,
+	`leavedate` DATE NOT NULL,
+	`remark` VARCHAR(255) NULL,
+	`createTime` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+	`state` VARCHAR(1) NOT NULL DEFAULT '1',
+	
+	PRIMARY KEY (`id`)
+);
+
 
 #字典
 CREATE TABLE `t_basic_dicType` (
