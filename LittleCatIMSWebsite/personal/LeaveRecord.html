@@ -128,7 +128,7 @@
                         <div class="form-group row">
                             <label for="inputName" class="col-sm-2 col-form-label">申请人</label>
                             <div class="col-sm-4">
-                                <input type="text" class="form-control" readonly ng-model="currentUser.name">
+                                <input type="text" class="form-control" readonly ng-model="detailInfo.staffName">
                             </div>
                             <label for="inputName" class="col-sm-2 col-form-label">请假日期</label>
                             <div class="col-sm-4">
@@ -262,7 +262,11 @@
 
 
             $scope.onAdd = function () {
-                $scope.detailInfo = {};
+                $scope.detailInfo = {
+                    staffName:$scope.currentUser.name,
+                    staff:$scope.currentUser.id
+                };
+
                 $scope.needHideSave = false;
 
                 $("#detailModal").modal("show")
@@ -313,7 +317,6 @@
 
 
             $scope.onSave = function () {
-                $scope.detailInfo.staff = $scope.currentUser.id
                 if (StringUtil.isEmpty($scope.detailInfo.id)) {//添加
                     $http.post(CommonConfig.RestBaseUrl.IMSService + 'personal/leaverecord/add', $scope.detailInfo, CommonConfig.httpReqConfig)
                         .then(function (result) {  //正确请求成功时处理
