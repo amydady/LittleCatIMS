@@ -283,7 +283,8 @@
             };
 
             $scope.detailInfo = {
-                kecheng: '-1'
+                kecheng: '-1',
+                fee:0
             };
 
             $scope.getStudentListData = function () {
@@ -318,7 +319,8 @@
 
             $scope.onClear = function () {
                 $scope.detailInfo = {
-                    kecheng: '-1'
+                    kecheng: '-1',
+                    fee:0
                 };
             };
 
@@ -361,8 +363,6 @@
 
 
             $scope.onSelectStudent = function () {
-                $scope.detailInfo.studentName = ''
-                $scope.detailInfo.student = ''
                 $scope.studentListData = []
                 $scope.search.studentKey = ''
 
@@ -380,12 +380,6 @@
                 if ($scope.detailInfo.kecheng == '-1') {
                     $("#myModal").modal("show")
                     $scope.modalContent = "请选择课程！"
-                    return
-                }
-
-                if (StringUtil.isEmpty($scope.detailInfo.fee)) {
-                    $("#myModal").modal("show")
-                    $scope.modalContent = "请填写费用！"
                     return
                 }
 
@@ -407,9 +401,7 @@
                             $("#myModal").modal("show")
                             $scope.modalContent = "添加成功！"
 
-                            $scope.detailInfo = {
-                                kecheng: '-1'
-                            };
+                            $scope.onClear()
 
                             $scope.onSearch()
 
@@ -430,6 +422,8 @@
 
                             $("#myModal").modal("show")
                             $scope.modalContent = "修改成功！"
+                            
+                            $scope.onClear()
 
                             $scope.onSearch()
 
