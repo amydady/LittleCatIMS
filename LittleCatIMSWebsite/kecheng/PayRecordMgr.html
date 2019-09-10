@@ -299,7 +299,7 @@
 
             $scope.getKeChengListData = function () {
 
-                $http.get(CommonConfig.RestBaseUrl.IMSService + 'kecheng/getList')
+                $http.get(CommonConfig.RestBaseUrl.IMSService + 'kecheng/getList?enable=Y')
                     .then(function (result) {  //正确请求成功时处理
                         $scope.kechengListData = result.data.data
                     }).catch(function (result) { //捕捉错误处理
