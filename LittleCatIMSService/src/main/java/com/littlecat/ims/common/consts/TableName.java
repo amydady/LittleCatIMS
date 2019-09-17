@@ -23,6 +23,7 @@ public enum TableName
 
 	Student("t_student"),
 	Kecheng("t_kecheng"),
+	Staff("t_staff"),
 	KeChengStudent("t_kecheng_student"),
 	PayRecord("t_kecheng_payrecord"),
 	TimesRecord("t_kecheng_timesrecord"),

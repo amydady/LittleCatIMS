@@ -129,6 +129,36 @@ CREATE TABLE `t_kecheng_timesrecord` (
 	UNIQUE KEY `name` (`kecheng`,`student`,`year`,`month`,`day`,`starttime`)
 );
 
+#员工信息
+drop table t_staff;
+CREATE TABLE `t_staff` (
+	`id` VARCHAR(255) NOT NULL,
+	`name` VARCHAR(255) NOT NULL,
+	`mobile` VARCHAR(255) NOT NULL,
+	`idcard` VARCHAR(255) NOT NULL,
+	`worktype` VARCHAR(5) NOT NULL,
+	`sex` VARCHAR(5) NULL,
+	`age` int NULL,
+	`biyexuexiao` VARCHAR(255) NOT NULL,
+	`biyeshijian` DATE NULL,
+	`xueli` VARCHAR(255) NOT NULL,
+	`zhuanye` VARCHAR(255) NOT NULL,
+	`techangjirongyu` VARCHAR(1024) NULL,
+	`joindate` DATE NOT NULL,
+	`shiyongqi` int NULL,
+	`zhuanzhengdate` DATE NULL,
+	`shiyonggongzi` int NULL,
+	`zhengshigongzi` int NULL,
+	`keshigongzi` VARCHAR(1024) NULL,
+	`baoxianxinxi` VARCHAR(1024) NULL,
+	`remark` VARCHAR(255) NULL,
+	`leavedate` DATE NULL,
+	`state` VARCHAR(5) NOT NULL,
+	`createTime` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+	
+	PRIMARY KEY (`id`)
+);
+
 ##交费记录
 CREATE TABLE `t_kecheng_payrecord` (
 	`id` VARCHAR(125) NOT NULL,
