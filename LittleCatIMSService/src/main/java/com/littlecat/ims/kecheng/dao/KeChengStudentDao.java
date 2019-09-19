@@ -131,7 +131,7 @@ public class KeChengStudentDao
 				.append(" inner join " + TABLE_NAME_STUDENT + " b on a.student = b.id ")
 				.append(" inner join " + TABLE_NAME_KECHENG + " c on a.kecheng = c.id ");
 
-		sql.append(" where a.remaintimes >0 and a.remaintimes <= 3 ");
+		sql.append(" where a.remaintimes >0 and a.remaintimes <= 3 and c.enable='Y' ");
 
 		if (StringUtil.isNotEmpty(key))
 		{
