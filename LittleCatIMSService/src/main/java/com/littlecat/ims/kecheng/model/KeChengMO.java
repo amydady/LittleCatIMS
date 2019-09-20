@@ -15,6 +15,7 @@ public class KeChengMO extends BaseMO
 	private String teacher;
 	private String remark;
 	private String enable;
+	private String shangkeshijian;
 	private String createTime;
 
 	private String enableV;
@@ -90,6 +91,16 @@ public class KeChengMO extends BaseMO
 		this.teacherName = teacherName;
 	}
 
+	public String getShangkeshijian()
+	{
+		return shangkeshijian;
+	}
+
+	public void setShangkeshijian(String shangkeshijian)
+	{
+		this.shangkeshijian = shangkeshijian;
+	}
+
 	public static class MOMapper implements RowMapper<KeChengMO>
 	{
 		@Override
@@ -103,6 +114,7 @@ public class KeChengMO extends BaseMO
 			mo.setEnable(rs.getString("enable"));
 			mo.setCreateTime(StringUtil.replace(rs.getString("createTime"), ".0", ""));
 			mo.setRemark(rs.getString("remark"));
+			mo.setShangkeshijian(rs.getString("shangkeshijian"));
 
 			// for display
 			mo.setEnableV(KeChengState.getNameByCode(mo.getEnable()));

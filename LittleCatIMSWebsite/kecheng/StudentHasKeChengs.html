@@ -45,8 +45,9 @@
                             <th scope="col">序 号</th>
                             <th scope="col" ng-hide={{true}}>ID</th>
                             <th scope="col">课程名称</th>
+                            <th scope="col">教师</th>
                             <th scope="col">剩余课次</th>
-                            <th scope="col">创建时间</th>
+                            <th scope="col">上课时间</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -54,8 +55,9 @@
                             <td>{{ $index + 1 }}</td>
                             <td ng-hide={{true}}>{{x.id}}</td>
                             <td>{{x.kechengName}}</td>
+                            <td>{{x.teacherName}}</td>
                             <td>{{x.remaintimes}}</td>
-                            <td>{{x.createTime}}</td>
+                            <td>{{x.shangkeshijian}}</td>
                         </tr>
                     </tbody>
                 </table>

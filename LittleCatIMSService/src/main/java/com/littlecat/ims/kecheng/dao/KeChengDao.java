@@ -65,11 +65,11 @@ public class KeChengDao
 			mo.setId(UUIDUtil.createUUID());
 		}
 
-		String sql = "insert into " + TABLE_NAME + "(id,name,teacher,remark) values(?,?,?,?)";
+		String sql = "insert into " + TABLE_NAME + "(id,name,teacher,remark,shangkeshijian) values(?,?,?,?,?)";
 
 		try
 		{
-			jdbcTemplate.update(sql, new Object[] { mo.getId(), mo.getName(), mo.getTeacher(), mo.getRemark() });
+			jdbcTemplate.update(sql, new Object[] { mo.getId(), mo.getName(), mo.getTeacher(), mo.getRemark(),mo.getShangkeshijian() });
 		}
 		catch (DataAccessException e)
 		{
@@ -81,11 +81,11 @@ public class KeChengDao
 
 	public void modify(KeChengMO mo) throws LittleCatException
 	{
-		String sql = "update " + TABLE_NAME + " set name=?,teacher=?,remark=? where id = ?";
+		String sql = "update " + TABLE_NAME + " set name=?,teacher=?,remark=?,shangkeshijian = ? where id = ?";
 
 		try
 		{
-			jdbcTemplate.update(sql, new Object[] { mo.getName(), mo.getTeacher(), mo.getRemark(), mo.getId() });
+			jdbcTemplate.update(sql, new Object[] { mo.getName(), mo.getTeacher(), mo.getRemark(),mo.getShangkeshijian(), mo.getId() });
 		}
 		catch (DataAccessException e)
 		{

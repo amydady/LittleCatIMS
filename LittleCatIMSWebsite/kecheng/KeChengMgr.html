@@ -75,8 +75,7 @@
                             <th scope="col">名称</th>
                             <th scope="col">教师</th>
                             <th scope="col">备注</th>
-                            <th scope="col">创建时间</th>
-                            <th scope="col">状态</th>
+                            <th scope="col">上课时间</th>
                             <th scope="col">操 作</th>
                         </tr>
                     </thead>
@@ -87,8 +86,7 @@
                             <th scope="row"><a href="#" ng-click="getDetailData(x.id)">{{x.name}}</a></td>
                             <td>{{x.teacherName}}</td>
                             <td>{{x.remark}}</td>
-                            <td>{{x.createTime}}</td>
-                            <td>{{x.enableV}}</td>
+                            <td>{{x.shangkeshijian}}</td>
                             <td>
                                 <button type="button" class="btn btn-secondary btn-sm"
                                    ng-hide="x.enable=='N'" ng-click="seestudentinfo(x.id,x.name)">学员</button>
@@ -145,6 +143,13 @@
                             <div class="col-sm-4">
                                 <input type="text" class="form-control" readonly ng-model="detailInfo.enableV">
                             </div>
+                        </div>
+                        <div class="form-group row">
+                            <label for="inputName" class="col-sm-2 col-form-label">上课时间</label>
+                            <div class="col-sm-10">
+                                <input type="text" class="form-control" ng-model="detailInfo.shangkeshijian">
+                            </div>
+
                         </div>
                         <div class="form-group row">
                             <label for="inputName" class="col-sm-2 col-form-label">备注</label>

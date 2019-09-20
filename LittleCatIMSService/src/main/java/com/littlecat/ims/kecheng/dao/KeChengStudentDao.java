@@ -22,6 +22,7 @@ public class KeChengStudentDao
 	private final String TABLE_NAME = TableName.KeChengStudent.getName();
 	private final String TABLE_NAME_STUDENT = TableName.Student.getName();
 	private final String TABLE_NAME_KECHENG = TableName.Kecheng.getName();
+	private final String TABLE_NAME_SYSOPERATOR = TableName.SysOperator.getName();
 
 	@Autowired
 	protected JdbcTemplate jdbcTemplate;
@@ -94,8 +95,11 @@ public class KeChengStudentDao
 	public List<KeChengStudentMO> getByStudent(String student, String state, String key) throws LittleCatException
 	{
 		StringBuilder sql = new StringBuilder()
-				.append("select a.*,b.name kechengName from ").append(TABLE_NAME).append(" a ")
-				.append(" inner join " + TABLE_NAME_KECHENG + " b on a.kecheng = b.id ");
+				.append("select a.*,b.name kechengName,b.shangkeshijian shangkeshijian,c.name teacherName  from ").append(TABLE_NAME).append(" a ")
+				.append(" inner join " + TABLE_NAME_KECHENG + " b on a.kecheng = b.id ")
+				.append(" left join " + TABLE_NAME_SYSOPERATOR + " c on b.teacher = c.id");
+		
+		
 
 		sql.append(" where a.student = ? ");
 

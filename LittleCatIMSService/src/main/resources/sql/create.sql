@@ -95,6 +95,8 @@ CREATE TABLE `t_kecheng` (
 	`teacher` VARCHAR(255) NULL,
 	`enable` VARCHAR(1) NOT NULL DEFAULT 'Y',
 	`remark` VARCHAR(255) NULL,
+	`shangkeshijian` VARCHAR(255) NULL,
+	
 	`createTime` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
 	
 	PRIMARY KEY (`id`),
