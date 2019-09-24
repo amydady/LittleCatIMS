@@ -74,10 +74,49 @@
                             <td>
                                 <button type="button" class="btn btn-secondary btn-sm"
                                     ng-click="onResetpwd(x.id)">密码重置</button>
+                                    <button type="button" class="btn btn-secondary btn-sm"
+                                    ng-click="getKechengList(x.id,x.name)">查看课程</button>
                             </td>
                         </tr>
                     </tbody>
                 </table>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal 老师所有课程维护弹出页面 -->
+    <div class="modal fade bd-example-modal-lg" id="kechengByTeacherModal" tabindex="-1" role="dialog" data-backdrop="static"
+        aria-labelledby="kechengByTeacherModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalLabel">教师课程（{{currentTeacherName}}）</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <table class="table table-striped table-hover" id="tableList">
+                        <thead class="bg-info text-white">
+                            <tr>
+                                <th scope="col">序 号</th>
+                                <th scope="col" ng-hide={{true}}>ID</th>
+                                <th scope="col">课程名称</th>
+                                <th scope="col">状态</th>
+                                <th scope="col">上课时间</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr ng-repeat="x in kechengListData">
+                                <td>{{ $index + 1 }}</td>
+                                <td ng-hide={{true}}>{{x.id}}</td>
+                                <td>{{x.name}}</td>
+                                <td>{{x.enableV}}</td>
+                                <td>{{x.shangkeshijian}}</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
             </div>
         </div>
     </div>
@@ -160,6 +199,18 @@
                     }).catch(function (result) { //捕捉错误处理
                         console.log(result);
                         alert(result.data.Message);
+                    });
+            };
+
+            $scope.getKechengList = function (teacher,teachername) {
+                $scope.currentTeacherName = teachername
+                $http.get(CommonConfig.RestBaseUrl.IMSService + 'kecheng/getList?teacher=' + teacher+'&enable=Y')
+                    .then(function (result) {  //正确请求成功时处理
+                        $scope.kechengListData = result.data.data;
+                        $("#kechengByTeacherModal").modal("show")
+
+                    }).catch(function (result) { //捕捉错误处理
+                        console.log(result);
                     });
             };
 
