@@ -21,6 +21,9 @@ Date.prototype.format = function (format) {
 
 
 DateTimeUtil.getCurrentDate = function(){
-    
     return new Date().format('yyyy-MM-dd');
+};
+
+DateTimeUtil.getCurrentYearMonth = function(){
+    return new Date().format('yyyyMM');
 };

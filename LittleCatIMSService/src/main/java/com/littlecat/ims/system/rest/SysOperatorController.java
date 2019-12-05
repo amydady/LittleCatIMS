@@ -6,6 +6,8 @@ import java.util.List;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.lang.Nullable;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -20,9 +22,11 @@ import com.littlecat.cbb.exception.LittleCatException;
 import com.littlecat.cbb.query.QueryParam;
 import com.littlecat.cbb.rest.RestRsp;
 import com.littlecat.cbb.rest.RestSimpleRsp;
+import com.littlecat.ims.system.business.QianDaoBusiness;
 import com.littlecat.ims.system.business.SysOperatorBusiness;
 import com.littlecat.ims.system.model.ChangePasswordReqInfo;
 import com.littlecat.ims.system.model.LoginReqInfo;
+import com.littlecat.ims.system.model.QianDaoMO;
 import com.littlecat.ims.system.model.SysOperatorMO;
 
 @RestController
@@ -31,6 +35,9 @@ public class SysOperatorController
 {
 	@Autowired
 	private SysOperatorBusiness sysOperatorBusiness;
+
+	@Autowired
+	private QianDaoBusiness qianDaoBusiness;
 
 	private static final Logger logger = LoggerFactory.getLogger(SysOperatorController.class);
 
@@ -59,7 +66,7 @@ public class SysOperatorController
 
 		return result;
 	}
-	
+
 	@PutMapping(value = "/resetPassword/{id}")
 	public RestSimpleRsp resetPassword(@PathVariable String id)
 	{
@@ -92,7 +99,7 @@ public class SysOperatorController
 
 		try
 		{
-			sysOperatorBusiness.changePassword(req.getId(),req.getOldPwd(), req.getPwd());
+			sysOperatorBusiness.changePassword(req.getId(), req.getOldPwd(), req.getPwd());
 		}
 		catch (LittleCatException e)
 		{
@@ -312,6 +319,96 @@ public class SysOperatorController
 		}
 
 		return result;
+	}
+
+	@PostMapping(value = "/qiandao")
+	public RestRsp<String> qianDao(@RequestBody QianDaoMO mo)
+	{
+		RestRsp<String> result = new RestRsp<String>();
+
+		try
+		{
+			result.getData().add(qianDaoBusiness.add(mo));
+		}
+		catch (LittleCatException e)
+		{
+			result.setCode(e.getErrorCode());
+			result.setMessage(e.getMessage());
+			logger.error(e.getMessage(), e);
+		}
+		catch (Exception e)
+		{
+			result.setCode(Consts.ERROR_CODE_UNKNOW);
+			result.setMessage(e.getMessage());
+			logger.error(e.getMessage(), e);
+		}
+
+		return result;
+	}
+
+	@DeleteMapping(value = "/qiandao/delete/{id}")
+	public RestSimpleRsp deleteQianDao(@PathVariable String id)
+	{
+		RestSimpleRsp result = new RestSimpleRsp();
+
+		try
+		{
+			qianDaoBusiness.delete(id);
+		}
+		catch (LittleCatException e)
+		{
+			result.setCode(e.getErrorCode());
+			result.setMessage(e.getMessage());
+			logger.error(e.getMessage(), e);
+		}
+		catch (Exception e)
+		{
+			result.setCode(Consts.ERROR_CODE_UNKNOW);
+			result.setMessage(e.getMessage());
+			logger.error(e.getMessage(), e);
+		}
+
+		return result;
+	}
+
+	@GetMapping(value = "/qiandao/getlist")
+	public RestRsp<QianDaoMO> getQianDaoList(@RequestParam @Nullable String userId, @RequestParam @Nullable String userName, @RequestParam @Nullable String date)
+	{
+		RestRsp<QianDaoMO> result = new RestRsp<QianDaoMO>();
+
+		try
+		{
+			result.getData().addAll(qianDaoBusiness.getList(userId, userName, date));
+		}
+		catch (LittleCatException e)
+		{
+			result.setCode(e.getErrorCode());
+			result.setMessage(e.getMessage());
+			logger.error(e.getMessage(), e);
+		}
+		catch (Exception e)
+		{
+			result.setCode(Consts.ERROR_CODE_UNKNOW);
+			result.setMessage(e.getMessage());
+			logger.error(e.getMessage(), e);
+		}
+
+		return result;
+	}
+
+	@GetMapping(value = "/qiandao/exist")
+	public boolean qianDaoExist(@RequestParam String userid, @RequestParam String date)
+	{
+		try
+		{
+			return qianDaoBusiness.exist(userid, date);
+		}
+		catch (Exception e)
+		{
+			logger.error(e.getMessage(), e);
+		}
+
+		return false;
 	}
 
 }

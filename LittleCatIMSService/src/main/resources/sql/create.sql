@@ -47,6 +47,16 @@ CREATE TABLE `t_staff_leaverecord` (
 	PRIMARY KEY (`id`)
 );
 
+#签到记录
+CREATE TABLE `t_sys_qiandao` (
+	`id` VARCHAR(255) NOT NULL,
+	`userid` VARCHAR(255) NOT NULL,
+	`createTime` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+	
+	PRIMARY KEY (`id`)
+);
+
+
 
 #字典
 CREATE TABLE `t_basic_dicType` (

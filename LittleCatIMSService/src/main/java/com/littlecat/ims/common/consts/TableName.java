@@ -14,6 +14,7 @@ public enum TableName
 	Action("t_sys_action"),
 	Role("t_sys_role"),
 	SysOperator("t_sys_sysoperator"),
+	QianDao("t_sys_qiandao"),
 	
 	XiaoQuArea("t_basic_xiaoquarea"),
 	XiaoQu("t_basic_xiaoqu"),
