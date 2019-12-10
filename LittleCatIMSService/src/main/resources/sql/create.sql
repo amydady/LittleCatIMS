@@ -121,7 +121,8 @@ CREATE TABLE `t_kecheng_student` (
 	`state` VARCHAR(255) NULL,
 	`createTime` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
 	
-	PRIMARY KEY (`id`)
+	PRIMARY KEY (`id`),
+	UNIQUE INDEX `kecheng_student` (`kecheng`, `student`)
 );
 drop table t_kecheng_timesrecord;
 CREATE TABLE `t_kecheng_timesrecord` (
