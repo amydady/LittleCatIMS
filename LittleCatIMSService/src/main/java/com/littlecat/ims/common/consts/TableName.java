@@ -29,6 +29,8 @@ public enum TableName
 	PayRecord("t_kecheng_payrecord"),
 	TimesRecord("t_kecheng_timesrecord"),
 	JieZhuanRecord("t_kecheng_jiezhuanrecord"),
+	YongCanStudent("t_yongcan_student"),
+	YongCanRecord("t_yongcan_timesrecord"),
 	
 	
 	
