@@ -223,6 +223,34 @@ public class StudentMO extends BaseMO
 			// for display
 			mo.setEnableV(mo.enable.equals("Y") ? "是" : "否");
 
+
+			try
+			{
+				mo.setXuexiaoName(rs.getString("xuexiaoName"));
+			}
+			catch (Exception e)
+			{
+
+			}
+
+			try
+			{
+				mo.setNianjiName(rs.getString("nianjiName"));
+			}
+			catch (Exception e)
+			{
+
+			}
+
+			try
+			{
+				mo.setBanjiName(rs.getString("banjiName"));
+			}
+			catch (Exception e)
+			{
+
+			}
+			
 			try
 			{
 				mo.setTuijianrenName(rs.getString("tuijianrenName"));

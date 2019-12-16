@@ -143,25 +143,24 @@ CREATE TABLE `t_kecheng_timesrecord` (
 );
 
 #用餐学员
+#drop table t_yongcan_student
 CREATE TABLE `t_yongcan_student` (
-	`id` VARCHAR(125) NOT NULL,
-	`student` VARCHAR(255) NULL,
-	`remark` VARCHAR(255) NULL,
+	`student` VARCHAR(255) NOT NULL,
 	
-	PRIMARY KEY (`id`),
-	UNIQUE KEY `student` (`student`)
+	PRIMARY KEY (`student`)
 );
 
 #学生用餐记录
-drop table t_yongcan_timesrecord;
+#drop table t_yongcan_timesrecord;
 CREATE TABLE `t_yongcan_timesrecord` (
 	`id` VARCHAR(125) NOT NULL,
-	`student` VARCHAR(255) NULL,
-	`year` VARCHAR(50) NULL,
-	`month` VARCHAR(50) NULL,
-	`day` VARCHAR(50) NULL,
+	`student` VARCHAR(255) NOT NULL,
+	`year` VARCHAR(50) NOT NULL,
+	`month` VARCHAR(50) NOT NULL,
+	`day` VARCHAR(50) NOT NULL,
 	`operator` VARCHAR(255) NOT NULL,
 	`remark` VARCHAR(255) NULL,
+	`state` VARCHAR(2) NULL,
 	`createTime` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
 	
 	PRIMARY KEY (`id`),

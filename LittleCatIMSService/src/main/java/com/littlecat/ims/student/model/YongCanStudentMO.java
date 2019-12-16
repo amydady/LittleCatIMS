@@ -5,19 +5,14 @@ import java.sql.SQLException;
 
 import org.springframework.jdbc.core.RowMapper;
 
-import com.littlecat.cbb.common.BaseMO;
-
-public class YongCanStudentMO extends BaseMO
+public class YongCanStudentMO
 {
 	private String student;
-	private String remark;
 
 	private String studentName;
 	private String xuexiaoName;
 	private String nianjiName;
 	private String banjiName;
-	
-	
 
 	public String getXuexiaoName()
 	{
@@ -59,16 +54,6 @@ public class YongCanStudentMO extends BaseMO
 		this.student = student;
 	}
 
-	public String getRemark()
-	{
-		return remark;
-	}
-
-	public void setRemark(String remark)
-	{
-		this.remark = remark;
-	}
-
 	public String getStudentName()
 	{
 		return studentName;
@@ -86,15 +71,40 @@ public class YongCanStudentMO extends BaseMO
 		{
 			YongCanStudentMO mo = new YongCanStudentMO();
 
-			mo.setId(rs.getString("id"));
 			mo.setStudent(rs.getString("student"));
-			mo.setRemark(rs.getString("remark"));
 
 			// for display
 
 			try
 			{
-				mo.setStudentName(rs.getString("StudentName"));
+				mo.setStudentName(rs.getString("studentName"));
+			}
+			catch (Exception e)
+			{
+
+			}
+
+			try
+			{
+				mo.setXuexiaoName(rs.getString("xuexiaoName"));
+			}
+			catch (Exception e)
+			{
+
+			}
+
+			try
+			{
+				mo.setNianjiName(rs.getString("nianjiName"));
+			}
+			catch (Exception e)
+			{
+
+			}
+
+			try
+			{
+				mo.setBanjiName(rs.getString("banjiName"));
 			}
 			catch (Exception e)
 			{
