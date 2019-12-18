@@ -91,5 +91,43 @@ public class StudentBusiness
 
 		return dataList;
 	}
+	
+	public List<StudentMO> getYongcanList(String need,String key) throws LittleCatException
+	{
+		List<StudentMO> dataList = studentDao.getYongcanList(need,key);
 
+		for (StudentMO data : dataList)
+		{
+			if (!Consts.DEFAULT_NONE_SELECTVALUE.equals(data.getXiaoqu()))
+			{
+				data.setXiaoquName(dicContentBusiness.getById(data.getXiaoqu()).getName());
+			}
+
+			if (!Consts.DEFAULT_NONE_SELECTVALUE.equals(data.getXuexiao()))
+			{
+				data.setXuexiaoName(dicContentBusiness.getById(data.getXuexiao()).getName());
+			}
+
+			if (!Consts.DEFAULT_NONE_SELECTVALUE.equals(data.getNianji()))
+			{
+				data.setNianjiName(dicContentBusiness.getById(data.getNianji()).getName());
+			}
+
+			if (!Consts.DEFAULT_NONE_SELECTVALUE.equals(data.getBanji()))
+			{
+				data.setBanjiName(dicContentBusiness.getById(data.getBanji()).getName());
+			}
+		}
+
+		return dataList;
+	}
+	
+	public void setNeedYongCan(List<String> ids) throws LittleCatException
+	{
+		studentDao.setNeedYongCan(ids);
+	}
+	public void setNotNeedYongCan(List<String> ids) throws LittleCatException
+	{
+		studentDao.setNotNeedYongCan(ids);
+	}
 }

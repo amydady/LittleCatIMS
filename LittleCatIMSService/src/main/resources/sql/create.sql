@@ -91,6 +91,7 @@ CREATE TABLE `t_student` (
 	`xiaoqu` VARCHAR(125) NULL DEFAULT '-1',
 	`tuijianren` VARCHAR(125) NULL DEFAULT '-1',
 	`enable` VARCHAR(1) NOT NULL DEFAULT 'Y',
+	`needyongcan` VARCHAR(1) NOT NULL DEFAULT 'N',
 	`remark` VARCHAR(255) NULL,
 	`createTime` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
 	
@@ -140,14 +141,6 @@ CREATE TABLE `t_kecheng_timesrecord` (
 	
 	PRIMARY KEY (`id`),
 	UNIQUE KEY `name` (`kecheng`,`student`,`year`,`month`,`day`,`starttime`)
-);
-
-#用餐学员
-#drop table t_yongcan_student
-CREATE TABLE `t_yongcan_student` (
-	`student` VARCHAR(255) NOT NULL,
-	
-	PRIMARY KEY (`student`)
 );
 
 #学生用餐记录

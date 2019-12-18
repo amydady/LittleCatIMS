@@ -5,6 +5,8 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
+import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.stereotype.Component;
 
 import com.littlecat.cbb.common.Consts;
@@ -111,5 +113,59 @@ public class StudentDao
 				.append(" where a.tuijianren = ? ");
 
 		return jdbcTemplate.query(sql.toString(), new Object[] { tuijianren }, new StudentMO.MOMapper());
+	}
+
+	public List<StudentMO> getYongcanList(String need, String key) throws LittleCatException
+	{
+		StringBuilder sql = new StringBuilder()
+				.append("select a.*  from ").append(TABLE_NAME).append(" a ")
+				.append(" where a.needyongcan = '" + need + "'");
+
+		if (StringUtil.isNotEmpty(key))
+		{
+			sql.append(" and a.name like '%" + key + "%'");
+		}
+
+		sql.append(" order by a.createTime desc ");
+
+		return jdbcTemplate.query(sql.toString(), new StudentMO.MOMapper());
+	}
+
+	public void setNeedYongCan(List<String> ids) throws LittleCatException
+	{
+		NamedParameterJdbcTemplate namedParameterJdbcTemplate = new NamedParameterJdbcTemplate(jdbcTemplate);
+
+		String sql = "update " + TABLE_NAME + " set needyongcan = 'Y' where id in (:ids)";
+
+		MapSqlParameterSource parameters = new MapSqlParameterSource();
+		parameters.addValue("ids", ids);
+
+		try
+		{
+			namedParameterJdbcTemplate.update(sql, parameters);
+		}
+		catch (DataAccessException e)
+		{
+			throw new LittleCatException(Consts.ERROR_CODE_DATAACCESSEXCEPTION, e.getMessage(), e);
+		}
+	}
+
+	public void setNotNeedYongCan(List<String> ids) throws LittleCatException
+	{
+		NamedParameterJdbcTemplate namedParameterJdbcTemplate = new NamedParameterJdbcTemplate(jdbcTemplate);
+
+		String sql = "update " + TABLE_NAME + " set needyongcan = 'N' where id in (:ids)";
+
+		MapSqlParameterSource parameters = new MapSqlParameterSource();
+		parameters.addValue("ids", ids);
+
+		try
+		{
+			namedParameterJdbcTemplate.update(sql, parameters);
+		}
+		catch (DataAccessException e)
+		{
+			throw new LittleCatException(Consts.ERROR_CODE_DATAACCESSEXCEPTION, e.getMessage(), e);
+		}
 	}
 }

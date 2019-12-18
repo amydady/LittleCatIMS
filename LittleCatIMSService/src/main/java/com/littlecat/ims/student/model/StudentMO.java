@@ -19,10 +19,12 @@ public class StudentMO extends BaseMO
 	private String remark;
 	private String tuijianren;
 	private String enable;
+	private String needyongcan;
 	private String createTime;
 	
 
 	private String enableV;
+	private String needyongcanV;
 	private String xiaoquName;
 	private String xuexiaoName;
 	private String nianjiName;
@@ -201,6 +203,30 @@ public class StudentMO extends BaseMO
 
 
 
+	public String getNeedyongcan()
+	{
+		return needyongcan;
+	}
+
+	public void setNeedyongcan(String needyongcan)
+	{
+		this.needyongcan = needyongcan;
+	}
+
+
+
+	public String getNeedyongcanV()
+	{
+		return needyongcanV;
+	}
+
+	public void setNeedyongcanV(String needyongcanV)
+	{
+		this.needyongcanV = needyongcanV;
+	}
+
+
+
 	public static class MOMapper implements RowMapper<StudentMO>
 	{
 		@Override
@@ -217,11 +243,13 @@ public class StudentMO extends BaseMO
 			mo.setXiaoqu(rs.getString("xiaoqu"));
 			mo.setTuijianren(rs.getString("tuijianren"));
 			mo.setEnable(rs.getString("enable"));
+			mo.setNeedyongcan(rs.getString("needyongcan"));
 			mo.setCreateTime(StringUtil.replace(rs.getString("createTime"), ".0", ""));
 			mo.setRemark(rs.getString("remark"));
 
 			// for display
 			mo.setEnableV(mo.enable.equals("Y") ? "是" : "否");
+			mo.setNeedyongcan(mo.needyongcan.equals("Y") ? "是" : "否");
 
 
 			try

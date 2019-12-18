@@ -7,6 +7,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.lang.Nullable;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -18,28 +19,26 @@ import com.littlecat.cbb.common.Consts;
 import com.littlecat.cbb.exception.LittleCatException;
 import com.littlecat.cbb.rest.RestRsp;
 import com.littlecat.cbb.rest.RestSimpleRsp;
-import com.littlecat.ims.student.business.YongCanStudentBusiness;
-import com.littlecat.ims.student.model.StudentMO;
-import com.littlecat.ims.student.model.YongCanStudentMO;
+import com.littlecat.ims.student.business.YongCanRecordBusiness;
+import com.littlecat.ims.student.model.YongCanRecordMO;
 
 @RestController
-@RequestMapping("/rest/littlecat/ims/yongcanstudent")
-public class YongcanStudentController
+@RequestMapping("/rest/littlecat/ims/yongcanrecord")
+public class YongCanRecordController
 {
 	@Autowired
-	private YongCanStudentBusiness yongCanStudentBusiness;
+	private YongCanRecordBusiness yongCanRecordBusiness;
 
-	private static final Logger logger = LoggerFactory.getLogger(YongcanStudentController.class);
+	private static final Logger logger = LoggerFactory.getLogger(YongCanRecordController.class);
 
-	
-	@PutMapping(value = "/delete")
-	public RestSimpleRsp delete(@RequestBody List<String> ids)
+	@PostMapping(value = "/add")
+	public RestRsp<String> add(@RequestBody YongCanRecordMO mo)
 	{
-		RestSimpleRsp result = new RestSimpleRsp();
+		RestRsp<String> result = new RestRsp<String>();
 
 		try
 		{
-			yongCanStudentBusiness.delete(ids);
+			result.getData().add(yongCanRecordBusiness.add(mo));
 		}
 		catch (LittleCatException e)
 		{
@@ -56,15 +55,15 @@ public class YongcanStudentController
 
 		return result;
 	}
-	
-	@PostMapping(value = "/add")
-	public RestRsp<String> add(@RequestBody List<String> studentIds)
+
+	@PostMapping(value = "/batchadd")
+	public RestSimpleRsp batchadd(@RequestBody List<YongCanRecordMO> mos)
 	{
-		RestRsp<String> result = new RestRsp<String>();
+		RestSimpleRsp result = new RestSimpleRsp();
 
 		try
 		{
-			yongCanStudentBusiness.add(studentIds);
+			yongCanRecordBusiness.add(mos);
 		}
 		catch (LittleCatException e)
 		{
@@ -83,13 +82,13 @@ public class YongcanStudentController
 	}
 
 	@GetMapping(value = "/getList")
-	public RestRsp<YongCanStudentMO> getList(@RequestParam @Nullable String key)
+	public RestRsp<YongCanRecordMO> getList( @RequestParam @Nullable String student, @RequestParam @Nullable String year, @RequestParam @Nullable String month, @RequestParam @Nullable String day, @RequestParam @Nullable String operator, @RequestParam @Nullable String key)
 	{
-		RestRsp<YongCanStudentMO> result = new RestRsp<YongCanStudentMO>();
+		RestRsp<YongCanRecordMO> result = new RestRsp<YongCanRecordMO>();
 
 		try
 		{
-			result.getData().addAll(yongCanStudentBusiness.getList(key));
+			result.getData().addAll(yongCanRecordBusiness.getList(student, year, month, day, operator, key));
 		}
 		catch (LittleCatException e)
 		{
@@ -107,14 +106,14 @@ public class YongcanStudentController
 		return result;
 	}
 
-	@PostMapping(value = "/getNoYongCanStudents")
-	public RestRsp<StudentMO> getNoYongCanStudents(@RequestBody List<String> studentIds, @RequestParam @Nullable String key)
+	@PutMapping(value = "/delete/{id}")
+	public RestSimpleRsp delete(@PathVariable String id)
 	{
-		RestRsp<StudentMO> result = new RestRsp<StudentMO>();
+		RestSimpleRsp result = new RestSimpleRsp();
 
 		try
 		{
-			result.getData().addAll(yongCanStudentBusiness.getNoYongCanStudents(studentIds, key));
+			yongCanRecordBusiness.delete(id);
 		}
 		catch (LittleCatException e)
 		{
@@ -132,4 +131,30 @@ public class YongcanStudentController
 		return result;
 	}
 
+	@PutMapping(value = "/batchdelete")
+	public RestSimpleRsp delete(@RequestBody List<String> ids)
+	{
+		RestSimpleRsp result = new RestSimpleRsp();
+
+		try
+		{
+			yongCanRecordBusiness.delete(ids);
+		}
+		catch (LittleCatException e)
+		{
+			result.setCode(e.getErrorCode());
+			result.setMessage(e.getMessage());
+			logger.error(e.getMessage(), e);
+		}
+		catch (Exception e)
+		{
+			result.setCode(Consts.ERROR_CODE_UNKNOW);
+			result.setMessage(e.getMessage());
+			logger.error(e.getMessage(), e);
+		}
+
+		return result;
+	}
+
+	
 }

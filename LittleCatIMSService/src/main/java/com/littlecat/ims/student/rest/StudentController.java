@@ -385,4 +385,79 @@ public class StudentController
 
 		return result;
 	}
+	
+	@GetMapping(value = "/getYongcanList")
+	public RestRsp<StudentMO> getYongcanList(@RequestParam String need, @RequestParam @Nullable String key)
+	{
+		RestRsp<StudentMO> result = new RestRsp<StudentMO>();
+
+		try
+		{
+			result.getData().addAll(studentBusiness.getYongcanList(need,key));
+		}
+		catch (LittleCatException e)
+		{
+			result.setCode(e.getErrorCode());
+			result.setMessage(e.getMessage());
+			logger.error(e.getMessage(), e);
+		}
+		catch (Exception e)
+		{
+			result.setCode(Consts.ERROR_CODE_UNKNOW);
+			result.setMessage(e.getMessage());
+			logger.error(e.getMessage(), e);
+		}
+
+		return result;
+	}
+	
+	@PutMapping(value = "/setNeedYongCan")
+	public RestSimpleRsp setNeedYongCan(@RequestBody List<String> ids)
+	{
+		RestSimpleRsp result = new RestSimpleRsp();
+
+		try
+		{
+			studentBusiness.setNeedYongCan(ids);
+		}
+		catch (LittleCatException e)
+		{
+			result.setCode(e.getErrorCode());
+			result.setMessage(e.getMessage());
+			logger.error(e.getMessage(), e);
+		}
+		catch (Exception e)
+		{
+			result.setCode(Consts.ERROR_CODE_UNKNOW);
+			result.setMessage(e.getMessage());
+			logger.error(e.getMessage(), e);
+		}
+
+		return result;
+	}
+	
+	@PutMapping(value = "/setNotNeedYongCan")
+	public RestSimpleRsp setNotNeedYongCan(@RequestBody List<String> ids)
+	{
+		RestSimpleRsp result = new RestSimpleRsp();
+
+		try
+		{
+			studentBusiness.setNotNeedYongCan(ids);
+		}
+		catch (LittleCatException e)
+		{
+			result.setCode(e.getErrorCode());
+			result.setMessage(e.getMessage());
+			logger.error(e.getMessage(), e);
+		}
+		catch (Exception e)
+		{
+			result.setCode(Consts.ERROR_CODE_UNKNOW);
+			result.setMessage(e.getMessage());
+			logger.error(e.getMessage(), e);
+		}
+
+		return result;
+	}
 }
