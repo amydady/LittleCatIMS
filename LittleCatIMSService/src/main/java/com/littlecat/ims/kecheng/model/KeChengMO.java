@@ -15,10 +15,12 @@ public class KeChengMO extends BaseMO
 	private String teacher;
 	private String remark;
 	private String enable;
+	private String needremind;
 	private String shangkeshijian;
 	private String createTime;
 
 	private String enableV;
+	private String needremindV;
 	private String teacherName;
 
 	public String getName()
@@ -101,6 +103,26 @@ public class KeChengMO extends BaseMO
 		this.shangkeshijian = shangkeshijian;
 	}
 
+	public String getNeedremind()
+	{
+		return needremind;
+	}
+
+	public void setNeedremind(String needremind)
+	{
+		this.needremind = needremind;
+	}
+
+	public String getNeedremindV()
+	{
+		return needremindV;
+	}
+
+	public void setNeedremindV(String needremindV)
+	{
+		this.needremindV = needremindV;
+	}
+
 	public static class MOMapper implements RowMapper<KeChengMO>
 	{
 		@Override
@@ -112,12 +134,15 @@ public class KeChengMO extends BaseMO
 			mo.setName(rs.getString("name"));
 			mo.setTeacher(rs.getString("teacher"));
 			mo.setEnable(rs.getString("enable"));
+			mo.setNeedremind(rs.getString("needremind"));
 			mo.setCreateTime(StringUtil.replace(rs.getString("createTime"), ".0", ""));
 			mo.setRemark(rs.getString("remark"));
 			mo.setShangkeshijian(rs.getString("shangkeshijian"));
 
 			// for display
 			mo.setEnableV(KeChengState.getNameByCode(mo.getEnable()));
+			mo.setNeedremindV(mo.needremind.equals("Y") ? "是" : "否");
+			
 
 			try
 			{

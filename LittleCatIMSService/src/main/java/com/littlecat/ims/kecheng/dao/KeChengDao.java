@@ -81,11 +81,11 @@ public class KeChengDao
 
 	public void modify(KeChengMO mo) throws LittleCatException
 	{
-		String sql = "update " + TABLE_NAME + " set name=?,teacher=?,remark=?,shangkeshijian = ? where id = ?";
+		String sql = "update " + TABLE_NAME + " set name=?,teacher=?,remark=?,shangkeshijian = ?,needremind = ? where id = ?";
 
 		try
 		{
-			jdbcTemplate.update(sql, new Object[] { mo.getName(), mo.getTeacher(), mo.getRemark(),mo.getShangkeshijian(), mo.getId() });
+			jdbcTemplate.update(sql, new Object[] { mo.getName(), mo.getTeacher(), mo.getRemark(),mo.getShangkeshijian(),mo.getNeedremind(), mo.getId() });
 		}
 		catch (DataAccessException e)
 		{

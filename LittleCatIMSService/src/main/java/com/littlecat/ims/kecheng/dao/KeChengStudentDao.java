@@ -133,7 +133,7 @@ public class KeChengStudentDao
 		StringBuilder sql = new StringBuilder()
 				.append("select a.*,b.name studentName,c.name kechengName  from ").append(TABLE_NAME).append(" a ")
 				.append(" inner join " + TABLE_NAME_STUDENT + " b on a.student = b.id ")
-				.append(" inner join " + TABLE_NAME_KECHENG + " c on a.kecheng = c.id ");
+				.append(" inner join " + TABLE_NAME_KECHENG + " c on a.kecheng = c.id and c.needremind = 'Y'");
 
 		sql.append(" where a.remaintimes >0 and a.remaintimes <= 3 and c.enable='Y' ");
 

@@ -105,6 +105,7 @@ CREATE TABLE `t_kecheng` (
 	`name` VARCHAR(255) NOT NULL,
 	`teacher` VARCHAR(255) NULL,
 	`enable` VARCHAR(1) NOT NULL DEFAULT 'Y',
+	`needremind` VARCHAR(1) NOT NULL DEFAULT 'Y',
 	`remark` VARCHAR(255) NULL,
 	`shangkeshijian` VARCHAR(255) NULL,
 	
