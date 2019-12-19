@@ -59,7 +59,6 @@
                             <th scope="col">年</th>
                             <th scope="col">月</th>
                             <th scope="col">日</th>
-                            <th scope="col">上课时间</th>
                             <th scope="col">备注</th>
                             <th scope="col">记录时间</th>
                             <th scope="col">记录人</th>
@@ -74,7 +73,6 @@
                             <td>{{x.year}}</td>
                             <td>{{x.month}}</td>
                             <td>{{x.day}}</td>
-                            <td>{{x.starttime}}</td>
                             <td>{{x.remark}}</td>
                             <td>{{x.createTime}}</td>
                             <td>{{x.operatorName}}</td>
@@ -195,8 +193,8 @@
 
             $scope.search = {
                 key: '',
-                year: '',
-                month: '',
+                year: new Date().format('yyyy'),
+                month: new Date().format('MM'),
                 day: ''
             };
 
