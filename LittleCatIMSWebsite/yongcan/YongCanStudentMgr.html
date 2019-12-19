@@ -9,7 +9,7 @@
     <!-- Bootstrap CSS -->
     <link rel="stylesheet" href="../lib/bootstrap/css/bootstrap.min.css">
 
-    <title>用餐人员管理</title>
+    <title>YC人员管理</title>
 </head>
 
 <body ng-app="myApp" ng-controller="myCtrl">
@@ -17,7 +17,7 @@
         <!-- 页面标题 -->
         <div class="row" style="height:60px">
             <div class="col">
-                <h4>用餐人员管理</h4>
+                <h4>YC人员管理</h4>
             </div>
         </div>
 
@@ -37,9 +37,9 @@
             </div>
             <div class="col" align="right">
                 <button type="button" class="btn btn-success" ng-click='onEnable()'
-                    ng-hide="needHideEnable">纳入用餐</button>
+                    ng-hide="needHideEnable">纳入YC</button>
                 <button type="button" class="btn btn-danger" ng-click='onDisable()'
-                    ng-hide="needHideDisable">移出用餐</button>
+                    ng-hide="needHideDisable">移出YC</button>
             </div>
         </div>
         <hr />
@@ -48,11 +48,11 @@
 
             <li class="nav-item">
                 <a class="nav-link active" id="enable-tab" data-toggle="tab" href="#enable"
-                    ng-click='onEnableTabClick()' role="tab" aria-controls="enable" aria-selected="false">用餐人员</a>
+                    ng-click='onEnableTabClick()' role="tab" aria-controls="enable" aria-selected="false">YC人员</a>
             </li>
             <li class="nav-item">
                 <a class="nav-link" id="disable-tab" data-toggle="tab" href="#disable" ng-click='onDisableTabClick()'
-                    role="tab" aria-controls="disable" aria-selected="false">未用餐人员</a>
+                    role="tab" aria-controls="disable" aria-selected="false">未YC人员</a>
             </li>
         </ul>
         <br />
@@ -124,7 +124,7 @@
         var app = angular.module('myApp', []);
 
         app.controller('myCtrl', function ($scope, $http) {
-            window.sessionStorage.setItem("currentUser", JSON.stringify({ "name": "shixp" }));
+            // window.sessionStorage.setItem("currentUser", JSON.stringify({ "name": "shixp" }));
             if (StringUtil.isEmpty(sessionStorage.getItem("currentUser"))) {//尚未登录
                 window.location = '../main/login.html';
             }

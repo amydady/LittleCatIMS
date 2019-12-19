@@ -9,7 +9,7 @@
     <!-- Bootstrap CSS -->
     <link rel="stylesheet" href="../lib/bootstrap/css/bootstrap.min.css">
 
-    <title>用餐记录</title>
+    <title>YC记录</title>
 </head>
 
 <body ng-app="myApp" ng-controller="myCtrl">
@@ -17,7 +17,7 @@
         <!-- 页面标题 -->
         <div class="row" style="height:60px">
             <div class="col">
-                <h4>用餐记录</h4>
+                <h4>YC记录</h4>
             </div>
         </div>
 
@@ -42,7 +42,8 @@
                 </div>
             </div>
             <div class="col" align="right">
-                <button type="button" class="btn btn-primary" ng-click="onAdd()">课时登记</button>
+                    <button type="button" class="btn btn-success" ng-click="onYCStudentMgr()">YC人员管理</button>
+                <button type="button" class="btn btn-primary" ng-click="onAdd()">新增记录</button>
             </div>
         </div>
         <hr />
@@ -62,7 +63,7 @@
                             <th scope="col">备注</th>
                             <th scope="col">记录时间</th>
                             <th scope="col">记录人</th>
-                            <!-- <th scope="col">操 作</th> -->
+                            <th scope="col">操 作</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -77,10 +78,10 @@
                             <td>{{x.remark}}</td>
                             <td>{{x.createTime}}</td>
                             <td>{{x.operatorName}}</td>
-                            <!-- <td>
+                            <td>
                                 <button type="button" class="btn btn-secondary btn-sm"
-                                    ng-click="seekechenginfo(x.id,x.name)">查看课程</button>
-                            </td> -->
+                                    ng-click="delete(x.id)">删除</button>
+                            </td>
                         </tr>
                     </tbody>
                 </table>
@@ -94,7 +95,7 @@
         <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h5 class="modal-title" id="exampleModalLabel">用餐登记</h5>
+                    <h5 class="modal-title" id="exampleModalLabel">YC登记</h5>
                     <div class="alert alert-warning" role="alert">
                         时间默认当天，注意修改确认
                     </div>
@@ -184,7 +185,7 @@
         var app = angular.module('myApp', []);
 
         app.controller('myCtrl', function ($scope, $http) {
-            window.sessionStorage.setItem("currentUser", JSON.stringify({ "name": "shixp" }));
+            // window.sessionStorage.setItem("currentUser", JSON.stringify({ "name": "shixp" }));
             if (StringUtil.isEmpty(sessionStorage.getItem("currentUser"))) {//尚未登录
                 window.location = '../main/login.html';
             }
@@ -231,7 +232,7 @@
 
             $scope.getData = function () {
 
-                $http.get(CommonConfig.RestBaseUrl.IMSService + 'timesrecord/getList?kecheng=' + $scope.kechengId + '&key=' + $scope.search.key + '&year=' + $scope.search.year + '&month=' + $scope.search.month + '&day=' + $scope.search.day)
+                $http.get(CommonConfig.RestBaseUrl.IMSService + 'yongcanrecord/getList?key=' + $scope.search.key + '&year=' + $scope.search.year + '&month=' + $scope.search.month + '&day=' + $scope.search.day)
                     .then(function (result) {  //正确请求成功时处理
                         $scope.listData = result.data.data
                         console.log(result);
@@ -240,6 +241,16 @@
                         console.log(result);
                     });
             };
+
+            $scope.delete = function (id) {
+                $http.delete(CommonConfig.RestBaseUrl.IMSService + 'yongcanrecord/delete/'+id, null, CommonConfig.httpReqConfig)
+                    .then(function (result) {  //正确请求成功时处理
+                        $scope.getData();
+                    }).catch(function (result) { //捕捉错误处理
+                        console.log(result);
+                    });
+            };
+
 
             $scope.onSearch = function () {
                 $scope.getData();
@@ -251,6 +262,12 @@
                 $scope.restDetailInfo()
                 $("#detailModal").modal("show")
             };
+
+            $scope.onYCStudentMgr = function () {
+                window.location = 'YongCanStudentMgr.html'
+            };
+
+            
 
 
             $scope.onSave = function () {

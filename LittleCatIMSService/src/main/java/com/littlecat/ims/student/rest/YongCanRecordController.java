@@ -6,6 +6,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.lang.Nullable;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -82,7 +83,7 @@ public class YongCanRecordController
 	}
 
 	@GetMapping(value = "/getList")
-	public RestRsp<YongCanRecordMO> getList( @RequestParam @Nullable String student, @RequestParam @Nullable String year, @RequestParam @Nullable String month, @RequestParam @Nullable String day, @RequestParam @Nullable String operator, @RequestParam @Nullable String key)
+	public RestRsp<YongCanRecordMO> getList(@RequestParam @Nullable String student, @RequestParam @Nullable String year, @RequestParam @Nullable String month, @RequestParam @Nullable String day, @RequestParam @Nullable String operator, @RequestParam @Nullable String key)
 	{
 		RestRsp<YongCanRecordMO> result = new RestRsp<YongCanRecordMO>();
 
@@ -106,7 +107,7 @@ public class YongCanRecordController
 		return result;
 	}
 
-	@PutMapping(value = "/delete/{id}")
+	@DeleteMapping(value = "/delete/{id}")
 	public RestSimpleRsp delete(@PathVariable String id)
 	{
 		RestSimpleRsp result = new RestSimpleRsp();
@@ -156,5 +157,4 @@ public class YongCanRecordController
 		return result;
 	}
 
-	
 }
