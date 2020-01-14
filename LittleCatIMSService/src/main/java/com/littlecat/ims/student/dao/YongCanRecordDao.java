@@ -91,7 +91,7 @@ public class YongCanRecordDao
 
 		if (StringUtil.isNotEmpty(key))
 		{
-			sql.append(" and (b.name like '%" + key + "%' or c.name like '%" + key + "%') ");
+			sql.append(" and (b.name like '%" + key + "%' or b.name like '%" + key + "%') ");
 		}
 
 		sql.append(" order by a.year desc,a.month desc ,a.day asc,b.name");
