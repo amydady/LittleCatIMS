@@ -35,7 +35,7 @@ public class PayRecordDao
 
 		try
 		{
-			jdbcTemplate.update(sql, new Object[] { mo.getId(), mo.getStudent(),mo.getKecheng(), mo.getFee(), mo.getTimes(),mo.getPaydate(), mo.getRemark() });
+			jdbcTemplate.update(sql, new Object[] { mo.getId(), mo.getStudent(), mo.getKecheng(), mo.getFee(), mo.getTimes(), mo.getPaydate(), mo.getRemark() });
 		}
 		catch (DataAccessException e)
 		{
@@ -51,7 +51,7 @@ public class PayRecordDao
 
 		try
 		{
-			jdbcTemplate.update(sql, new Object[] { mo.getStudent(),mo.getKecheng(), mo.getFee(), mo.getTimes(), mo.getPaydate(),mo.getRemark(), mo.getId() });
+			jdbcTemplate.update(sql, new Object[] { mo.getStudent(), mo.getKecheng(), mo.getFee(), mo.getTimes(), mo.getPaydate(), mo.getRemark(), mo.getId() });
 		}
 		catch (DataAccessException e)
 		{
@@ -71,7 +71,7 @@ public class PayRecordDao
 		return jdbcTemplate.queryForObject(sql.toString(), new Object[] { id }, new PayRecordMO.MOMapper());
 	}
 
-	public List<PayRecordMO> getList(String studentId, String studentName) throws LittleCatException
+	public List<PayRecordMO> getList(String studentId, String studentName, String beginDate, String endDate) throws LittleCatException
 	{
 		StringBuilder sql = new StringBuilder()
 				.append("select a.*,b.name studentName,c.name kechengName from ").append(TABLE_NAME).append(" a ")
@@ -89,7 +89,17 @@ public class PayRecordDao
 		{
 			sql.append(" and b.id = '" + studentId + "'");
 		}
-		
+
+		if (StringUtil.isNotEmpty(beginDate))
+		{
+			sql.append(" and date_format(a.paydate,'%Y%m%d') >= " + "date_format('" + beginDate + "','%Y%m%d')");
+		}
+
+		if (StringUtil.isNotEmpty(endDate))
+		{
+			sql.append(" and date_format(a.paydate,'%Y%m%d') <= " + "date_format('" + endDate + "','%Y%m%d')");
+		}
+
 		sql.append(" order by a.createTime desc");
 
 		return jdbcTemplate.query(sql.toString(), new PayRecordMO.MOMapper());

@@ -68,9 +68,9 @@ public class PayRecordBusiness
 		return payRecordDao.getById(id);
 	}
 
-	public List<PayRecordMO> getList(String studentId, String studentName) throws LittleCatException
+	public List<PayRecordMO> getList(String studentId, String studentName,String beginDate,String endDate) throws LittleCatException
 	{
-		return payRecordDao.getList(studentId, studentName);
+		return payRecordDao.getList(studentId, studentName,beginDate,endDate);
 	}
 
 }

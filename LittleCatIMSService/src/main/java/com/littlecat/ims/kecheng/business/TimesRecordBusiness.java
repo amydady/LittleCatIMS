@@ -77,4 +77,14 @@ public class TimesRecordBusiness
 	{
 		timesRecordDao.delete(ids);
 	}
+	
+	public void delete(String id) throws LittleCatException
+	{
+		TimesRecordMO mo = timesRecordDao.getById(id);
+		KeChengStudentMO keChengStudentMO = keChengStudentDao.getByKeChengAndStudent(mo.getKecheng(), mo.getStudent());
+		keChengStudentMO.setRemaintimes(keChengStudentMO.getRemaintimes() + 1);
+		keChengStudentDao.modify(keChengStudentMO);
+		
+		timesRecordDao.delete(id);
+	}
 }

@@ -144,6 +144,23 @@ CREATE TABLE `t_kecheng_timesrecord` (
 	UNIQUE KEY `name` (`kecheng`,`student`,`year`,`month`,`day`,`starttime`)
 );
 
+#课程表
+CREATE TABLE `t_kecheng_kechengbiao` (
+	`id` VARCHAR(125) NOT NULL,
+	`kecheng` VARCHAR(255) NOT NULL,
+	`rulebegindate` VARCHAR(255) NOT NULL,
+	`ruleenddate` VARCHAR(255) NOT NULL,
+	`begindate` VARCHAR(255)  NULL,
+	`enddate` VARCHAR(255)  NULL,
+	`shangkedate` VARCHAR(255)  NULL,
+	`cycle` VARCHAR(1) NULL,
+	`timebegin` TIME NULL,
+	`timeend` TIME NULL,
+	`createTime` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+	
+	PRIMARY KEY (`id`)
+);
+
 #学生用餐记录
 #drop table t_yongcan_timesrecord;
 CREATE TABLE `t_yongcan_timesrecord` (

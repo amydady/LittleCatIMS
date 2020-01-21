@@ -24,6 +24,10 @@ DateTimeUtil.getCurrentDate = function(){
     return new Date().format('yyyy-MM-dd');
 };
 
+DateTimeUtil.getCurrentDateyyyyMMdd = function(){
+    return new Date().format('yyyyMMdd');
+};
+
 DateTimeUtil.getCurrentYearMonth = function(){
     return new Date().format('yyyyMM');
 };

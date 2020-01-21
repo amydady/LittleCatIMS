@@ -42,7 +42,8 @@
                 </div>
             </div>
             <div class="col" align="right">
-                <button type="button" class="btn btn-primary" ng-click="onAdd()" ng-hide="kechengState!='Y'">课时登记</button>
+                <button type="button" class="btn btn-primary" ng-click="onAdd()"
+                    ng-hide="kechengState!='Y'">课时登记</button>
             </div>
         </div>
         <hr />
@@ -63,7 +64,7 @@
                             <th scope="col">记录时间</th>
                             <th scope="col">记录人</th>
                             <th scope="col">是否有效</th>
-                            <!-- <th scope="col">操 作</th> -->
+                            <th scope="col">操 作</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -79,10 +80,11 @@
                             <td>{{x.createTime}}</td>
                             <td>{{x.operatorName}}</td>
                             <td>{{x.enableV}}</td>
-                            <!-- <td>
+
+                            <td>
                                 <button type="button" class="btn btn-secondary btn-sm"
-                                    ng-click="seekechenginfo(x.id,x.name)">查看课程</button>
-                            </td> -->
+                                    ng-click="delete(x.id)">删除</button>
+                            </td>
                         </tr>
                     </tbody>
                 </table>
@@ -169,6 +171,30 @@
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" data-dismiss="modal">确 定</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 危险操作确认框-->
+    <div class="modal fade" id="submitAlert" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
+        aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalLabel">危险操作告警</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    {{modalContent}}
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal" ng-click='onSubmitCancel()'>取
+                        消</button>
+                    <button type="button" class="btn btn-danger" data-dismiss="modal" ng-click='onSubmitOK()'>确
+                        定</button>
                 </div>
             </div>
         </div>
@@ -343,6 +369,26 @@
                     });
 
 
+            };
+
+            $scope.onSubmitCancel = function () {
+                $("#submitAlert").modal("hide")
+            }
+
+            $scope.onSubmitOK = function () {
+                $http.delete(CommonConfig.RestBaseUrl.IMSService + 'timesrecord/delete/' + $scope.currentId, null, CommonConfig.httpReqConfig)
+                    .then(function (result) {  //正确请求成功时处理
+                        $("#submitAlert").modal("hide")
+                        $scope.getData();
+                    }).catch(function (result) { //捕捉错误处理
+                        console.log(result);
+                    });
+            }
+
+            $scope.delete = function (id) {
+                $("#submitAlert").modal("show")
+                $scope.modalContent = "确认要删除本条课次记录么？"
+                $scope.currentId = id
             };
 
             //跳转查看学生课程页面

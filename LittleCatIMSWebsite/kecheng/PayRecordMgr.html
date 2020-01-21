@@ -67,10 +67,17 @@
         <hr />
         <!-- 查询板块 -->
         <div class="row">
-            <div class="col-3">
+            <div class="col-12">
                 <div class="input-group">
+                    <button type="button" class="btn btn-outline-success" ng-click="onSearchOneMonth()">只看当月</button>
+
                     <input type="text" class="form-control is-valid" ng-keyup="enterEvent($event)"
-                        ng-model="search.key">
+                        ng-model="search.beginDate" placeholder="指定开始日期，格式：20190101">
+                     
+                        <input type="text" class="form-control is-valid" ng-keyup="enterEvent($event)"
+                        ng-model="search.endDate" placeholder="指定结束日期，格式：20190101">
+                    <input type="text" class="form-control is-valid" ng-keyup="enterEvent($event)"
+                        ng-model="search.key" placeholder="学生姓名">
                     <div class="input-group-prepend">
                         <button type="button" class="btn btn-outline-success" ng-click="onSearch()">查 询</button>
                     </div>
@@ -182,7 +189,7 @@
         <div class="modal-dialog modal-dialog-centered" role="document">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h5 class="modal-title" id="exampleModalLabel">密码确认</h5>
+                    <h5 class="modal-title" id="exampleModalLabel">密码确认{{passwordcheckresult}}</h5>
                     <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                         <span aria-hidden="true">&times;</span>
                     </button>
@@ -192,7 +199,7 @@
                     <div class="row">
                         <div class="col">
                             <div class="input-group">
-                                <input type="password" class="form-control is-valid" ng-model="pwd">
+                                <input type="password" class="form-control is-valid" ng-model="pwd" ng-keyup="enterEventCheckPassword($event)" >
                                 <div class="input-group-prepend">
                                     <button type="button" class="btn btn-outline-success" ng-click="onCheckPassword()">确
                                         定</button>
@@ -250,19 +257,20 @@
             }
 
             $("#mimaquerenModal").modal("show")
+
             $scope.passwordChecked = false
 
             $scope.onCheckPassword = function () {
                 $http.post(CommonConfig.RestBaseUrl.IMSService + 'sys/operator/login', {identity:$scope.currentUser.username,pwd:$scope.pwd}, CommonConfig.httpReqConfig)
                     .then(function (result) {  //正确请求成功时处理
                         if (result.data.code == 'NONE_ERROR') {
-                            $scope.getData();
+                            $scope.onSearchOneMonth()
                             $scope.getKeChengListData();
                             $scope.passwordChecked = true
                             $("#mimaquerenModal").modal("hide")
                         }
                         else{
-                            $scope.pwd = '密码错误!'
+                            $scope.passwordcheckresult = '：密码错误!'
                         }
 
                     }).catch(function (result) { //捕捉错误处理
@@ -279,7 +287,9 @@
             
             $scope.search = {
                 key: '',
-                studentKey: ''
+                studentKey: '',
+                beginDate:'',
+                endDate:''
             };
 
             $scope.detailInfo = {
@@ -327,7 +337,7 @@
 
             $scope.getData = function () {
 
-                $http.get(CommonConfig.RestBaseUrl.IMSService + 'payrecord/getList?studentName=' + $scope.search.key)
+                $http.get(CommonConfig.RestBaseUrl.IMSService + 'payrecord/getList?studentName=' + $scope.search.key+'&beginDate='+$scope.search.beginDate+'&endDate='+$scope.search.endDate)
                     .then(function (result) {  //正确请求成功时处理
                         $scope.listData = result.data.data
 
@@ -351,6 +361,12 @@
                 $scope.detailInfo.studentName = name
                 $scope.detailInfo.student = id
                 $("#studentSelectModal").modal("hide")
+            };
+
+            $scope.onSearchOneMonth = function () {
+                $scope.search.beginDate = DateTimeUtil.getCurrentYearMonth()+'01'
+                $scope.search.endDate = DateTimeUtil.getCurrentDateyyyyMMdd()
+                $scope.getData();
             };
 
             $scope.onSearch = function () {
@@ -442,6 +458,15 @@
                     $scope.onSearch();
                 }
             };
+
+            $scope.enterEventCheckPassword = function (e) {
+                var keycode = window.event ? e.keyCode : e.which;
+                if (keycode == 13) {
+                    $scope.onCheckPassword()
+                }
+            };
+
+            
 
         });
     </script>

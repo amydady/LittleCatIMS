@@ -144,4 +144,9 @@ public class TimesRecordDao
 	{
 		DaoUtil.delete(TABLE_NAME, ids, jdbcTemplate);
 	}
+	
+	public void delete(String id) throws LittleCatException
+	{
+		DaoUtil.delete(TABLE_NAME, id, jdbcTemplate);
+	}
 }

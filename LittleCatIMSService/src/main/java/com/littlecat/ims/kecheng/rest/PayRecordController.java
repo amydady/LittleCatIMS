@@ -104,13 +104,13 @@ public class PayRecordController
 	}
 
 	@GetMapping(value = "/getList")
-	public RestRsp<PayRecordMO> getList(@RequestParam @Nullable String studentId, @RequestParam @Nullable String studentName)
+	public RestRsp<PayRecordMO> getList(@RequestParam @Nullable String studentId, @RequestParam @Nullable String studentName,@RequestParam @Nullable String beginDate,@RequestParam @Nullable String endDate)
 	{
 		RestRsp<PayRecordMO> result = new RestRsp<PayRecordMO>();
 
 		try
 		{
-			result.getData().addAll(payRecordBusiness.getList(studentId, studentName));
+			result.getData().addAll(payRecordBusiness.getList(studentId, studentName,beginDate,endDate));
 		}
 		catch (LittleCatException e)
 		{

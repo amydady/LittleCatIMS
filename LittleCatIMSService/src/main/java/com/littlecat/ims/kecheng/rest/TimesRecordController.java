@@ -6,6 +6,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.lang.Nullable;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -55,7 +56,7 @@ public class TimesRecordController
 
 		return result;
 	}
-	
+
 	@PostMapping(value = "/batchadd")
 	public RestSimpleRsp batchadd(@RequestBody List<TimesRecordMO> mos)
 	{
@@ -77,7 +78,7 @@ public class TimesRecordController
 			result.setMessage(e.getMessage());
 			logger.error(e.getMessage(), e);
 		}
-		
+
 		return result;
 	}
 
@@ -138,7 +139,7 @@ public class TimesRecordController
 
 		try
 		{
-			result.getData().addAll(timesRecordBusiness.getList(kecheng, student, year, month, day, operator,key));
+			result.getData().addAll(timesRecordBusiness.getList(kecheng, student, year, month, day, operator, key));
 		}
 		catch (LittleCatException e)
 		{
@@ -255,4 +256,30 @@ public class TimesRecordController
 
 		return result;
 	}
+
+	@DeleteMapping(value = "/delete/{id}")
+	public RestSimpleRsp delete(@PathVariable String id)
+	{
+		RestSimpleRsp result = new RestSimpleRsp();
+
+		try
+		{
+			timesRecordBusiness.delete(id);
+		}
+		catch (LittleCatException e)
+		{
+			result.setCode(e.getErrorCode());
+			result.setMessage(e.getMessage());
+			logger.error(e.getMessage(), e);
+		}
+		catch (Exception e)
+		{
+			result.setCode(Consts.ERROR_CODE_UNKNOW);
+			result.setMessage(e.getMessage());
+			logger.error(e.getMessage(), e);
+		}
+
+		return result;
+	}
+
 }
