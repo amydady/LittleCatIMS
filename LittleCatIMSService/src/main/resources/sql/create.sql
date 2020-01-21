@@ -148,14 +148,15 @@ CREATE TABLE `t_kecheng_timesrecord` (
 CREATE TABLE `t_kecheng_kechengbiao` (
 	`id` VARCHAR(125) NOT NULL,
 	`kecheng` VARCHAR(255) NOT NULL,
-	`rulebegindate` VARCHAR(255) NOT NULL,
-	`ruleenddate` VARCHAR(255) NOT NULL,
-	`begindate` VARCHAR(255)  NULL,
-	`enddate` VARCHAR(255)  NULL,
-	`shangkedate` VARCHAR(255)  NULL,
-	`cycle` VARCHAR(1) NULL,
-	`timebegin` TIME NULL,
-	`timeend` TIME NULL,
+	`fixdate` VARCHAR(255)  NULL, #指定具体日期
+	`begindate` VARCHAR(255)  NULL, #日期段开始
+	`enddate` VARCHAR(255)  NULL, #日期段截止
+	`weekday` VARCHAR(255)  NULL, #周几
+	`cycle` VARCHAR(1) NOT NULL, #周期类型：周几、日期段、具体日期
+	`timebeginhour` VARCHAR(2) NULL,
+	`timebeginmin` VARCHAR(2) NULL,
+	`timeendhour` VARCHAR(2) NULL,
+	`timeendmin` VARCHAR(2) NULL,
 	`createTime` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
 	
 	PRIMARY KEY (`id`)

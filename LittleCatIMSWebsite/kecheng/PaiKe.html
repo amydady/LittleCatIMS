@@ -1,0 +1,351 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="../lib/bootstrap/css/bootstrap.min.css">
+
+    <title>排课管理</title>
+</head>
+
+<body ng-app="myApp" ng-controller="myCtrl">
+    <div class="container-fluid">
+        <!-- 页面标题 -->
+        <div class="row" style="height:60px">
+            <div class="col">
+                <h4>排课管理（{{kechengName}}:{{teacherName}}）</h4>
+            </div>
+        </div>
+        <form role="form">
+            <div class="form-group row">
+                <label for="inputName" class="col-sm-2 col-form-label">周期类型</label>
+                <div class="col-sm-10">
+                    <select class="form-control" ng-model="detailInfo.cycle">
+                        <option value="-1">请选择...</option>
+                        <option value="1">周几</option>
+                        <option value="2">日期段</option>
+                        <option value="3">具体日期</option>
+                    </select>
+                </div>
+            </div>
+            <div class="form-group row">
+                <label for="inputName" class="col-sm-2 col-form-label">周几</label>
+                <div class="col-sm-4">
+                    <select class="form-control" ng-model="detailInfo.weekday">
+                        <option value="-1">请选择……</option>
+                        <option ng-repeat="x in weekdayListData" value="{{x.id}}">{{x.name}}</option>
+                    </select>
+                </div>
+                <label for="inputName" class="col-sm-2 col-form-label">指定日期</label>
+                <div class="col-sm-4">
+                    <input type="text" class="form-control" ng-model="detailInfo.fixdate" placeholder="格式:20190401">
+                </div>
+            </div>
+            <div class="form-group row">
+                <label for="inputName" class="col-sm-2 col-form-label">日期段开始日期</label>
+                <div class="col-sm-4">
+                    <input type="text" class="form-control" ng-model="detailInfo.begindate" placeholder="格式:20190401">
+                </div>
+                <label for="inputName" class="col-sm-2 col-form-label">日期段结束日期</label>
+                <div class="col-sm-4">
+                    <input type="text" class="form-control" ng-model="detailInfo.enddate" placeholder="格式:20190401">
+                </div>
+            </div>
+        </form>
+        <form class="form-inline" role="form">
+            <div class="form-group row">
+                <label
+                    for="name">&nbsp;&nbsp;&nbsp;上课时间（24小时制）&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                </label>
+                <input type="text" class="form-control" ng-model="detailInfo.timebeginhour" placeholder="小时，两位">
+                <label> &nbsp;&nbsp;&nbsp;:&nbsp;&nbsp;&nbsp; </label>
+                <input type="text" class="form-control" ng-model="detailInfo.timebeginmin" placeholder="分钟，两位">
+                <label> &nbsp;&nbsp;&nbsp;至&nbsp;&nbsp;&nbsp; </label>
+                <input type="text" class="form-control" ng-model="detailInfo.timeendhour" placeholder="小时，两位">
+                <label> &nbsp;&nbsp;&nbsp;:&nbsp;&nbsp;&nbsp; </label>
+                <input type="text" class="form-control" ng-model="detailInfo.timeendmin" placeholder="分钟，两位">
+            </div>
+        </form>
+        <br>
+        <form role="form">
+            <div class="form-group row">
+                <div class="col-sm-6"></div>
+                <div class="col-sm-5"></div>
+                <div class="col-sm-1"><button class="btn btn-primary form-control" ng-click="onSave()">保 存</button>
+                </div>
+            </div>
+        </form>
+
+        <!-- 数据区域 -->
+        <div class="row">
+            <div class="col">
+                <table class="table table-striped table-hover" id="tableList">
+                    <thead class="bg-info text-white">
+                        <tr>
+                            <th scope="col">序 号</th>
+                            <th scope="col" ng-hide={{true}}>ID</th>
+                            <th scope="col">周期类型</th>
+                            <th scope="col">星期几</th>
+                            <th scope="col">日期段开始</th>
+                            <th scope="col">日期段结束</th>
+                            <th scope="col">指定日期</th>
+                            <th scope="col">上课时间</th>
+                            <th scope="col">操 作</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr ng-repeat="x in listData">
+                            <td><a href="#" ng-click="getDetailData(x.id)">{{ $index + 1 }}</a></td>
+                            <td ng-hide={{true}}>{{x.id}}</td>
+                            <th scope="row">{{x.cycleName}}</td>
+                            <td>{{x.weekdayName}}</td>
+                            <td>{{x.begindate}}</td>
+                            <td>{{x.enddate}}</td>
+                            <td>{{x.fixdate}}</td>
+                            <td>{{x.shangkeshijian}}</td>
+                            <td>
+                                <button type="button" class="btn btn-secondary btn-sm"
+                                    ng-click="delete(x.id)">删除</button>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+
+        <!-- Modal 提示框-->
+        <div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
+            aria-hidden="true">
+            <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="exampleModalLabel">友情提示</h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <div class="modal-body">
+                        {{modalContent}}
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal">确 定</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- 危险操作确认框-->
+        <div class="modal fade" id="submitAlert" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
+            aria-hidden="true">
+            <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="exampleModalLabel">危险操作告警</h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <div class="modal-body">
+                        {{modalContent}}
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal"
+                            ng-click='onSubmitCancel()'>取 消</button>
+                        <button type="button" class="btn btn-danger" data-dismiss="modal" ng-click='onSubmitOK()'>确
+                            定</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Optional JavaScript -->
+    <!-- jQuery first, then Popper.js, then Bootstrap JS -->
+    <script src="../lib/jquery/jquery.3.2.1.js"></script>
+    <script src="../lib/popper/popper.1.12.9.js"></script>
+    <script src="../lib/bootstrap/js/bootstrap.min.js"></script>
+    <script src="../lib/angular-1.7.5/angular.min.js"></script>
+    <script src="../common/littleCatCommon.js"></script>
+
+    <script>
+        var app = angular.module('myApp', []);
+
+        app.controller('myCtrl', function ($scope, $http) {
+            $scope.ResetDetailInfo = function () {
+                $scope.detailInfo = {
+                    cycle: '-1',
+                    weekday: '-1'
+                }
+            };
+
+            $scope.getWeekDayListData = function () {
+
+                $http.get(CommonConfig.RestBaseUrl.IMSService + 'basicinfo/getDicContentList?dictype=5')
+                    .then(function (result) {  //正确请求成功时处理
+                        $scope.weekdayListData = result.data.data
+
+                    }).catch(function (result) { //捕捉错误处理
+                        console.log(result);
+                    });
+            };
+
+
+            $scope.getData = function () {
+
+                $http.get(CommonConfig.RestBaseUrl.IMSService + 'kechengbiao/getList?kecheng=' + $scope.kechengId)
+                    .then(function (result) {  //正确请求成功时处理
+                        $scope.listData = result.data.data
+                        console.log(result);
+
+                    }).catch(function (result) { //捕捉错误处理
+                        console.log(result);
+                    });
+            };
+
+            $scope.check = function () {
+                $scope.checkResult = false
+
+                if ($scope.detailInfo.cycle == '-1') {
+                    $("#myModal").modal("show")
+                    $scope.modalContent = "请选择周期类型！"
+                    return
+                };
+
+                if ($scope.detailInfo.cycle == '1') {
+                    if ($scope.detailInfo.weekday == '-1') {
+                        $("#myModal").modal("show")
+                        $scope.modalContent = "请选择周几！"
+                        return
+                    }
+                }
+
+                if ($scope.detailInfo.cycle == '2') {
+                    if (StringUtil.isEmpty($scope.detailInfo.begindate)) {
+                        $("#myModal").modal("show")
+                        $scope.modalContent = "日期段开始日期不能为空！"
+                        return
+                    }
+
+                    if (StringUtil.isEmpty(StringUtil.isEmpty($scope.detailInfo.enddate))) {
+                        $("#myModal").modal("show")
+                        $scope.modalContent = "日期段结束日期不能为空！"
+                        return
+                    }
+                }
+
+                if ($scope.detailInfo.cycle == '3') {
+                    if (StringUtil.isEmpty(StringUtil.isEmpty($scope.detailInfo.fixdate))) {
+                        $("#myModal").modal("show")
+                        $scope.modalContent = "指定日期不能为空！"
+                        return
+                    }
+                }
+
+                if (StringUtil.isEmpty($scope.detailInfo.timebeginhour)) {
+                    $("#myModal").modal("show")
+                    $scope.modalContent = "上课开始时间（时）不能为空！"
+                    return
+                }
+
+                if (StringUtil.isEmpty($scope.detailInfo.timebeginmin)) {
+                    $("#myModal").modal("show")
+                    $scope.modalContent = "上课开始时间（分）不能为空！"
+                    return
+                }
+
+
+                if (StringUtil.isEmpty($scope.detailInfo.timeendhour)) {
+                    $("#myModal").modal("show")
+                    $scope.modalContent = "上课结束时间（时）不能为空！"
+                    return
+                }
+
+                if (StringUtil.isEmpty($scope.detailInfo.timeendmin)) {
+                    $("#myModal").modal("show")
+                    $scope.modalContent = "上课结束时间（分）不能为空！"
+                    return
+                }
+
+                $scope.checkResult = true
+            };
+
+            $scope.onSave = function () {
+                $scope.check()
+
+                if (!$scope.checkResult) {
+                    return
+                }
+
+                $scope.detailInfo.kecheng = $scope.kechengId
+
+                $http.post(CommonConfig.RestBaseUrl.IMSService + 'kechengbiao/add', $scope.detailInfo, CommonConfig.httpReqConfig)
+                    .then(function (result) {  //正确请求成功时处理
+                        if (result.data.code != 'NONE_ERROR') {
+                            $("#myModal").modal("show")
+                            $scope.modalContent = result.data.message
+                            return
+                        }
+
+                        $("#myModal").modal("show")
+                        $scope.modalContent = "添加成功！"
+
+                        $scope.ResetDetailInfo()
+
+                        $scope.getData()
+
+                    }).catch(function (result) { //捕捉错误处理
+                        $("#myModal").modal("show")
+                        $scope.modalContent = "添加失败！"
+
+                        console.log(result);
+                    });
+            };
+
+            $scope.delete = function (id) {
+                $("#submitAlert").modal("show")
+                $scope.modalContent = "确认要删除本条排课记录么？"
+                $scope.currentId = id
+            };
+
+            $scope.onSubmitCancel = function () {
+                $("#submitAlert").modal("hide")
+            }
+
+            $scope.onSubmitOK = function () {
+                $http.delete(CommonConfig.RestBaseUrl.IMSService + 'kechengbiao/delete/' + $scope.currentId, null, CommonConfig.httpReqConfig)
+                    .then(function (result) {  //正确请求成功时处理
+                        $("#submitAlert").modal("hide")
+                        $scope.getData();
+                    }).catch(function (result) { //捕捉错误处理
+                        console.log(result);
+                    });
+            }
+
+            if (StringUtil.isEmpty(sessionStorage.getItem("currentUser"))) {//尚未登录
+                window.location = '../main/login.html';
+            }
+
+            $scope.currentUser = JSON.parse(sessionStorage.getItem("currentUser"));
+
+            if ($scope.currentUser.isboss != 'Y') {
+                window.location = '../main/NoPermission.html';
+            }
+
+            $scope.kechengId = RequestUtil.getQueryParamByName("kechengId")
+            $scope.kechengName = RequestUtil.getQueryParamByName("kechengName")
+            $scope.teacherName = RequestUtil.getQueryParamByName("teacherName")
+            $scope.ResetDetailInfo()
+            $scope.getWeekDayListData()
+            $scope.getData()
+
+
+        });
+    </script>
+</body>
+
+</html>

@@ -90,7 +90,6 @@
                             <td>
                                 <button type="button" class="btn btn-secondary btn-sm" ng-hide="x.enable=='N'"
                                     ng-click="seestudentinfo(x.id,x.name)">学员</button>
-
                                 <button type="button" class="btn btn-secondary btn-sm" ng-hide="x.enable=='N'"
                                     ng-click="seetimesinfo(x.id,x.name,x.enable,x.enableV)">课次</button>
                                 <button type="button" class="btn btn-secondary btn-sm" ng-click="onEnable(x.id)"
@@ -99,6 +98,8 @@
                                     ng-hide="needHideDisable">失效</button>
                                 <button type="button" class="btn btn-secondary btn-sm" ng-click="onClose(x.id)"
                                     ng-hide="needHideClose">关闭</button>
+                                    <button type="button" class="btn btn-secondary btn-sm" ng-hide="x.enable=='N'"
+                                    ng-click="paike(x.id,x.name,x.teacherName)">排课</button>
                             </td>
                         </tr>
                     </tbody>
@@ -452,6 +453,10 @@
 
             $scope.seetimesinfo = function (id, name, state, statename) {
                 window.location = '../kecheng/TimesMgr.html?kechengId=' + id + '&kechengName=' + name + '&state=' + state + '&statename=' + statename
+            };
+
+            $scope.paike = function(id, name,teacherName){
+                window.location = '../kecheng/PaiKe.html?kechengId=' + id + '&kechengName=' + name + '&teacherName=' + teacherName
             };
 
 
