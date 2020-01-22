@@ -76,6 +76,9 @@
                             <td>
                                 <button type="button" class="btn btn-secondary btn-sm"
                                     ng-click="seekechenginfo(x.id,x.name)">查看课程</button>
+
+                                <button type="button" class="btn btn-secondary btn-sm"
+                                    ng-click="seekechengbiaoinfo(x.id,x.name)">课程表</button>
                                 <button type="button" class="btn btn-secondary btn-sm"
                                     ng-click="seetuijianreninfo(x.id,x.name)">推荐的人</button>
                             </td>
@@ -268,6 +271,47 @@
                                         <td>{{x.xuexiaoName}}</td>
                                         <td>{{x.nianjiName}}</td>
                                         <td>{{x.banjiName}}</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal 课程表弹出页面 -->
+    <div class="modal fade bd-example-modal-lg" id="kechengbiaoModalLabel" tabindex="-1" role="dialog"
+        data-backdrop="static" aria-labelledby="tuijianderenModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalLabel">（{{CurrentStudentName}}）课程表</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <div class="row">
+                        <div class="col">
+                            <table class="table table-striped table-hover" id="kechengbiaoTableList">
+                                <thead class="bg-info text-white">
+                                    <tr>
+                                        <th scope="col">序 号</th>
+                                        <th scope="col" ng-hide={{true}}>ID</th>
+                                        <th scope="col">课程</th>
+                                        <th scope="col">周几</th>
+                                        <th scope="col">上课时间</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr ng-repeat="x in kechengbiaoListData">
+                                        <th scope="row">{{ $index + 1 }}</td>
+                                        <td ng-hide={{true}}>{{x.id}}</td>
+                                        <td>{{x.kechengName}}</td>
+                                        <td>{{x.weekdayName}}</td>
+                                        <td>{{x.shangkeshijian}}</td>
                                     </tr>
                                 </tbody>
                             </table>
@@ -504,6 +548,21 @@
 
                 window.location = '../kecheng/StudentHasKeChengs.html?studentId=' + id + '&studentName=' + name
             };
+
+            $scope.seekechengbiaoinfo = function (id, name) {
+                $scope.CurrentStudentName = name
+
+                $http.get(CommonConfig.RestBaseUrl.IMSService + 'kechengbiao/getList?student=' + id)
+                    .then(function (result) {  //正确请求成功时处理
+                        $scope.kechengbiaoListData = result.data.data
+                    }).catch(function (result) { //捕捉错误处理
+                        console.log(result);
+                    });
+                
+                $("#kechengbiaoModalLabel").modal("show")
+            };
+
+
 
             //查看推荐的人列表
             $scope.seetuijianreninfo = function (id, name) {
