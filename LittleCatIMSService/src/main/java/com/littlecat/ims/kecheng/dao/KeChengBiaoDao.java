@@ -2,6 +2,7 @@ package com.littlecat.ims.kecheng.dao;
 
 import java.util.List;
 
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
@@ -37,6 +38,26 @@ public class KeChengBiaoDao
 		if (StringUtil.isEmpty(mo.getId()))
 		{
 			mo.setId(UUIDUtil.createUUID());
+		}
+
+		if (StringUtils.length(mo.getTimebeginhour()) == 1)
+		{
+			mo.setTimebeginhour('0' + mo.getTimebeginhour());
+		}
+
+		if (StringUtils.length(mo.getTimebeginmin()) == 1)
+		{
+			mo.setTimebeginmin('0' + mo.getTimebeginmin());
+		}
+
+		if (StringUtils.length(mo.getTimeendhour()) == 1)
+		{
+			mo.setTimeendhour('0' + mo.getTimeendhour());
+		}
+
+		if (StringUtils.length(mo.getTimeendmin()) == 1)
+		{
+			mo.setTimeendmin('0' + mo.getTimeendmin());
 		}
 
 		String sql = "insert into " + TABLE_NAME + "(id,kecheng,fixdate,begindate,enddate,weekday,cycle,timebeginhour,timebeginmin,timeendhour,timeendmin) values(?,?,?,?,?,?,?,?,?,?,?)";
@@ -93,8 +114,8 @@ public class KeChengBiaoDao
 		}
 
 		sql.append(" order by b.name,a.begindate,a.weekday,a.fixdate ");
-		
-//		System.out.print(sql);
+
+//		 System.out.print(sql);
 
 		return jdbcTemplate.query(sql.toString(), new KeChengBiaoMO.MOMapper());
 	}

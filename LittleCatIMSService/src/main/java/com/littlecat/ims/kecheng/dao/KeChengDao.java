@@ -20,6 +20,8 @@ public class KeChengDao
 {
 	private final String TABLE_NAME = TableName.Kecheng.getName();
 	private final String TABLE_NAME_SYSOPERATOR = TableName.SysOperator.getName();
+	private final String TABLE_NAME_DICCONTENT = TableName.DicContent.getName();
+
 
 	@Autowired
 	protected JdbcTemplate jdbcTemplate;
@@ -65,11 +67,11 @@ public class KeChengDao
 			mo.setId(UUIDUtil.createUUID());
 		}
 
-		String sql = "insert into " + TABLE_NAME + "(id,name,teacher,remark,shangkeshijian) values(?,?,?,?,?)";
+		String sql = "insert into " + TABLE_NAME + "(id,name,teacher,nianji,kemu,remark,shangkeshijian) values(?,?,?,?,?,?,?)";
 
 		try
 		{
-			jdbcTemplate.update(sql, new Object[] { mo.getId(), mo.getName(), mo.getTeacher(), mo.getRemark(),mo.getShangkeshijian() });
+			jdbcTemplate.update(sql, new Object[] { mo.getId(), mo.getName(), mo.getTeacher(),mo.getNianji(),mo.getKemu(), mo.getRemark(),mo.getShangkeshijian() });
 		}
 		catch (DataAccessException e)
 		{
@@ -81,11 +83,11 @@ public class KeChengDao
 
 	public void modify(KeChengMO mo) throws LittleCatException
 	{
-		String sql = "update " + TABLE_NAME + " set name=?,teacher=?,remark=?,shangkeshijian = ?,needremind = ? where id = ?";
+		String sql = "update " + TABLE_NAME + " set name=?,teacher=?,nianji = ?,kemu = ?,remark=?,shangkeshijian = ?,needremind = ? where id = ?";
 
 		try
 		{
-			jdbcTemplate.update(sql, new Object[] { mo.getName(), mo.getTeacher(), mo.getRemark(),mo.getShangkeshijian(),mo.getNeedremind(), mo.getId() });
+			jdbcTemplate.update(sql, new Object[] { mo.getName(), mo.getTeacher(),mo.getNianji(),mo.getKemu(), mo.getRemark(),mo.getShangkeshijian(),mo.getNeedremind(), mo.getId() });
 		}
 		catch (DataAccessException e)
 		{
@@ -101,8 +103,10 @@ public class KeChengDao
 	public List<KeChengMO> getList(String key, String teacher, String enable) throws LittleCatException
 	{
 		StringBuilder sql = new StringBuilder()
-				.append("select a.*,b.name teacherName from ").append(TABLE_NAME).append(" a ")
-				.append(" left join " + TABLE_NAME_SYSOPERATOR + " b on a.teacher = b.id ");
+				.append("select a.*,b.name teacherName,c.name nianjiName,d.name kemuName from ").append(TABLE_NAME).append(" a ")
+				.append(" left join " + TABLE_NAME_SYSOPERATOR + " b on a.teacher = b.id ")
+				.append(" left join " + TABLE_NAME_DICCONTENT + " c on a.nianji = c.id and c.typeid = '2' ")
+				.append(" left join " + TABLE_NAME_DICCONTENT + " d on a.kemu = d.id and d.typeid = '6' ");
 
 		sql.append(" where 1 = 1 ");
 
@@ -121,7 +125,7 @@ public class KeChengDao
 			sql.append(" and a.enable ='" + enable + "'");
 		}
 
-		sql.append(" order by a.name ");
+		sql.append(" order by d.name,c.name ");
 
 		return jdbcTemplate.query(sql.toString(), new KeChengMO.MOMapper());
 	}

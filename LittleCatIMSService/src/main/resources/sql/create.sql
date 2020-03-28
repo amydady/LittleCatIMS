@@ -104,6 +104,8 @@ CREATE TABLE `t_kecheng` (
 	`id` VARCHAR(125) NOT NULL,
 	`name` VARCHAR(255) NOT NULL,
 	`teacher` VARCHAR(255) NULL,
+	`nianji` VARCHAR(255) NULL,
+	`kemu` VARCHAR(255) NULL,
 	`enable` VARCHAR(1) NOT NULL DEFAULT 'Y',
 	`needremind` VARCHAR(1) NOT NULL DEFAULT 'Y',
 	`remark` VARCHAR(255) NULL,

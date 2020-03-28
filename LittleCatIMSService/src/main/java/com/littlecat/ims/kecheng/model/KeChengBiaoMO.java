@@ -211,7 +211,7 @@ public class KeChengBiaoMO extends BaseMO
 
 			// for display
 			mo.setCycleName(PaiKeCycleType.getNameByCode(rs.getString("cycle")));
-			mo.setShangkeshijian(mo.getTimebeginhour() + ":" + mo.getTimebeginmin() + "-" + mo.getTimebeginhour() + ":" + mo.getTimeendmin());
+			mo.setShangkeshijian(mo.getTimebeginhour() + ":" + mo.getTimebeginmin() + "-" + mo.getTimeendhour() + ":" + mo.getTimeendmin());
 
 			try
 			{

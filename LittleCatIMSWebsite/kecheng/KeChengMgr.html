@@ -73,6 +73,8 @@
                             <th scope="col">序 号</th>
                             <th scope="col" ng-hide={{true}}>ID</th>
                             <th scope="col">名称</th>
+                            <th scope="col">年级</th>
+                            <th scope="col">科目</th>
                             <th scope="col">教师</th>
                             <th scope="col">备注</th>
                             <th scope="col">上课时间</th>
@@ -84,6 +86,8 @@
                             <td>{{ $index + 1 }}</td>
                             <td ng-hide={{true}}>{{x.id}}</td>
                             <th scope="row"><a href="#" ng-click="getDetailData(x.id)">{{x.name}}</a></td>
+                            <td>{{x.nianjiName}}</td>
+                            <td>{{x.kemuName}}</td>
                             <td>{{x.teacherName}}</td>
                             <td>{{x.remark}}</td>
                             <td>{{x.shangkeshijian}}</td>
@@ -98,7 +102,7 @@
                                     ng-hide="needHideDisable">失效</button>
                                 <button type="button" class="btn btn-secondary btn-sm" ng-click="onClose(x.id)"
                                     ng-hide="needHideClose">关闭</button>
-                                    <button type="button" class="btn btn-secondary btn-sm" ng-hide="x.enable=='N'"
+                                <button type="button" class="btn btn-secondary btn-sm" ng-hide="x.enable=='N'"
                                     ng-click="paike(x.id,x.name,x.teacherName)">排课</button>
                             </td>
                         </tr>
@@ -109,7 +113,7 @@
 
     </div>
 
-    <!-- Modal 字典内容维护弹出页面 -->
+    <!-- Modal 课程详细信息维护弹出页面 -->
     <div class="modal fade bd-example-modal-lg" id="detailModal" tabindex="-1" role="dialog" data-backdrop="static"
         aria-labelledby="detailModalLabel" aria-hidden="true">
         <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
@@ -136,6 +140,21 @@
                             </div>
                         </div>
                         <div class="form-group row">
+                            <label for="inputName" class="col-sm-2 col-form-label">年级</label>
+                            <div class="col-sm-4">
+                                <select class="form-control" ng-model="detailInfo.nianji">
+                                    <option value="-1">请选择……</option>
+                                    <option ng-repeat="x in nianjiListData" value="{{x.id}}">{{x.name}}</option>
+                                </select> </div>
+                            <label for="inputName" class="col-sm-2 col-form-label">科目</label>
+                            <div class="col-sm-4">
+                                <select class="form-control" ng-model="detailInfo.kemu">
+                                    <option value="-1">请选择……</option>
+                                    <option ng-repeat="x in kemuListData" value="{{x.id}}">{{x.name}}</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="form-group row">
                             <label for="inputName" class="col-sm-2 col-form-label">创建时间</label>
                             <div class="col-sm-4">
                                 <input type="text" class="form-control" readonly ng-model="detailInfo.createTime">
@@ -153,7 +172,7 @@
                                     <option value="Y">是</option>
                                     <option value="N">否</option>
                                 </select>
-                             </div>
+                            </div>
 
                         </div>
                         <div class="form-group row">
@@ -253,6 +272,24 @@
                     });
             };
 
+            $scope.getNianjiListData = function () {
+                $http.get(CommonConfig.RestBaseUrl.IMSService + 'basicinfo/getDicContentList?dictype=2')
+                    .then(function (result) {  //正确请求成功时处理
+                        $scope.nianjiListData = result.data.data
+                    }).catch(function (result) { //捕捉错误处理
+                        console.log(result);
+                    });
+            };
+
+            $scope.getKemuListData = function () {
+                $http.get(CommonConfig.RestBaseUrl.IMSService + 'basicinfo/getDicContentList?dictype=6')
+                    .then(function (result) {  //正确请求成功时处理
+                        $scope.kemuListData = result.data.data
+                    }).catch(function (result) { //捕捉错误处理
+                        console.log(result);
+                    });
+            };
+
 
 
             $scope.getData = function () {
@@ -271,6 +308,7 @@
                 $http.get(CommonConfig.RestBaseUrl.IMSService + 'kecheng/getById?id=' + id)
                     .then(function (result) {  //正确请求成功时处理
                         $scope.detailInfo = result.data.data[0];
+                        console.log(result);
                         $("#detailModal").modal("show")
 
                     }).catch(function (result) { //捕捉错误处理
@@ -368,6 +406,17 @@
                     });
             };
 
+            $scope.ResetDetailInfo = function(){
+                $scope.detailInfo = {
+                    teacher: '-1',
+                    name: '',
+                    enableV: '是',
+                    needremind: 'Y',
+                    nianji:'-1',
+                    kemu:'-1'
+                };
+            };
+
             $scope.onSearch = function () {
                 $scope.getData();
             };
@@ -379,15 +428,8 @@
                     $("#myModal").modal("show")
                     return
                 }
-
-
-
-                $scope.detailInfo = {
-                    teacher: '-1',
-                    name: '',
-                    enableV: '是',
-                    needremind:'Y'
-                };
+                
+                $scope.ResetDetailInfo()
 
                 $("#detailModal").modal("show")
             };
@@ -411,10 +453,7 @@
                             $("#myModal").modal("show")
                             $scope.modalContent = "添加成功！"
 
-                            $scope.detailInfo = {
-                                teacher: '-1',
-                                needremind:'Y'
-                            };
+                            $scope.ResetDetailInfo()
 
                             $scope.onSearch()
 
@@ -455,7 +494,7 @@
                 window.location = '../kecheng/TimesMgr.html?kechengId=' + id + '&kechengName=' + name + '&state=' + state + '&statename=' + statename
             };
 
-            $scope.paike = function(id, name,teacherName){
+            $scope.paike = function (id, name, teacherName) {
                 window.location = '../kecheng/PaiKe.html?kechengId=' + id + '&kechengName=' + name + '&teacherName=' + teacherName
             };
 
@@ -474,7 +513,10 @@
             $scope.needHideClose = false;
 
             $scope.getTeacherListData()
+            $scope.getNianjiListData()
+            $scope.getKemuListData()
             $scope.getData();
+            $scope.ResetDetailInfo()
 
         });
     </script>
