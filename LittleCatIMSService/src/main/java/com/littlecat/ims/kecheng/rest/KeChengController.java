@@ -112,13 +112,13 @@ public class KeChengController
 	}
 
 	@GetMapping(value = "/getList")
-	public RestRsp<KeChengMO> getList(@RequestParam @Nullable String key, @RequestParam @Nullable String teacher, @RequestParam @Nullable String enable)
+	public RestRsp<KeChengMO> getList(@RequestParam @Nullable String key, @RequestParam @Nullable String teacher, @RequestParam @Nullable String enable,@RequestParam @Nullable String needremind)
 	{
 		RestRsp<KeChengMO> result = new RestRsp<KeChengMO>();
 
 		try
 		{
-			result.getData().addAll(keChengBusiness.getList(key, teacher, enable));
+			result.getData().addAll(keChengBusiness.getList(key, teacher, enable,needremind));
 		}
 		catch (LittleCatException e)
 		{
@@ -244,6 +244,31 @@ public class KeChengController
 		try
 		{
 			keChengBusiness.close(id);
+		}
+		catch (LittleCatException e)
+		{
+			result.setCode(e.getErrorCode());
+			result.setMessage(e.getMessage());
+			logger.error(e.getMessage(), e);
+		}
+		catch (Exception e)
+		{
+			result.setCode(Consts.ERROR_CODE_UNKNOW);
+			result.setMessage(e.getMessage());
+			logger.error(e.getMessage(), e);
+		}
+
+		return result;
+	}
+	
+	@PutMapping(value = "/setRemindTag/{id}/{tag}")
+	public RestSimpleRsp setRemindTag(@PathVariable String id,@PathVariable String tag)
+	{
+		RestSimpleRsp result = new RestSimpleRsp();
+
+		try
+		{
+			keChengBusiness.setRemindTag(id,tag);
 		}
 		catch (LittleCatException e)
 		{

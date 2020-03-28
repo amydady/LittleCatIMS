@@ -51,15 +51,19 @@ public class KeChengBusiness
 	{
 		keChengDao.modify(mo);
 	}
+	public void setRemindTag(String id, String tag) throws LittleCatException
+	{
+		keChengDao.setRemindTag(id, tag);
+	}
 
 	public String add(KeChengMO mo) throws LittleCatException
 	{
 		return keChengDao.add(mo);
 	}
 
-	public List<KeChengMO> getList(String key, String teacher, String enable) throws LittleCatException
+	public List<KeChengMO> getList(String key, String teacher, String enable,String needremind) throws LittleCatException
 	{
-		return keChengDao.getList(key, teacher, enable);
+		return keChengDao.getList(key, teacher, enable,needremind);
 	}
 
 }

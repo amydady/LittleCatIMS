@@ -22,7 +22,6 @@ public class KeChengDao
 	private final String TABLE_NAME_SYSOPERATOR = TableName.SysOperator.getName();
 	private final String TABLE_NAME_DICCONTENT = TableName.DicContent.getName();
 
-
 	@Autowired
 	protected JdbcTemplate jdbcTemplate;
 
@@ -71,7 +70,7 @@ public class KeChengDao
 
 		try
 		{
-			jdbcTemplate.update(sql, new Object[] { mo.getId(), mo.getName(), mo.getTeacher(),mo.getNianji(),mo.getKemu(), mo.getRemark(),mo.getShangkeshijian() });
+			jdbcTemplate.update(sql, new Object[] { mo.getId(), mo.getName(), mo.getTeacher(), mo.getNianji(), mo.getKemu(), mo.getRemark(), mo.getShangkeshijian() });
 		}
 		catch (DataAccessException e)
 		{
@@ -87,7 +86,21 @@ public class KeChengDao
 
 		try
 		{
-			jdbcTemplate.update(sql, new Object[] { mo.getName(), mo.getTeacher(),mo.getNianji(),mo.getKemu(), mo.getRemark(),mo.getShangkeshijian(),mo.getNeedremind(), mo.getId() });
+			jdbcTemplate.update(sql, new Object[] { mo.getName(), mo.getTeacher(), mo.getNianji(), mo.getKemu(), mo.getRemark(), mo.getShangkeshijian(), mo.getNeedremind(), mo.getId() });
+		}
+		catch (DataAccessException e)
+		{
+			throw new LittleCatException(Consts.ERROR_CODE_DATAACCESSEXCEPTION, e.getMessage(), e);
+		}
+	}
+
+	public void setRemindTag(String id, String tag) throws LittleCatException
+	{
+		String sql = "update " + TABLE_NAME + " set needremind=? where id = ?";
+
+		try
+		{
+			jdbcTemplate.update(sql, new Object[] { tag, id });
 		}
 		catch (DataAccessException e)
 		{
@@ -100,7 +113,7 @@ public class KeChengDao
 		return DaoUtil.getById(TABLE_NAME, id, jdbcTemplate, new KeChengMO.MOMapper());
 	}
 
-	public List<KeChengMO> getList(String key, String teacher, String enable) throws LittleCatException
+	public List<KeChengMO> getList(String key, String teacher, String enable, String needremind) throws LittleCatException
 	{
 		StringBuilder sql = new StringBuilder()
 				.append("select a.*,b.name teacherName,c.name nianjiName,d.name kemuName from ").append(TABLE_NAME).append(" a ")
@@ -123,6 +136,11 @@ public class KeChengDao
 		if (StringUtil.isNotEmpty(enable))
 		{
 			sql.append(" and a.enable ='" + enable + "'");
+		}
+
+		if (StringUtil.isNotEmpty(needremind))
+		{
+			sql.append(" and a.needremind ='" + needremind + "'");
 		}
 
 		sql.append(" order by d.name,c.name ");
