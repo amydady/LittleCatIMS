@@ -336,7 +336,7 @@ public class StaffMO extends BaseMO
 			// for display
 			mo.setWorktypeName(StaffWorkType.getNameByCode(mo.getWorktype()));
 			mo.setSexName(Sex.getNameByCode(mo.getSex()));
-			mo.setXueliName(XueLi.getNameByCode(mo.getSex()));
+			mo.setXueliName(XueLi.getNameByCode(mo.getXueli()));
 			mo.setStateName(StaffState.getNameByCode(mo.getState()));
 
 			try
