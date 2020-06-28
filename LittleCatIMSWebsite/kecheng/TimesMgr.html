@@ -17,7 +17,7 @@
         <!-- 页面标题 -->
         <div class="row" style="height:60px">
             <div class="col">
-                <h4>课时管理（{{kechengName}}:{{kechengStateName}}）</h4>
+                <h4>课时管理<span ng-hide={{!hideKeCheng}}>（{{kechengName}}:{{kechengStateName}}）</span></h4>
             </div>
         </div>
 
@@ -55,6 +55,7 @@
                         <tr>
                             <th scope="col">序 号</th>
                             <th scope="col" ng-hide={{true}}>ID</th>
+                            <th scope="col" ng-hide={{hideKeCheng}}>课程名称</th>
                             <th scope="col">学生姓名</th>
                             <th scope="col">年</th>
                             <th scope="col">月</th>
@@ -64,13 +65,14 @@
                             <th scope="col">记录时间</th>
                             <th scope="col">记录人</th>
                             <th scope="col">是否有效</th>
-                            <th scope="col">操 作</th>
+                            <th scope="col" ng-hide={{hideDelete}}>操 作</th>
                         </tr>
                     </thead>
                     <tbody>
                         <tr ng-repeat="x in listData">
                             <td>{{ $index + 1 }}</td>
                             <td ng-hide={{true}}>{{x.id}}</td>
+                            <td ng-hide={{hideKeCheng}}>{{x.kechengName}}</td>
                             <td>{{x.studentName}}</td>
                             <td>{{x.year}}</td>
                             <td>{{x.month}}</td>
@@ -81,8 +83,8 @@
                             <td>{{x.operatorName}}</td>
                             <td>{{x.enableV}}</td>
 
-                            <td>
-                                <button type="button" class="btn btn-secondary btn-sm"
+                            <td ng-hide={{hideDelete}}>
+                                <button type="button" class="btn btn-secondary btn-sm" 
                                     ng-click="delete(x.id)">删除</button>
                             </td>
                         </tr>
@@ -219,8 +221,7 @@
             }
 
             $scope.currentUser = JSON.parse(sessionStorage.getItem("currentUser"));
-
-
+            
             $scope.search = {
                 key: '',
                 year: new Date().format('yyyy'),
@@ -237,15 +238,32 @@
                 };
             };
 
+            $scope.hideKeCheng = true
+            $scope.hideDelete = false
             $scope.kechengId = RequestUtil.getQueryParamByName("kechengId")
             $scope.kechengName = RequestUtil.getQueryParamByName("kechengName")
-
             $scope.kechengState = RequestUtil.getQueryParamByName("state")
             $scope.kechengStateName = RequestUtil.getQueryParamByName("statename")
 
             if (StringUtil.isEmpty($scope.kechengId)) {
-                window.location = '../kecheng/KeChengMgr.html'
+                $scope.kechengId = ''
+                $scope.kechengState = ''
+                $scope.kechengStateName = ''
+
+                $scope.search.day = new Date().format('dd')
+
+                $scope.hideKeCheng = false
+                $scope.hideDelete = true
             }
+
+            $scope.hideDelete = $scope.currentUser.isboss != 'Y'
+            
+
+
+
+            // if (StringUtil.isEmpty($scope.kechengId)) {
+            //     window.location = '../kecheng/KeChengMgr.html'
+            // }
 
             $scope.onSelectAllOrCancel = function () {
                 TableUtil.selectAllOrCncel('studentTableList', !$scope.selectAll, 1, $scope.studentListData.length);

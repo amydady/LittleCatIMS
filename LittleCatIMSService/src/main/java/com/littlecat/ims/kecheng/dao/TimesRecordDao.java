@@ -121,7 +121,7 @@ public class TimesRecordDao
 			sql.append(" and (b.name like '%" + key + "%' or c.name like '%"+key+"%') ");
 		}
 		
-		sql.append(" order by a.year desc,a.month desc ,a.day asc,b.name");
+		sql.append(" order by a.year desc,a.month desc ,a.day asc,c.name,b.name");
 		
 		return jdbcTemplate.query(sql.toString(), new TimesRecordMO.MOMapper());
 	}
